@@ -37,16 +37,6 @@ describe("AddressInput", () => {
 		expect(onChange).toHaveBeenCalled();
 	});
 
-	it("does not show VAT field by default", () => {
-		render(<AddressInput value={baseValue} onChange={() => {}} />);
-		expect(screen.queryByLabelText(/vat|ein/i)).not.toBeInTheDocument();
-	});
-
-	it("shows VAT field when showVat is true", () => {
-		render(<AddressInput value={baseValue} onChange={() => {}} showVat />);
-		expect(screen.getByLabelText(/ein/i)).toBeInTheDocument();
-	});
-
 	it("shows validation error on blur when field is empty", async () => {
 		render(
 			<AddressInput value={{ ...baseValue, line1: "" }} onChange={() => {}} />,
@@ -68,14 +58,14 @@ describe("AddressInput", () => {
 		expect(onValidationChange).toHaveBeenCalledWith(true, []);
 	});
 
-	it("resets postal code and VAT on country change", async () => {
+	it("resets postal code and state on country change", async () => {
 		const onChange = vi.fn();
-		render(<AddressInput value={baseValue} onChange={onChange} showVat />);
+		render(<AddressInput value={baseValue} onChange={onChange} />);
 		const select = screen.getByLabelText(/country/i);
 		await userEvent.selectOptions(select, "DE");
 		const lastCall = onChange.mock.calls.at(-1)?.[0] as AddressValue;
 		expect(lastCall.postalCode).toBe("");
-		expect(lastCall.vat).toBe("");
+		expect(lastCall.state).toBe("");
 	});
 
 	it("renders DE address fields after switching country", async () => {
@@ -109,5 +99,50 @@ describe("AddressInput", () => {
 			/>,
 		);
 		expect(document.querySelector(".my-root")).toBeInTheDocument();
+	});
+
+	it("shows only state field in minimal mode for US", () => {
+		render(
+			<AddressInput value={baseValue} onChange={() => {}} mode="minimal" />,
+		);
+		expect(screen.queryByLabelText(/address line 1/i)).not.toBeInTheDocument();
+		expect(screen.getByLabelText(/state/i)).toBeInTheDocument();
+	});
+
+	it("shows no address fields in minimal mode for non-EU non-federal country", () => {
+		render(
+			<AddressInput
+				value={{ ...baseValue, country: "JP", state: "", postalCode: "" }}
+				onChange={() => {}}
+				mode="minimal"
+			/>,
+		);
+		expect(screen.queryByLabelText(/address line 1/i)).not.toBeInTheDocument();
+		expect(screen.queryByLabelText(/prefecture/i)).not.toBeInTheDocument();
+	});
+
+	it("shows full address in minimal mode for EU country", () => {
+		render(
+			<AddressInput
+				value={{ ...baseValue, country: "DE", state: "", postalCode: "" }}
+				onChange={() => {}}
+				mode="minimal"
+			/>,
+		);
+		expect(
+			screen.getByLabelText(/street and house number/i),
+		).toBeInTheDocument();
+	});
+
+	it("uses defaultRegion to pre-fill state", () => {
+		render(
+			<AddressInput
+				value={{ ...baseValue, state: "" }}
+				onChange={() => {}}
+				defaultRegion="CA"
+			/>,
+		);
+		const stateSelect = screen.getByLabelText(/state/i) as HTMLSelectElement;
+		expect(stateSelect.value).toBe("CA");
 	});
 });

@@ -1,13 +1,29 @@
-import { type ChangeEvent, useCallback, useEffect, useState } from "react";
-import type { AddressInputProps, AddressValue } from "../../types.js";
+import {
+	type ChangeEvent,
+	Fragment,
+	useCallback,
+	useEffect,
+	useState,
+} from "react";
+import type {
+	AddressCollectionMode,
+	AddressInputProps,
+	AddressValue,
+	RenderContainerProps,
+	RenderInputProps,
+	RenderSelectProps,
+} from "../../types.js";
+import type {
+	AddressFieldConfig,
+	CountryConfig,
+} from "../../utils/countries.js";
 import {
 	COUNTRY_LIST,
 	getCountryConfig,
-	getVatLabel,
 	isEUCountry,
 } from "../../utils/countries.js";
 import type { ValidationError } from "../../utils/validation.js";
-import { normalizeVat, validateAddress } from "../../utils/validation.js";
+import { validateAddress } from "../../utils/validation.js";
 
 const EMPTY_VALUE: AddressValue = {
 	line1: "",
@@ -16,51 +32,62 @@ const EMPTY_VALUE: AddressValue = {
 	state: "",
 	postalCode: "",
 	country: "",
-	vat: "",
 };
+
+function computeEffectiveFields(
+	mode: AddressCollectionMode,
+	country: string,
+	countryConfig: CountryConfig | undefined,
+): AddressFieldConfig[] {
+	if (!country || !countryConfig) return [];
+	const allFields = countryConfig.addressFields;
+
+	switch (mode) {
+		case "full":
+			return allFields;
+		case "region":
+			return allFields.filter((f) => f.field === "state");
+		case "regionMinimal":
+			return isEUCountry(country)
+				? allFields
+				: allFields.filter((f) => f.field === "state");
+		case "minimal":
+		default:
+			if (isEUCountry(country)) return allFields;
+			if (countryConfig.hasRegionalTax)
+				return allFields.filter((f) => f.field === "state");
+			return [];
+	}
+}
 
 export function AddressInput({
 	value,
 	onChange,
 	onValidationChange,
-	showVat = false,
-	vatRequired = false,
+	mode = "full",
 	disabled = false,
 	className,
 	classNames,
-	labels,
 	defaultCountry,
-	minimalCollection = false,
-	showBusinessToggle = false,
-	isBusiness: isBusinessProp,
-	onBusinessChange,
-	lacksVatNumber: lacksVatNumberProp,
-	onLacksVatNumberChange,
+	defaultRegion,
+	renderInput,
+	renderCheckbox: _renderCheckbox,
+	renderSelect,
+	renderContainer,
 }: AddressInputProps) {
 	const [touched, setTouched] = useState<Partial<Record<string, boolean>>>({});
 	const [errors, setErrors] = useState<ValidationError[]>([]);
-	const [internalIsBusiness, setInternalIsBusiness] = useState(false);
-	const [internalLacksVatNumber, setInternalLacksVatNumber] = useState(false);
 
-	const isBusiness =
-		isBusinessProp !== undefined ? isBusinessProp : internalIsBusiness;
-	// false = has a number (VAT shown); true = "I don't have one" (VAT hidden)
-	const lacksVatNumber =
-		lacksVatNumberProp !== undefined
-			? lacksVatNumberProp
-			: internalLacksVatNumber;
-
-	// When defaultCountry is provided: country is pre-selected, selector moves to bottom.
-	// When not provided: country starts empty and the selector is shown at top.
 	const effectiveCountry = value.country || defaultCountry || "";
-	const currentValue = { ...EMPTY_VALUE, ...value, country: effectiveCountry };
+	const effectiveState = value.state || defaultRegion || "";
+	const currentValue = {
+		...EMPTY_VALUE,
+		...value,
+		country: effectiveCountry,
+		state: effectiveState,
+	};
 	const countryConfig = getCountryConfig(currentValue.country);
 	const countryAtBottom = !!defaultCountry;
-
-	// Business + not opted out → show VAT. Otherwise fall back to the showVat prop.
-	const shouldShowVat = showBusinessToggle
-		? isBusiness && !lacksVatNumber
-		: showVat;
 
 	const runValidation = useCallback(
 		(val: AddressValue) => {
@@ -71,7 +98,7 @@ export function AddressInput({
 		[onValidationChange],
 	);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: only changes on country change
+	// biome-ignore lint/correctness/useExhaustiveDependencies: only re-run on country change
 	useEffect(() => {
 		runValidation(currentValue);
 	}, [currentValue.country]);
@@ -82,38 +109,11 @@ export function AddressInput({
 			if (field === "country") {
 				next.state = "";
 				next.postalCode = "";
-				next.vat = "";
 			}
 			onChange(next);
 			setTouched((t) => ({ ...t, [field]: true }));
 			runValidation(next);
 		};
-	}
-
-	function handleVatBlur() {
-		const normalized = normalizeVat(currentValue.vat ?? "");
-		if (normalized !== (currentValue.vat ?? "")) {
-			const next = { ...currentValue, vat: normalized };
-			onChange(next);
-			runValidation(next);
-		}
-		setTouched((t) => ({ ...t, vat: true }));
-	}
-
-	function handleBusinessToggle(e: ChangeEvent<HTMLInputElement>) {
-		const val = e.target.checked;
-		setInternalIsBusiness(val);
-		onBusinessChange?.(val);
-		if (!val) {
-			setInternalLacksVatNumber(false);
-			onLacksVatNumberChange?.(false);
-		}
-	}
-
-	function handleLacksVatNumberToggle(e: ChangeEvent<HTMLInputElement>) {
-		const val = e.target.checked;
-		setInternalLacksVatNumber(val);
-		onLacksVatNumberChange?.(val);
 	}
 
 	function getError(field: string): string | undefined {
@@ -124,83 +124,112 @@ export function AddressInput({
 	const cn = (base: string, custom?: string) =>
 		[base, custom].filter(Boolean).join(" ");
 
-	const vatLabel =
-		labels?.vatLabel ??
-		(countryConfig ? getVatLabel(currentValue.country) : "VAT Number");
+	const effectiveFieldOrder = computeEffectiveFields(
+		mode,
+		currentValue.country,
+		countryConfig,
+	);
 
-	const fieldOrder = countryConfig?.addressFields ?? [];
+	// --- Default render helpers ---
 
-	const effectiveFieldOrder = (() => {
-		if (!minimalCollection || !currentValue.country) return fieldOrder;
-		if (isEUCountry(currentValue.country)) return fieldOrder;
-		if (countryConfig?.hasRegionalTax) return fieldOrder.filter((f) => f.field === "state");
-		return [];
-	})();
+	function renderInputEl(props: RenderInputProps) {
+		if (renderInput) return renderInput(props);
+		return (
+			<input
+				id={props.id}
+				type="text"
+				className={props.className}
+				value={props.value}
+				onChange={props.onChange}
+				onBlur={props.onBlur}
+				placeholder={props.placeholder}
+				disabled={props.disabled}
+				aria-required={props.required}
+				aria-invalid={props["aria-invalid"]}
+				aria-describedby={props["aria-describedby"]}
+			/>
+		);
+	}
 
-	const countrySelector = (
-		<div className={cn("rav-field", classNames?.field)}>
-			<label
-				className={cn("rav-label", classNames?.label)}
-				htmlFor="rav-country"
-			>
-				{labels?.countryLabel ?? "Country"}
-				<span aria-hidden="true"> *</span>
-			</label>
+	function renderSelectEl(props: RenderSelectProps) {
+		if (renderSelect) return renderSelect(props);
+		return (
 			<select
-				id="rav-country"
-				className={cn("rav-select", classNames?.select)}
-				value={currentValue.country}
-				onChange={handleField("country")}
-				disabled={disabled}
-				aria-required="true"
+				id={props.id}
+				className={props.className}
+				value={props.value}
+				onChange={props.onChange}
+				onBlur={props.onBlur}
+				disabled={props.disabled}
+				aria-required={props.required}
+				aria-invalid={props["aria-invalid"]}
+				aria-describedby={props["aria-describedby"]}
 			>
-				{!currentValue.country && (
-					<option value="" disabled>
-						— Select a country —
-					</option>
-				)}
-				{COUNTRY_LIST.map((c) => (
-					<option key={c.code} value={c.code}>
-						{c.name}
+				<option value="" disabled>
+					{props.placeholder ?? "— Select —"}
+				</option>
+				{props.options.map((opt) => (
+					<option key={opt.value} value={opt.value}>
+						{opt.label}
 					</option>
 				))}
 			</select>
-			{getError("country") && (
-				<span className={cn("rav-error", classNames?.error)} role="alert">
-					{getError("country")}
-				</span>
-			)}
-		</div>
-	);
+		);
+	}
+
+	function renderContainerEl(containerProps: RenderContainerProps) {
+		if (renderContainer) return renderContainer(containerProps);
+		return (
+			<div className={cn("rav-field", containerProps.className)}>
+				<label
+					className={cn("rav-label", classNames?.label)}
+					htmlFor={containerProps.id}
+				>
+					{containerProps.label}
+					{containerProps.required && <span aria-hidden="true"> *</span>}
+				</label>
+				{containerProps.children}
+				{containerProps.error && (
+					<span
+						id={`${containerProps.id}-error`}
+						className={cn("rav-error", classNames?.error)}
+						role="alert"
+					>
+						{containerProps.error}
+					</span>
+				)}
+			</div>
+		);
+	}
+
+	// --- Country selector ---
+
+	const countryId = "rav-country";
+	const countryError = getError("country");
+
+	const countrySelector = renderContainerEl({
+		id: countryId,
+		fieldKey: "country",
+		label: "Country",
+		required: true,
+		error: countryError,
+		className: classNames?.field,
+		children: renderSelectEl({
+			id: countryId,
+			value: currentValue.country,
+			onChange: handleField("country"),
+			disabled,
+			required: true,
+			"aria-invalid": countryError !== undefined,
+			"aria-describedby": countryError ? `${countryId}-error` : undefined,
+			className: cn("rav-select", classNames?.select),
+			options: COUNTRY_LIST.map((c) => ({ value: c.code, label: c.name })),
+			placeholder: "— Select a country —",
+		}),
+	});
 
 	return (
 		<div className={cn("rav-root", className ?? classNames?.root)}>
-			{showBusinessToggle && (
-				<div className={cn("rav-field", classNames?.field)}>
-					<label
-						style={{
-							display: "flex",
-							alignItems: "center",
-							gap: 6,
-							cursor: "pointer",
-						}}
-					>
-						<input
-							type="checkbox"
-							checked={isBusiness}
-							onChange={handleBusinessToggle}
-							disabled={disabled}
-						/>
-						<span
-							className={cn("rav-label", classNames?.label)}
-							style={{ margin: 0 }}
-						>
-							{labels?.businessLabel ?? "Business account"}
-						</span>
-					</label>
-				</div>
-			)}
-
 			{!countryAtBottom && countrySelector}
 
 			{countryConfig &&
@@ -211,130 +240,51 @@ export function AddressInput({
 					const currentFieldValue =
 						(currentValue[fieldKey] as string | undefined) ?? "";
 
+					const inputElement = fieldCfg.options
+						? renderSelectEl({
+								id: inputId,
+								value: currentFieldValue,
+								onChange: handleField(fieldKey),
+								onBlur: () =>
+									setTouched((t) => ({ ...t, [fieldCfg.field]: true })),
+								disabled,
+								required: fieldCfg.required,
+								"aria-invalid": error !== undefined,
+								"aria-describedby": error ? `${inputId}-error` : undefined,
+								className: cn("rav-select", classNames?.select),
+								options: fieldCfg.options,
+								placeholder: `— Select ${fieldCfg.label} —`,
+							})
+						: renderInputEl({
+								id: inputId,
+								value: currentFieldValue,
+								onChange: handleField(fieldKey),
+								onBlur: () =>
+									setTouched((t) => ({ ...t, [fieldCfg.field]: true })),
+								placeholder: fieldCfg.placeholder,
+								disabled,
+								required: fieldCfg.required,
+								"aria-invalid": error !== undefined,
+								"aria-describedby": error ? `${inputId}-error` : undefined,
+								className: cn("rav-input", classNames?.input),
+							});
+
 					return (
-						<div
-							key={fieldCfg.field}
-							className={cn("rav-field", classNames?.field)}
-						>
-							<label
-								className={cn("rav-label", classNames?.label)}
-								htmlFor={inputId}
-							>
-								{fieldCfg.label}
-								{fieldCfg.required && <span aria-hidden="true"> *</span>}
-							</label>
-							{fieldCfg.options ? (
-								<select
-									id={inputId}
-									className={cn("rav-select", classNames?.select)}
-									value={currentFieldValue}
-									onChange={handleField(fieldKey)}
-									onBlur={() =>
-										setTouched((t) => ({ ...t, [fieldCfg.field]: true }))
-									}
-									disabled={disabled}
-									aria-required={fieldCfg.required}
-									aria-invalid={error !== undefined}
-									aria-describedby={error ? `${inputId}-error` : undefined}
-								>
-									<option value="">— Select {fieldCfg.label} —</option>
-									{fieldCfg.options.map((opt) => (
-										<option key={opt.value} value={opt.value}>
-											{opt.label}
-										</option>
-									))}
-								</select>
-							) : (
-								<input
-									id={inputId}
-									type="text"
-									className={cn("rav-input", classNames?.input)}
-									value={currentFieldValue}
-									onChange={handleField(fieldKey)}
-									onBlur={() =>
-										setTouched((t) => ({ ...t, [fieldCfg.field]: true }))
-									}
-									placeholder={fieldCfg.placeholder}
-									disabled={disabled}
-									aria-required={fieldCfg.required}
-									aria-invalid={error !== undefined}
-									aria-describedby={error ? `${inputId}-error` : undefined}
-								/>
-							)}
-							{error && (
-								<span
-									id={`${inputId}-error`}
-									className={cn("rav-error", classNames?.error)}
-									role="alert"
-								>
-									{error}
-								</span>
-							)}
-						</div>
+						<Fragment key={fieldCfg.field}>
+							{renderContainerEl({
+								id: inputId,
+								fieldKey: fieldCfg.field,
+								label: fieldCfg.label,
+								required: fieldCfg.required,
+								error,
+								className: classNames?.field,
+								children: inputElement,
+							})}
+						</Fragment>
 					);
 				})}
 
 			{countryAtBottom && countrySelector}
-
-			{showBusinessToggle && isBusiness && currentValue.country && (
-				<div className={cn("rav-field", classNames?.field)}>
-					<label
-						style={{
-							display: "flex",
-							alignItems: "center",
-							gap: 6,
-							cursor: "pointer",
-						}}
-					>
-						<input
-							type="checkbox"
-							checked={lacksVatNumber}
-							onChange={handleLacksVatNumberToggle}
-							disabled={disabled}
-						/>
-						<span
-							className={cn("rav-label", classNames?.label)}
-							style={{ margin: 0 }}
-						>
-							{`I don't have a ${vatLabel}`}
-						</span>
-					</label>
-				</div>
-			)}
-
-			{shouldShowVat && currentValue.country && (
-				<div className={cn("rav-field", classNames?.field)}>
-					<label
-						className={cn("rav-label", classNames?.label)}
-						htmlFor="rav-vat"
-					>
-						{vatLabel}
-						{vatRequired && <span aria-hidden="true"> *</span>}
-					</label>
-					<input
-						id="rav-vat"
-						type="text"
-						className={cn("rav-input", classNames?.input)}
-						value={currentValue.vat ?? ""}
-						onChange={handleField("vat")}
-						onBlur={handleVatBlur}
-						placeholder={labels?.vatPlaceholder ?? countryConfig?.vatExample}
-						disabled={disabled}
-						aria-required={vatRequired}
-						aria-invalid={getError("vat") !== undefined}
-						aria-describedby={getError("vat") ? "rav-vat-error" : undefined}
-					/>
-					{getError("vat") && (
-						<span
-							id="rav-vat-error"
-							className={cn("rav-error", classNames?.error)}
-							role="alert"
-						>
-							{getError("vat")}
-						</span>
-					)}
-				</div>
-			)}
 		</div>
 	);
 }

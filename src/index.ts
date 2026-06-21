@@ -1,9 +1,17 @@
 export { AddressInput } from "./components/AddressInput/index.js";
+export { AddressTaxInput } from "./components/AddressTaxInput/index.js";
 export type {
+	AddressCollectionMode,
 	AddressInputClassNames,
-	AddressInputLabels,
 	AddressInputProps,
+	AddressTaxInputProps,
 	AddressValue,
+	ConsumptionTaxValue,
+	RenderCheckboxProps,
+	RenderContainerProps,
+	RenderInputProps,
+	RenderSelectProps,
+	TaxType,
 } from "./types.js";
 export type {
 	AddressFieldConfig,
@@ -13,13 +21,13 @@ export type {
 export {
 	COUNTRIES,
 	COUNTRY_LIST,
+	getConsumptionTaxLabel,
 	getCountryConfig,
-	getVatLabel,
 } from "./utils/countries.js";
 export type { ValidationError, ValidationResult } from "./utils/validation.js";
 export {
-	normalizeVat,
+	normalizeConsumptionTax,
 	validateAddress,
+	validateConsumptionTax,
 	validatePostalCode,
-	validateVat,
 } from "./utils/validation.js";

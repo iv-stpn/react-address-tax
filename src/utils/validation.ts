@@ -1,5 +1,5 @@
 import type { AddressValue } from "../types.js";
-import { getCountryConfig, getVatLabel } from "./countries.js";
+import { getCountryConfig } from "./countries.js";
 
 export interface ValidationError {
 	field: string;
@@ -11,11 +11,14 @@ export interface ValidationResult {
 	errors: ValidationError[];
 }
 
-export function validateVat(vat: string, countryCode: string): boolean {
+export function validateConsumptionTax(
+	consumptionTaxId: string,
+	countryCode: string,
+): boolean {
 	const config = getCountryConfig(countryCode);
 	if (!config) return false;
-	const normalized = vat.trim().toUpperCase().replace(/\s/g, "");
-	return config.vatPattern.test(normalized);
+	const normalized = consumptionTaxId.trim().toUpperCase().replace(/\s/g, "");
+	return config.consumptionTaxPattern.test(normalized);
 }
 
 export function validatePostalCode(
@@ -60,17 +63,9 @@ export function validateAddress(value: AddressValue): ValidationResult {
 		});
 	}
 
-	if (value.vat && !validateVat(value.vat, value.country)) {
-		const label = getVatLabel(value.country);
-		errors.push({
-			field: "vat",
-			message: `Invalid ${label} format. Expected: ${config.vatExample}.`,
-		});
-	}
-
 	return { valid: errors.length === 0, errors };
 }
 
-export function normalizeVat(vat: string): string {
-	return vat.trim().toUpperCase().replace(/\s/g, "");
+export function normalizeConsumptionTax(consumptionTaxId: string): string {
+	return consumptionTaxId.trim().toUpperCase().replace(/\s/g, "");
 }

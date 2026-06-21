@@ -1,154 +1,19 @@
 import { type CSSProperties, useState } from "react";
 import { AddressInput } from "../components/AddressInput/index.js";
-import type { AddressValue } from "../types.js";
+import { AddressTaxInput } from "../components/AddressTaxInput/index.js";
+import type { AddressValue, ConsumptionTaxValue, TaxType } from "../types.js";
+import {
+	type ConsumptionTaxOutcome,
+	type ConsumptionTaxTreatment,
+	computeConsumptionTaxOutcome,
+} from "./tax.js";
 
 // ---------------------------------------------------------------------------
-// VAT outcome logic
-// Assumes an EU-based seller. Shows the applicable VAT treatment for a buyer.
-// ---------------------------------------------------------------------------
-
-const EU_RATES: Record<string, { rate: number; name: string }> = {
-	AT: { rate: 20, name: "MwSt" },
-	BE: { rate: 21, name: "BTW/TVA" },
-	DE: { rate: 19, name: "MwSt" },
-	ES: { rate: 21, name: "IVA" },
-	FR: { rate: 20, name: "TVA" },
-	IT: { rate: 22, name: "IVA" },
-	NL: { rate: 21, name: "BTW" },
-	PL: { rate: 23, name: "VAT" },
-};
-
-type VatTreatment =
-	| "reverse-charge"
-	| "standard"
-	| "zero-rated"
-	| "outside-eu"
-	| "no-country";
-
-export interface VatOutcome {
-	treatment: VatTreatment;
-	headline: string;
-	rate: string;
-	detail: string;
-}
-
-export function computeVatOutcome(
-	country: string,
-	isBusiness: boolean,
-	hasVatNumber: boolean,
-): VatOutcome {
-	if (!country) {
-		return {
-			treatment: "no-country",
-			headline: "No country selected",
-			rate: "—",
-			detail: "Select a country to see the applicable VAT treatment.",
-		};
-	}
-
-	const euEntry = EU_RATES[country];
-
-	if (euEntry) {
-		const { rate, name } = euEntry;
-		if (isBusiness && hasVatNumber) {
-			return {
-				treatment: "reverse-charge",
-				headline: "Reverse Charge",
-				rate: "0%",
-				detail: `Intra-EU B2B supply. Customer self-accounts for ${name} (${rate}%) in their country. You invoice at 0%.`,
-			};
-		}
-		if (isBusiness && !hasVatNumber) {
-			return {
-				treatment: "standard",
-				headline: `Standard ${name} — ${rate}%`,
-				rate: `${rate}%`,
-				detail: `Business opted out of providing a VAT number — reverse charge cannot apply. Apply ${country} ${name} at ${rate}%.`,
-			};
-		}
-		return {
-			treatment: "standard",
-			headline: `Standard ${name} — ${rate}%`,
-			rate: `${rate}%`,
-			detail: `Consumer purchase. Apply ${country} ${name} at ${rate}% (EU OSS rules may apply).`,
-		};
-	}
-
-	switch (country) {
-		case "GB":
-			if (isBusiness && hasVatNumber) {
-				return {
-					treatment: "zero-rated",
-					headline: "Zero-rated Export",
-					rate: "0%",
-					detail:
-						'Post-Brexit B2B. UK reverse charge applies on the buyer\'s side. Invoice at 0% and note "reverse charge".',
-				};
-			}
-			return {
-				treatment: "zero-rated",
-				headline: "Zero-rated Export",
-				rate: "0%",
-				detail:
-					"Post-Brexit: outside EU VAT area. UK VAT (20%) is accounted for on the buyer's side.",
-			};
-		case "CH":
-			return {
-				treatment: "outside-eu",
-				headline: "Outside EU VAT — Swiss MWST/TVA/IVA",
-				rate: "8.1%",
-				detail:
-					"Switzerland is not in the EU VAT area. Swiss tax at 8.1% may apply on the buyer's side; zero-rated export for EU VAT.",
-			};
-		case "US":
-			return {
-				treatment: "outside-eu",
-				headline: "Outside EU VAT — No federal VAT",
-				rate: "N/A",
-				detail:
-					"USA has no federal VAT. State sales tax varies (0–13%). Zero-rated export for EU VAT purposes.",
-			};
-		case "CA":
-			return {
-				treatment: "outside-eu",
-				headline: "Outside EU VAT — GST/HST",
-				rate: "N/A",
-				detail:
-					"Canada uses GST (5%) + provincial HST/PST. Zero-rated export for EU VAT purposes.",
-			};
-		case "AU":
-			return {
-				treatment: "outside-eu",
-				headline: "Outside EU VAT — GST",
-				rate: "10%",
-				detail:
-					"Australia uses GST at 10%. Zero-rated export for EU VAT purposes.",
-			};
-		case "JP":
-			return {
-				treatment: "outside-eu",
-				headline: "Outside EU VAT — Consumption Tax",
-				rate: "10%",
-				detail:
-					"Japan Consumption Tax at 10%. Zero-rated export for EU VAT purposes.",
-			};
-		default:
-			return {
-				treatment: "outside-eu",
-				headline: "Outside EU VAT",
-				rate: "N/A",
-				detail:
-					"VAT treatment depends on local regulations of the destination country.",
-			};
-	}
-}
-
-// ---------------------------------------------------------------------------
-// VatPanel component
+// ConsumptionTaxPanel
 // ---------------------------------------------------------------------------
 
 const COLORS: Record<
-	VatTreatment,
+	ConsumptionTaxTreatment,
 	{ bg: string; border: string; text: string; badge: string }
 > = {
 	"reverse-charge": {
@@ -175,6 +40,12 @@ const COLORS: Record<
 		text: "#374151",
 		badge: "#6b7280",
 	},
+	"no-nexus": {
+		bg: "#fdf4ff",
+		border: "#a855f7",
+		text: "#6b21a8",
+		badge: "#9333ea",
+	},
 	"no-country": {
 		bg: "#f9fafb",
 		border: "#e5e7eb",
@@ -183,7 +54,12 @@ const COLORS: Record<
 	},
 };
 
-export function VatPanel({ outcome }: { outcome: VatOutcome }) {
+function formatRate(rate: number | null): string {
+	if (rate === null) return "—";
+	return `${rate}%`;
+}
+
+function ConsumptionTaxPanel({ outcome }: { outcome: ConsumptionTaxOutcome }) {
 	const c = COLORS[outcome.treatment];
 	return (
 		<div
@@ -213,7 +89,7 @@ export function VatPanel({ outcome }: { outcome: VatOutcome }) {
 						textTransform: "uppercase",
 					}}
 				>
-					VAT
+					TAX
 				</span>
 				<span style={{ fontWeight: 600, color: c.text, fontSize: 14 }}>
 					{outcome.headline}
@@ -227,7 +103,7 @@ export function VatPanel({ outcome }: { outcome: VatOutcome }) {
 						fontVariantNumeric: "tabular-nums",
 					}}
 				>
-					{outcome.rate}
+					{formatRate(outcome.rate)}
 				</span>
 			</div>
 			<p style={{ margin: 0, fontSize: 12, color: c.text, lineHeight: 1.5 }}>
@@ -238,10 +114,8 @@ export function VatPanel({ outcome }: { outcome: VatOutcome }) {
 }
 
 // ---------------------------------------------------------------------------
-// Shared story wrapper
+// Shared styles
 // ---------------------------------------------------------------------------
-
-export type StoryMode = "business" | "individual" | "toggle";
 
 const containerStyle: CSSProperties = {
 	maxWidth: 480,
@@ -270,8 +144,13 @@ const sectionLabelStyle: CSSProperties = {
 	color: "#9ca3af",
 };
 
-type StoryWrapperProps = { defaultCountry?: string; mode: StoryMode };
-export function StoryWrapper({ defaultCountry, mode }: StoryWrapperProps) {
+// ---------------------------------------------------------------------------
+// AddressWrapper — demos for AddressInput
+// ---------------------------------------------------------------------------
+
+type AddressWrapperProps = { defaultCountry?: string };
+
+export function AddressWrapper({ defaultCountry }: AddressWrapperProps) {
 	const [value, setValue] = useState<AddressValue>({
 		line1: "",
 		line2: "",
@@ -279,27 +158,7 @@ export function StoryWrapper({ defaultCountry, mode }: StoryWrapperProps) {
 		state: "",
 		postalCode: "",
 		country: defaultCountry ?? "",
-		vat: "",
 	});
-	const [isBusiness, setIsBusiness] = useState(false);
-	const [lacksVatNumber, setLacksVatNumber] = useState(false);
-
-	const effectiveBusiness =
-		mode === "business" ? true : mode === "individual" ? false : isBusiness;
-	// In toggle mode, lacksVatNumber=false (default) means the user HAS a number.
-	// In business mode we always treat them as having a number (VAT field is always shown).
-	const effectiveHasVatNumber =
-		mode === "business"
-			? true
-			: mode === "individual"
-				? false
-				: !lacksVatNumber;
-
-	const outcome = computeVatOutcome(
-		value.country,
-		effectiveBusiness,
-		effectiveHasVatNumber,
-	);
 
 	return (
 		<div style={containerStyle}>
@@ -307,18 +166,100 @@ export function StoryWrapper({ defaultCountry, mode }: StoryWrapperProps) {
 				value={value}
 				onChange={setValue}
 				defaultCountry={defaultCountry}
-				showVat={mode === "business"}
-				showBusinessToggle={mode === "toggle"}
-				onBusinessChange={mode === "toggle" ? setIsBusiness : undefined}
-				onLacksVatNumberChange={
-					mode === "toggle" ? setLacksVatNumber : undefined
-				}
 			/>
-
-			<span style={sectionLabelStyle}>Vat to collect</span>
-			<VatPanel outcome={outcome} />
-			<span style={sectionLabelStyle}>Current value</span>
+			<span style={sectionLabelStyle}>Address value</span>
 			<pre style={jsonStyle}>{JSON.stringify(value, null, 2)}</pre>
+		</div>
+	);
+}
+
+// ---------------------------------------------------------------------------
+// AddressTaxWrapper — demos for AddressTaxInput
+// ---------------------------------------------------------------------------
+
+type AddressTaxWrapperProps = { defaultCountry?: string; taxType: TaxType };
+
+export function AddressTaxWrapper({
+	defaultCountry,
+	taxType,
+}: AddressTaxWrapperProps) {
+	const [addressValue, setAddressValue] = useState<AddressValue>({
+		line1: "",
+		line2: "",
+		city: "",
+		state: "",
+		postalCode: "",
+		country: defaultCountry ?? "",
+	});
+	const [taxValue, setTaxValue] = useState<ConsumptionTaxValue>({});
+	const [isBusiness, setIsBusiness] = useState(false);
+	const [hasNexus, setHasNexus] = useState(true);
+
+	const effectiveIsBusiness =
+		taxType === "business"
+			? true
+			: taxType === "individual"
+				? false
+				: isBusiness;
+	const hasConsumptionTaxId = taxValue.hasIdentifier ?? true;
+
+	const nexusList = hasNexus ? undefined : [];
+
+	const outcome =
+		!hasNexus && (addressValue.country || defaultCountry)
+			? {
+					treatment: "no-nexus" as const,
+					headline: "No nexus — not collecting",
+					rate: null,
+					detail:
+						"You have no tax nexus in this country. No consumption tax collection is required from your side.",
+				}
+			: computeConsumptionTaxOutcome(
+					addressValue.country,
+					effectiveIsBusiness,
+					hasConsumptionTaxId,
+					addressValue.state,
+				);
+
+	return (
+		<div style={containerStyle}>
+			<AddressTaxInput
+				addressValue={addressValue}
+				taxValue={taxValue}
+				taxType={taxType}
+				isBusiness={taxType === "either" ? isBusiness : undefined}
+				nexusList={nexusList}
+				defaultCountry={defaultCountry}
+				onAddressChange={setAddressValue}
+				onConsumptionTaxChange={setTaxValue}
+				onBusinessChange={taxType === "either" ? setIsBusiness : undefined}
+			/>
+			<div style={{ marginTop: 12 }}>
+				<label
+					style={{
+						display: "flex",
+						alignItems: "center",
+						gap: 6,
+						cursor: "pointer",
+						fontSize: 13,
+					}}
+				>
+					<input
+						type="checkbox"
+						checked={hasNexus}
+						onChange={(e) => setHasNexus(e.target.checked)}
+					/>
+					Has nexus in selected country?
+				</label>
+			</div>
+			<span style={sectionLabelStyle}>Tax to collect</span>
+			<ConsumptionTaxPanel outcome={outcome} />
+			<span style={sectionLabelStyle}>Address value</span>
+			<pre style={jsonStyle}>{JSON.stringify(addressValue, null, 2)}</pre>
+			<span style={sectionLabelStyle}>Tax value</span>
+			<pre style={jsonStyle}>
+				{JSON.stringify({ ...taxValue, rate: outcome.rate }, null, 2)}
+			</pre>
 		</div>
 	);
 }
