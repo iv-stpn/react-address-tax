@@ -41,7 +41,8 @@
     "lint:fix": "biome check src --write",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "bun run build && bun run typecheck",
-    "ladle": "ladle serve"
+    "ladle": "ladle serve",
+    "gen:geonames": "bun run scripts/gen-geonames.ts"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
