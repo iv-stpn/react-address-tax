@@ -27,7 +27,6 @@ export const COUNTRY_CODES = [
   "AI",
   "AL",
   "AM",
-  "AN",
   "AO",
   "AQ",
   "AR",
@@ -71,7 +70,6 @@ export const COUNTRY_CODES = [
   "CN",
   "CO",
   "CR",
-  "CS",
   "CU",
   "CV",
   "CW",
@@ -404,20 +402,6 @@ export const COUNTRY_DATA: Record<CountryCode, CountryData> = {
         en: "Village",
         local: "Գյուղ",
       },
-    },
-  },
-  AN: {
-    code: "AN",
-    iso3: "ANT",
-    name: "Netherlands Antilles",
-    continent: "NA",
-    currencyCode: "ANG",
-    currencyName: "Guilder",
-    postalCodeRegex: null,
-    languages: ["nl-AN", "en", "es"],
-    administrativeLabels: {
-      level1: null,
-      level2: null,
     },
   },
   AO: {
@@ -1202,20 +1186,6 @@ export const COUNTRY_DATA: Record<CountryCode, CountryData> = {
       },
     },
   },
-  CS: {
-    code: "CS",
-    iso3: "SCG",
-    name: "Serbia and Montenegro",
-    continent: "EU",
-    currencyCode: "RSD",
-    currencyName: "Dinar",
-    postalCodeRegex: "^(\\d{5})$",
-    languages: ["cu", "hu", "sq", "sr"],
-    administrativeLabels: {
-      level1: null,
-      level2: null,
-    },
-  },
   CU: {
     code: "CU",
     iso3: "CUB",
@@ -1920,8 +1890,8 @@ export const COUNTRY_DATA: Record<CountryCode, CountryData> = {
     languages: ["el-GR", "en", "fr"],
     administrativeLabels: {
       level1: {
-        en: "Religious community",
-        local: "Θρησκευτική κοινότητα",
+        en: "Monastic community",
+        local: "Μοναστική κοινότητα",
       },
       level2: {
         en: "Regional unit",

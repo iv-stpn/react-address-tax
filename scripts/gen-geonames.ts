@@ -24,6 +24,10 @@ const BASE = "https://download.geonames.org/export/dump";
 const WIKIDATA_SPARQL = "https://query.wikidata.org/sparql";
 const USER_AGENT = "react-address-tax-geonames-script/1.0 (data enrichment)";
 
+// Defunct ISO 3166-1 alpha-2 codes still present in some GeoNames data that we
+// exclude from output: AN (Netherlands Antilles), CS (Serbia and Montenegro).
+const DEFUNCT_COUNTRY_CODES = new Set(["AN", "CS"]);
+
 // GeoNames files are tab-separated. countryInfo.txt carries leading comment
 // lines starting with "#"; the admin files have no comments.
 async function fetchTsv(file: string): Promise<string[][]> {
@@ -664,6 +668,8 @@ async function main() {
       },
     }))
     .filter((c) => c.code.length === 2)
+    // Drop defunct ISO 3166-1 codes: AN (Netherlands Antilles), CS (Serbia and Montenegro).
+    .filter((c) => !DEFUNCT_COUNTRY_CODES.has(c.code))
     .sort((a, b) => a.code.localeCompare(b.code));
 
   const langsByCountry = new Map(countries.map((c) => [c.code, baseLanguages(c.languages)]));

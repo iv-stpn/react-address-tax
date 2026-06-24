@@ -380,7 +380,6 @@ export const TAX_CONFIG: Record<CountryCode, CountryTaxEntry> = {
   // a reliable figure isn't curated.
   AX: flat("ALV", 25.5, 0), // Åland (Finnish VAT applies locally)
   BY: flat("PDV", 20, 0), // Belarus
-  CS: flat("PDV", 20, 0), // Serbia and Montenegro (legacy code → Serbia rate)
   FO: flat("MVG", 25, 0), // Faroe Islands
   GG: flat("No VAT", null, null), // Guernsey
   GI: flat("No VAT", null, null), // Gibraltar
@@ -498,7 +497,6 @@ export const TAX_CONFIG: Record<CountryCode, CountryTaxEntry> = {
   // ---- Rest of North America & Caribbean ------------------------------------
   AG: flat("ABST", 15, 0), // Antigua and Barbuda
   AI: flat("GST", 13, 0), // Anguilla
-  AN: flat("No VAT", null, null), // Netherlands Antilles (dissolved)
   AW: flat("No VAT", null, null), // Aruba (turnover tax, no VAT)
   BB: flat("VAT", 17.5, 0), // Barbados
   BL: flat("No VAT", null, null), // Saint Barthelemy

@@ -87,7 +87,7 @@ export const BO: Story = () => <AddressWrapper defaultCountry="BO" />;
 BO.storyName = "Bolivia";
 
 export const BQ: Story = () => <AddressWrapper defaultCountry="BQ" />;
-BQ.storyName = "Bonaire, Saint Eustatius and Saba ";
+BQ.storyName = "Bonaire Saint Eustatius and Saba ";
 
 export const BA: Story = () => <AddressWrapper defaultCountry="BA" />;
 BA.storyName = "Bosnia and Herzegovina";
@@ -467,9 +467,6 @@ NR.storyName = "Nauru";
 export const NP: Story = () => <AddressWrapper defaultCountry="NP" />;
 NP.storyName = "Nepal";
 
-export const AN: Story = () => <AddressWrapper defaultCountry="AN" />;
-AN.storyName = "Netherlands Antilles";
-
 export const NC: Story = () => <AddressWrapper defaultCountry="NC" />;
 NC.storyName = "New Caledonia";
 
@@ -599,9 +596,6 @@ SN.storyName = "Senegal";
 export const RS: Story = () => <AddressWrapper defaultCountry="RS" />;
 RS.storyName = "Serbia";
 
-export const CS: Story = () => <AddressWrapper defaultCountry="CS" />;
-CS.storyName = "Serbia and Montenegro";
-
 export const SC: Story = () => <AddressWrapper defaultCountry="SC" />;
 SC.storyName = "Seychelles";
 
@@ -708,7 +702,7 @@ export const TV: Story = () => <AddressWrapper defaultCountry="TV" />;
 TV.storyName = "Tuvalu";
 
 export const VI: Story = () => <AddressWrapper defaultCountry="VI" />;
-VI.storyName = "U.S. Virgin Islands";
+VI.storyName = "US Virgin Islands";
 
 export const UG: Story = () => <AddressWrapper defaultCountry="UG" />;
 UG.storyName = "Uganda";

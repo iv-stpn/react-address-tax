@@ -150,24 +150,6 @@
 		}
 	},
 	{
-		"code": "AN",
-		"iso3": "ANT",
-		"name": "Netherlands Antilles",
-		"continent": "NA",
-		"currencyCode": "ANG",
-		"currencyName": "Guilder",
-		"postalCodeRegex": null,
-		"languages": [
-			"nl-AN",
-			"en",
-			"es"
-		],
-		"administrativeLabels": {
-			"level1": null,
-			"level2": null
-		}
-	},
-	{
 		"code": "AO",
 		"iso3": "AGO",
 		"name": "Angola",
@@ -1092,25 +1074,6 @@
 				"en": "Canton",
 				"local": "Cantón"
 			}
-		}
-	},
-	{
-		"code": "CS",
-		"iso3": "SCG",
-		"name": "Serbia and Montenegro",
-		"continent": "EU",
-		"currencyCode": "RSD",
-		"currencyName": "Dinar",
-		"postalCodeRegex": "^(\\d{5})$",
-		"languages": [
-			"cu",
-			"hu",
-			"sq",
-			"sr"
-		],
-		"administrativeLabels": {
-			"level1": null,
-			"level2": null
 		}
 	},
 	{

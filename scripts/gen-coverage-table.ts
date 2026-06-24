@@ -10,10 +10,9 @@
 // to flag that it needs reverification; the ❗ is sticky until a human removes
 // it (typically while setting a new "Last verified" date).
 
-import RandExp from "randexp";
 import countries from "../data/countries.json";
 import { level1Admin_CA, level1Admin_US } from "../src/data/level1-administrative-codes";
-import { POSTAL_CODE_OVERRIDES } from "../src/data/postal-codes";
+import { POSTAL_CODE_DATA } from "../src/data/postal-codes";
 import { getConsumptionTaxConfig, hasRegionalTax, TAX_CONFIG } from "../src/utils/tax";
 
 const README = new URL("../README.md", import.meta.url).pathname;
@@ -35,31 +34,13 @@ const HEADERS = [
 // Columns that make up a row's data signature (everything a human verifies).
 const DATA_COLS = HEADERS.slice(3);
 
-// Seeded PRNG so generated postal examples stay stable across runs (otherwise
-// every regeneration would spuriously flag every postcoded country).
-let seed = 1337;
-Math.random = (() => {
-  seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-  return seed / 0x7fffffff;
-}) as typeof Math.random;
-
 const regionLabel = (cc: string, code: string): string => {
   const list = cc === "US" ? level1Admin_US : cc === "CA" ? level1Admin_CA : [];
   return list.find((o) => o.value === code)?.label ?? code;
 };
 
-function postalExample(code: string, regex: string): string {
-  const curated = POSTAL_CODE_OVERRIDES[code]?.placeholder;
-  if (curated) return curated;
-  try {
-    const re = new RandExp(regex.replace(/\s+$/, ""));
-    re.max = 1;
-    for (let i = 0; i < 8; i++) {
-      const out = re.gen().trim();
-      if (out) return out;
-    }
-  } catch {}
-  return "?";
+function postalExample(code: string): string {
+  return POSTAL_CODE_DATA[code]?.placeholder ?? "?";
 }
 
 function vatCell(code: string): string {
@@ -105,7 +86,7 @@ function buildRows(): Row[] {
 
     const addressFmt = "✅";
     const vat = vatCell(code);
-    const postal = c.postalCodeRegex ? `✅ (${postalExample(code, c.postalCodeRegex)})` : "❌";
+    const postal = c.postalCodeRegex ? `✅ (${postalExample(code)})` : "❌";
     const l1 = levelCell(c.administrativeLabels?.level1);
     const l2 = levelCell(c.administrativeLabels?.level2);
 

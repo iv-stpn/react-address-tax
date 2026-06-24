@@ -18,7 +18,7 @@ import {
   level1Admin_JP,
   level1Admin_US,
 } from "../data/level1-administrative-codes";
-import { POSTAL_CODE_OVERRIDES } from "../data/postal-codes";
+import { POSTAL_CODE_DATA } from "../data/postal-codes";
 
 export type { CountryCode };
 // Re-export the generated country code list and union type so consumers can
@@ -73,7 +73,7 @@ export interface CountryAddressConfig {
 }
 
 // Default field labels and placeholders. Per-country overrides for the postal
-// code and city fields live in POSTAL_CODE_OVERRIDES; the level-1 label is
+// code and city fields live in POSTAL_CODE_DATA; the level-1 label is
 // derived from COUNTRY_DATA. line1/line2 use the generic labels/placeholders
 // below for every country except those listed in LINE_OVERRIDES.
 const LINE1_LABEL_DEFAULT = "Address line 1";
@@ -142,9 +142,9 @@ export function addressFieldLabel(code: string, key: AddressFieldKey): string {
     case "line2":
       return LINE_OVERRIDES[code]?.line2Label ?? LINE2_LABEL_DEFAULT;
     case "city":
-      return POSTAL_CODE_OVERRIDES[code]?.cityLabel ?? CITY_LABEL_DEFAULT;
+      return POSTAL_CODE_DATA[code]?.cityLabel ?? CITY_LABEL_DEFAULT;
     case "postalCode":
-      return POSTAL_CODE_OVERRIDES[code]?.label ?? POSTAL_CODE_LABEL_DEFAULT;
+      return POSTAL_CODE_DATA[code]?.label ?? POSTAL_CODE_LABEL_DEFAULT;
     case "level1":
       return COUNTRY_DATA[code as CountryCode]?.administrativeLabels.level1?.en ?? "Region";
     case "country":
@@ -178,7 +178,7 @@ export function resolveAddressField(code: string, key: AddressFieldKey, requireL
     field.placeholder = LINE_OVERRIDES[code]?.line2Placeholder ?? LINE2_PLACEHOLDER_DEFAULT;
   }
   if (key === "postalCode") {
-    const placeholder = POSTAL_CODE_OVERRIDES[code]?.placeholder;
+    const placeholder = POSTAL_CODE_DATA[code]?.placeholder;
     if (placeholder) field.placeholder = placeholder;
   }
   if (key === "level1") {

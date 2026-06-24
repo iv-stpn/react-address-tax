@@ -87,7 +87,7 @@ export const BO: Story = () => <AddressTaxWrapper taxType="individual" defaultCo
 BO.storyName = "Bolivia";
 
 export const BQ: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="BQ" />;
-BQ.storyName = "Bonaire, Saint Eustatius and Saba ";
+BQ.storyName = "Bonaire Saint Eustatius and Saba ";
 
 export const BA: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="BA" />;
 BA.storyName = "Bosnia and Herzegovina";
@@ -467,9 +467,6 @@ NR.storyName = "Nauru";
 export const NP: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="NP" />;
 NP.storyName = "Nepal";
 
-export const AN: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="AN" />;
-AN.storyName = "Netherlands Antilles";
-
 export const NC: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="NC" />;
 NC.storyName = "New Caledonia";
 
@@ -599,9 +596,6 @@ SN.storyName = "Senegal";
 export const RS: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="RS" />;
 RS.storyName = "Serbia";
 
-export const CS: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="CS" />;
-CS.storyName = "Serbia and Montenegro";
-
 export const SC: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="SC" />;
 SC.storyName = "Seychelles";
 
@@ -708,7 +702,7 @@ export const TV: Story = () => <AddressTaxWrapper taxType="individual" defaultCo
 TV.storyName = "Tuvalu";
 
 export const VI: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="VI" />;
-VI.storyName = "U.S. Virgin Islands";
+VI.storyName = "US Virgin Islands";
 
 export const UG: Story = () => <AddressTaxWrapper taxType="individual" defaultCountry="UG" />;
 UG.storyName = "Uganda";
