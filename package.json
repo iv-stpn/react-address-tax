@@ -42,6 +42,7 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "bun run build && bun run typecheck",
     "ladle": "ladle serve",
+    "ladle:build": "ladle build --base /react-address-tax/",
     "gen:geonames": "bun run scripts/gen-geonames.ts",
     "gen:level1": "bun run scripts/gen-level1-codes.ts",
     "gen:countries": "bun run scripts/gen-countries.ts",
