@@ -14,14 +14,15 @@ import type {
 	RenderSelectProps,
 } from "../../types.js";
 import type {
-	AddressFieldConfig,
+	AddressFieldKey,
 	CountryAddressConfig,
-} from "../../utils/countries.js";
+} from "../../utils/address.js";
 import {
-	COUNTRY_LIST,
+	ALL_COUNTRY_OPTIONS,
 	getCountryConfig,
 	isEUCountry,
-} from "../../utils/countries.js";
+	resolveAddressField,
+} from "../../utils/address.js";
 import { hasRegionalTax } from "../../utils/tax.js";
 import type { ValidationError } from "../../utils/validation.js";
 import { validateAddress } from "../../utils/validation.js";
@@ -30,7 +31,7 @@ const EMPTY_VALUE: AddressValue = {
 	line1: "",
 	line2: "",
 	city: "",
-	state: "",
+	level1: "",
 	postalCode: "",
 	country: "",
 };
@@ -39,24 +40,40 @@ function computeEffectiveFields(
 	mode: AddressCollectionMode,
 	country: string,
 	countryConfig: CountryAddressConfig | undefined,
-): AddressFieldConfig[] {
+	requireLevel1 = false,
+): AddressFieldKey[] {
 	if (!country || !countryConfig) return [];
 	const allFields = countryConfig.addressFields;
 
+	// level1 is never optional: it is collected only when required, otherwise
+	// it is omitted entirely. `withLevel1` enforces that invariant on a base
+	// field list — adding level1 when required (even for countries whose config
+	// lacks it), and stripping it otherwise.
+	const withLevel1 = (
+		base: AddressFieldKey[],
+		required: boolean,
+	): AddressFieldKey[] => {
+		if (required) {
+			return base.includes("level1") ? base : [...base, "level1"];
+		}
+		return base.filter((f) => f !== "level1");
+	};
+
 	switch (mode) {
 		case "full":
-			return allFields;
+			return withLevel1(allFields, requireLevel1);
 		case "region":
-			return allFields.filter((f) => f.field === "state");
+			return requireLevel1 ? ["level1"] : [];
 		case "regionMinimal":
 			return isEUCountry(country)
-				? allFields
-				: allFields.filter((f) => f.field === "state");
+				? withLevel1(allFields, requireLevel1)
+				: requireLevel1
+					? ["level1"]
+					: [];
 		case "minimal":
 		default:
-			if (isEUCountry(country)) return allFields;
-			if (hasRegionalTax(country))
-				return allFields.filter((f) => f.field === "state");
+			if (isEUCountry(country)) return withLevel1(allFields, requireLevel1);
+			if (hasRegionalTax(country)) return requireLevel1 ? ["level1"] : [];
 			return [];
 	}
 }
@@ -66,6 +83,7 @@ export function AddressInput({
 	onChange,
 	onValidationChange,
 	mode = "full",
+	requireLevel1 = false,
 	disabled = false,
 	className,
 	classNames,
@@ -80,23 +98,23 @@ export function AddressInput({
 	const [errors, setErrors] = useState<ValidationError[]>([]);
 
 	const effectiveCountry = value.country || defaultCountry || "";
-	const effectiveState = value.state || defaultRegion || "";
+	const effectiveLevel1 = value.level1 || defaultRegion || "";
 	const currentValue = {
 		...EMPTY_VALUE,
 		...value,
 		country: effectiveCountry,
-		state: effectiveState,
+		level1: effectiveLevel1,
 	};
 	const countryConfig = getCountryConfig(currentValue.country);
 	const countryAtBottom = !!defaultCountry;
 
 	const runValidation = useCallback(
 		(val: AddressValue) => {
-			const result = validateAddress(val);
+			const result = validateAddress(val, { requireLevel1 });
 			setErrors(result.errors);
 			onValidationChange?.(result.valid, result.errors);
 		},
-		[onValidationChange],
+		[onValidationChange, requireLevel1],
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: only re-run on country change
@@ -108,7 +126,7 @@ export function AddressInput({
 		return (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 			const next: AddressValue = { ...currentValue, [field]: e.target.value };
 			if (field === "country") {
-				next.state = "";
+				next.level1 = "";
 				next.postalCode = "";
 			}
 			onChange(next);
@@ -129,6 +147,7 @@ export function AddressInput({
 		mode,
 		currentValue.country,
 		countryConfig,
+		requireLevel1,
 	);
 
 	// --- Default render helpers ---
@@ -224,7 +243,10 @@ export function AddressInput({
 			"aria-invalid": countryError !== undefined,
 			"aria-describedby": countryError ? `${countryId}-error` : undefined,
 			className: cn("rav-select", classNames?.select),
-			options: COUNTRY_LIST.map((c) => ({ value: c.code, label: c.name })),
+			options: ALL_COUNTRY_OPTIONS.map((c) => ({
+				value: c.code,
+				label: c.name,
+			})),
 			placeholder: "— Select a country —",
 		}),
 	});
@@ -234,20 +256,25 @@ export function AddressInput({
 			{!countryAtBottom && countrySelector}
 
 			{countryConfig &&
-				effectiveFieldOrder.map((fieldCfg) => {
-					const fieldKey = fieldCfg.field as keyof AddressValue;
-					const error = getError(fieldCfg.field);
-					const inputId = `rav-${fieldCfg.field}`;
+				effectiveFieldOrder.map((fieldKey) => {
+					const fieldCfg = resolveAddressField(
+						currentValue.country,
+						fieldKey,
+						requireLevel1,
+					);
+					const error = getError(fieldKey);
+					const inputId = `rav-${fieldKey}`;
 					const currentFieldValue =
-						(currentValue[fieldKey] as string | undefined) ?? "";
+						(currentValue[fieldKey as keyof AddressValue] as
+							| string
+							| undefined) ?? "";
 
 					const inputElement = fieldCfg.options
 						? renderSelectEl({
 								id: inputId,
 								value: currentFieldValue,
 								onChange: handleField(fieldKey),
-								onBlur: () =>
-									setTouched((t) => ({ ...t, [fieldCfg.field]: true })),
+								onBlur: () => setTouched((t) => ({ ...t, [fieldKey]: true })),
 								disabled,
 								required: fieldCfg.required,
 								"aria-invalid": error !== undefined,
@@ -260,8 +287,7 @@ export function AddressInput({
 								id: inputId,
 								value: currentFieldValue,
 								onChange: handleField(fieldKey),
-								onBlur: () =>
-									setTouched((t) => ({ ...t, [fieldCfg.field]: true })),
+								onBlur: () => setTouched((t) => ({ ...t, [fieldKey]: true })),
 								placeholder: fieldCfg.placeholder,
 								disabled,
 								required: fieldCfg.required,
@@ -271,10 +297,10 @@ export function AddressInput({
 							});
 
 					return (
-						<Fragment key={fieldCfg.field}>
+						<Fragment key={fieldKey}>
 							{renderContainerEl({
 								id: inputId,
-								fieldKey: fieldCfg.field,
+								fieldKey,
 								label: fieldCfg.label,
 								required: fieldCfg.required,
 								error,

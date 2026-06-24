@@ -2,7 +2,7 @@
 // Types
 // ---------------------------------------------------------------------------
 
-import type { CountryCode } from "./countries.js";
+import type { SupportedCountryCode } from "./address.js";
 
 /**
  * How a jurisdiction's consumption tax is collected:
@@ -52,7 +52,23 @@ export interface ConsumptionTaxOutcome {
 	taxSystem: TaxSystem | null;
 	/** Local name of the tax (e.g. "TVA", "GST"), or null when not applicable. */
 	taxName: string | null;
-	rate: number | null;
+	/**
+	 * Consumption tax rate (%) that would apply if the seller had a nexus in the
+	 * resolved jurisdiction — the headline rate for this transaction, reverse-
+	 * charge aware (B2B with a valid ID, or a zero-rated export → 0) but NOT
+	 * gated by nexus. null when the rate can't be resolved: no/unknown country,
+	 * a regional country with no state selected, or a jurisdiction with no
+	 * consumption tax.
+	 */
+	baseTax: number | null;
+	/**
+	 * Rate the seller actually charges: {@link baseTax} when {@link hasNexus}, 0
+	 * otherwise. null only when {@link hasNexus} is true and {@link baseTax}
+	 * itself can't be resolved.
+	 */
+	effectiveTax: number | null;
+	/** Whether the seller has a nexus in the resolved country (mirrors the input). */
+	hasNexus: boolean;
 	/** Resolved state/province code, when one was supplied. */
 	state: string | null;
 	/** 0 = no threshold (always collect); positive = registration threshold in local currency; null = seller never collects. */
@@ -112,7 +128,7 @@ function regional(
 // Main tax config table
 // ---------------------------------------------------------------------------
 
-export const TAX_CONFIG: Record<CountryCode, CountryTaxEntry> = {
+export const TAX_CONFIG: Record<SupportedCountryCode, CountryTaxEntry> = {
 	// ---- EU member states (all 27, standard VAT rates as of 2025) -----------
 	AT: {
 		...eu(20, "MwSt"),
@@ -358,7 +374,7 @@ function isRegional(
 
 /** True when a country's tax rate varies by state/province. */
 export function hasRegionalTax(country: string): boolean {
-	const entry = TAX_CONFIG[country.toUpperCase() as CountryCode];
+	const entry = TAX_CONFIG[country.toUpperCase() as SupportedCountryCode];
 	return !!entry && isRegional(entry);
 }
 
@@ -370,7 +386,7 @@ export function hasRegionalTax(country: string): boolean {
 export function getConsumptionTaxConfig(
 	country: string,
 ): TaxConfig | undefined {
-	const entry = TAX_CONFIG[country.toUpperCase() as CountryCode];
+	const entry = TAX_CONFIG[country.toUpperCase() as SupportedCountryCode];
 	if (!entry) return undefined;
 	return isRegional(entry) ? Object.values(entry)[0] : entry;
 }
@@ -415,7 +431,9 @@ function makeFlags(partial: Partial<TaxOutcomeFlags>): TaxOutcomeFlags {
 const EMPTY_OUTCOME: ConsumptionTaxOutcome = {
 	taxSystem: null,
 	taxName: null,
-	rate: null,
+	baseTax: null,
+	effectiveTax: 0,
+	hasNexus: false,
 	state: null,
 	collectionThreshold: null,
 	flags: NO_FLAGS,
@@ -429,34 +447,44 @@ export function computeConsumptionTaxOutcome(
 	country: string,
 	isBusiness: boolean,
 	hasConsumptionTaxId: boolean,
+	hasNexus: boolean,
 	state?: string,
 ): ConsumptionTaxOutcome {
-	if (!country) return EMPTY_OUTCOME;
+	if (!country) return { ...EMPTY_OUTCOME, hasNexus };
 
-	const entry = TAX_CONFIG[country.toUpperCase() as CountryCode];
-	if (!entry) return EMPTY_OUTCOME;
+	const entry = TAX_CONFIG[country.toUpperCase() as SupportedCountryCode];
+	if (!entry) return { ...EMPTY_OUTCOME, hasNexus };
 
 	const { config, regionResolved } = resolveConfig(entry, state);
 	const base = {
 		taxSystem: config.taxSystem,
 		taxName: config.taxName,
 		state: state ? state.toUpperCase() : null,
+		hasNexus,
 	} as const;
+
+	// `effectiveTax` is `baseTax` when the seller has a nexus, else 0 — so the
+	// seller only charges when they actually have a collection obligation.
+	const effective = (b: number | null): number | null => (hasNexus ? b : 0);
 
 	// OSS countries reverse-charge B2B sales to identifier holders (invoice at
 	// 0%, buyer self-accounts), otherwise charge the standard rate.
 	if (config.taxSystem === "oss") {
 		if (isBusiness && hasConsumptionTaxId) {
+			const baseTax = 0;
 			return {
 				...base,
-				rate: 0,
+				baseTax,
+				effectiveTax: effective(baseTax),
 				collectionThreshold: null,
 				flags: makeFlags({ buyerSelfAccounts: true, invoiceAtZero: true }),
 			};
 		}
+		const baseTax = config.baseConsumerTax;
 		return {
 			...base,
-			rate: config.baseConsumerTax,
+			baseTax,
+			effectiveTax: effective(baseTax),
 			collectionThreshold: config.collectionThreshold,
 			flags: NO_FLAGS,
 		};
@@ -464,9 +492,11 @@ export function computeConsumptionTaxOutcome(
 
 	// Zero-rated exports (UK): invoice at 0%, buyer self-accounts.
 	if (config.zeroRatedExport) {
+		const baseTax = 0;
 		return {
 			...base,
-			rate: 0,
+			baseTax,
+			effectiveTax: effective(baseTax),
 			collectionThreshold: null,
 			flags: makeFlags({ buyerSelfAccounts: true, invoiceAtZero: true }),
 		};
@@ -474,11 +504,12 @@ export function computeConsumptionTaxOutcome(
 
 	// Country-specific: rate comes from the resolved region (when applicable).
 	const isRegionalCountry = isRegional(entry);
-	const rate =
+	const baseTax =
 		regionResolved || !isRegionalCountry ? config.baseConsumerTax : null;
 	return {
 		...base,
-		rate,
+		baseTax,
+		effectiveTax: effective(baseTax),
 		collectionThreshold: config.collectionThreshold,
 		flags: makeFlags({
 			regionalRates: isRegionalCountry,

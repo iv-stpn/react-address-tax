@@ -14,18 +14,17 @@ export type {
 	TaxType,
 } from "./types.js";
 export type {
-	AddressFieldConfig,
 	AddressFieldKey,
 	CountryAddressConfig,
-	CountryCode,
-} from "./utils/countries.js";
+	SupportedCountryCode as CountryCode,
+} from "./utils/address.js";
 export {
-	COUNTRIES,
-	COUNTRY_CODES,
+	COUNTRIES_ADDRESSES as COUNTRIES,
 	COUNTRY_LIST,
 	getConsumptionTaxLabel,
 	getCountryConfig,
-} from "./utils/countries.js";
+	SUPPORTED_COUNTRY_CODES as COUNTRY_CODES,
+} from "./utils/address.js";
 export type { ValidationError, ValidationResult } from "./utils/validation.js";
 export {
 	normalizeConsumptionTax,

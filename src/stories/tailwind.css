@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/*
+ * Tailwind v4's automatic source detection roots itself at Ladle's virtual app
+ * directory (inside node_modules), so it never finds the class names used in
+ * our stories and emits zero utilities. Point it at the source tree explicitly.
+ * Path is relative to this CSS file (src/stories/).
+ */
+@source "../**/*.{ts,tsx}";

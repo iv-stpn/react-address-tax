@@ -12,10 +12,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parròquia",
-				"en": "Parish"
+				"en": "Parish",
+				"local": "Parròquia"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Settlement",
+				"local": "Ciutat"
+			}
 		}
 	},
 	{
@@ -35,8 +38,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "إمارة",
-				"en": "Emirate"
+				"en": "Emirate",
+				"local": "إمارة"
 			},
 			"admin2": null
 		}
@@ -57,10 +60,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "ولایت",
-				"en": "Province"
+				"en": "Province",
+				"local": "ولایت"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "ولسوالی"
+			}
 		}
 	},
 	{
@@ -76,8 +82,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": "Parish"
+				"en": "Parish",
+				"local": "Parish"
 			},
 			"admin2": null
 		}
@@ -112,10 +118,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Qarku",
-				"en": "County"
+				"en": "County",
+				"local": "Qarku"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Rrethet"
+			}
 		}
 	},
 	{
@@ -131,10 +140,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Մարզ",
-				"en": "Region"
+				"en": "Province",
+				"local": "Մարզ"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Village",
+				"local": "Գյուղ"
+			}
 		}
 	},
 	{
@@ -168,10 +180,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Província",
-				"en": "Province"
+				"en": "Province",
+				"local": "Província"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Município"
+			}
 		}
 	},
 	{
@@ -206,10 +221,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provincia",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provincia"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Department",
+				"local": "Departamento"
+			}
 		}
 	},
 	{
@@ -227,10 +245,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": null
+				"en": "District",
+				"local": "District"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "County",
+				"local": "County"
+			}
 		}
 	},
 	{
@@ -249,10 +270,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Bundesland",
-				"en": "State"
+				"en": "Federal state",
+				"local": "Bundesland"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Bezirk"
+			}
 		}
 	},
 	{
@@ -268,10 +292,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "State",
-				"en": "State"
+				"en": "External territory",
+				"local": "External territory"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Local government area",
+				"local": "Local government area"
+			}
 		}
 	},
 	{
@@ -305,10 +332,7 @@
 			"sv-AX"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "Ekonomisk region",
-				"en": null
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -327,13 +351,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Rayonu",
-				"en": "Rayon"
+				"en": "District",
+				"local": "Rayonu"
 			},
-			"admin2": {
-				"local": "Rayonu",
-				"en": "Rayon"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -351,10 +372,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Administrativna podjela",
-				"en": "Entity"
+				"en": "Political division",
+				"local": "Administrativna podjela"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Region",
+				"local": "Regije Republike Srpske"
+			}
 		}
 	},
 	{
@@ -370,8 +394,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": "Parish"
+				"en": "Parish",
+				"local": "Parish"
 			},
 			"admin2": null
 		}
@@ -390,12 +414,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "বিভাগসমূহ",
-				"en": "Division"
+				"en": "Division",
+				"local": "বিভাগ"
 			},
 			"admin2": {
-				"local": "জেলা",
-				"en": "District"
+				"en": "District",
+				"local": "জেলা"
 			}
 		}
 	},
@@ -414,12 +438,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Gewest",
-				"en": "Region"
+				"en": "Region",
+				"local": "Gewest"
 			},
 			"admin2": {
-				"local": "Provincie",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provincie"
 			}
 		}
 	},
@@ -437,12 +461,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Region"
+				"en": "Region",
+				"local": "Région"
 			},
 			"admin2": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			}
 		}
 	},
@@ -461,10 +485,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Oбласт",
-				"en": "District"
+				"en": "Oblast",
+				"local": "Oбласт"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Община"
+			}
 		}
 	},
 	{
@@ -483,8 +510,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظة",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
 			"admin2": null
 		}
@@ -503,10 +530,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Commune",
+				"local": "Commune"
+			}
 		}
 	},
 	{
@@ -522,10 +552,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Département",
-				"en": "Department"
+				"en": "Department",
+				"local": "Département"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Commune",
+				"local": "Commune"
+			}
 		}
 	},
 	{
@@ -558,8 +591,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": null
+				"en": "Parish",
+				"local": "Parish"
 			},
 			"admin2": null
 		}
@@ -578,10 +611,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Daerah",
-				"en": "District"
+				"en": "District",
+				"local": "Daerah"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Mukim",
+				"local": "Mukim Negara"
+			}
 		}
 	},
 	{
@@ -599,10 +635,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departamento",
-				"en": "Department"
+				"en": "Department",
+				"local": "Departamento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Province",
+				"local": "Provincia"
+			}
 		}
 	},
 	{
@@ -619,10 +658,7 @@
 			"en"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "Eiland",
-				"en": "Special municipality"
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -642,10 +678,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Unidade federativa",
-				"en": "State"
+				"en": "Federative unit",
+				"local": "Unidade federativa"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Município"
+			}
 		}
 	},
 	{
@@ -661,8 +700,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": "District"
+				"en": "District",
+				"local": "District"
 			},
 			"admin2": null
 		}
@@ -680,10 +719,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "རྫོང་ཁག",
-				"en": "District"
+				"en": "District",
+				"local": "རྫོང་ཁག"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Gewog",
+				"local": ""
+			}
 		}
 	},
 	{
@@ -714,8 +756,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": "District"
+				"en": "District",
+				"local": "District"
 			},
 			"admin2": null
 		}
@@ -734,10 +776,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Вобласць",
-				"en": "Oblast"
+				"en": "Region",
+				"local": "Вобласць"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Раён"
+			}
 		}
 	},
 	{
@@ -754,8 +799,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": "District"
+				"en": "District",
+				"local": "District"
 			},
 			"admin2": null
 		}
@@ -775,10 +820,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Regional district",
+				"local": "Regional district"
+			}
 		}
 	},
 	{
@@ -816,10 +864,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provinces",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provinces"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Commune",
+				"local": "Commune"
+			}
 		}
 	},
 	{
@@ -838,8 +889,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Préfecture",
-				"en": "Prefecture"
+				"en": "Prefecture",
+				"local": "Préfecture"
 			},
 			"admin2": null
 		}
@@ -859,8 +910,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Département",
-				"en": "Department"
+				"en": "Department",
+				"local": "Département"
 			},
 			"admin2": null
 		}
@@ -881,10 +932,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Kanton",
-				"en": "Canton"
+				"en": "Canton",
+				"local": "Kanton"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Gemeinde"
+			}
 		}
 	},
 	{
@@ -900,8 +954,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": "District"
+				"en": "Region",
+				"local": "Région"
 			},
 			"admin2": null
 		}
@@ -936,10 +990,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Región",
-				"en": "Region"
+				"en": "Region",
+				"local": "Región"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Province",
+				"local": "Provincia"
+			}
 		}
 	},
 	{
@@ -956,10 +1013,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Electoral unit",
-				"en": "Region"
+				"en": "Electoral unit",
+				"local": "Electoral unit"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Department",
+				"local": "Department"
+			}
 		}
 	},
 	{
@@ -980,10 +1040,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "省",
-				"en": "Province"
+				"en": "Province",
+				"local": "省"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Prefecture-level city",
+				"local": "地级市"
+			}
 		}
 	},
 	{
@@ -999,10 +1062,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departamento",
-				"en": "Department"
+				"en": "Department",
+				"local": "Departamento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -1019,10 +1085,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Circunscripción electoral",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provincia"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Canton",
+				"local": "Cantón"
+			}
 		}
 	},
 	{
@@ -1058,10 +1127,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provincia",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provincia"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -1077,12 +1149,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Municipio",
-				"en": "Geographical region"
+				"en": "Concelho",
+				"local": "Municipio"
 			},
 			"admin2": {
-				"local": "Freguesia",
-				"en": "Municipality"
+				"en": "Freguesia",
+				"local": "Freguesia"
 			}
 		}
 	},
@@ -1136,10 +1208,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Επαρχία",
-				"en": "District"
+				"en": "District",
+				"local": "Επαρχία"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Community",
+				"local": "Κοινότητα"
+			}
 		}
 	},
 	{
@@ -1156,12 +1231,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Kraj",
-				"en": "Region"
+				"en": "Region",
+				"local": "Kraj"
 			},
 			"admin2": {
-				"local": "Okres",
-				"en": "District"
+				"en": "Municipal part",
+				"local": "Část obce"
 			}
 		}
 	},
@@ -1178,10 +1253,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Bundesland",
-				"en": "Land"
+				"en": "Federated state",
+				"local": "Bundesland"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Urban municipality",
+				"local": "Stadt"
+			}
 		}
 	},
 	{
@@ -1200,10 +1278,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Region"
+				"en": "Region",
+				"local": "Région"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Sub-prefecture",
+				"local": "Sous-préfecture"
+			}
 		}
 	},
 	{
@@ -1222,10 +1303,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Region",
-				"en": "Region"
+				"en": "County",
+				"local": "Dansk amt"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Kommune"
+			}
 		}
 	},
 	{
@@ -1241,8 +1325,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": "Parish"
+				"en": "Parish",
+				"local": "Parish"
 			},
 			"admin2": null
 		}
@@ -1260,13 +1344,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provincia",
-				"en": "Region"
+				"en": "Province",
+				"local": "Provincia"
 			},
-			"admin2": {
-				"local": "Municipio",
-				"en": "Province"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -1282,10 +1363,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "ولاية",
-				"en": "Province"
+				"en": "Province",
+				"local": "ولاية"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "دائرة"
+			}
 		}
 	},
 	{
@@ -1301,10 +1385,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provincia",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provincia"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Canton",
+				"local": "Cantón"
+			}
 		}
 	},
 	{
@@ -1321,13 +1408,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Maakond",
-				"en": "County"
+				"en": "County",
+				"local": "Maakond"
 			},
-			"admin2": {
-				"local": "Vald",
-				"en": "Rural municipality"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -1345,10 +1429,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظة",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Marka",
+				"local": "مركز"
+			}
 		}
 	},
 	{
@@ -1385,8 +1472,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "Region"
+				"en": "Region",
+				"local": ""
 			},
 			"admin2": null
 		}
@@ -1408,12 +1495,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Comunidad autónoma",
-				"en": "Autonomous community"
+				"en": "Autonomous community",
+				"local": "Comunidad autónoma"
 			},
 			"admin2": {
-				"local": "Provincia",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provincia"
 			}
 		}
 	},
@@ -1435,10 +1522,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "ከተማ",
-				"en": "Regional state"
+				"en": "Region",
+				"local": ""
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": ""
+			}
 		}
 	},
 	{
@@ -1456,10 +1546,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Maakunta",
-				"en": "Region"
+				"en": "Region",
+				"local": "Maakunta"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Kunta"
+			}
 		}
 	},
 	{
@@ -1476,13 +1569,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Division",
-				"en": "Division"
+				"en": "Division",
+				"local": "Division"
 			},
-			"admin2": {
-				"local": "Province",
-				"en": "Province"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -1522,8 +1612,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Electoral unit",
-				"en": "State"
+				"en": "State",
+				"local": "State"
 			},
 			"admin2": null
 		}
@@ -1541,10 +1631,7 @@
 			"da-FO"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "Oyggj",
-				"en": null
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -1567,12 +1654,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Metropolitan region"
+				"en": "Region",
+				"local": "Région"
 			},
 			"admin2": {
-				"local": "Département",
-				"en": "Metropolitan department"
+				"en": "Department",
+				"local": "Département"
 			}
 		}
 	},
@@ -1589,8 +1676,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
 			"admin2": null
 		}
@@ -1610,12 +1697,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Constituent country",
-				"en": "Country"
+				"en": "Constituent country",
+				"local": "Constituent country"
 			},
 			"admin2": {
-				"local": "Unitary authority area",
-				"en": "Unitary authority"
+				"en": "Council area",
+				"local": "Council area"
 			}
 		}
 	},
@@ -1632,8 +1719,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": "Parish"
+				"en": "Parish",
+				"local": "Parish"
 			},
 			"admin2": null
 		}
@@ -1654,10 +1741,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Მხარე",
-				"en": "Region"
+				"en": "Mkhare",
+				"local": "Მხარე"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Მუნიციპალიტეტი"
+			}
 		}
 	},
 	{
@@ -1672,8 +1762,14 @@
 			"fr-GF"
 		],
 		"divisionTypes": {
-			"admin1": null,
-			"admin2": null
+			"admin1": {
+				"en": "Arrondissement",
+				"local": "Arrondissement"
+			},
+			"admin2": {
+				"en": "Canton",
+				"local": "Canton"
+			}
 		}
 	},
 	{
@@ -1690,10 +1786,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": null
+				"en": "Island",
+				"local": "Island"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Parish",
+				"local": "Parish"
+			}
 		}
 	},
 	{
@@ -1712,10 +1811,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Region",
-				"en": "Region"
+				"en": "Region",
+				"local": "Region"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "District"
+			}
 		}
 	},
 	{
@@ -1752,8 +1854,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "Municipality"
+				"en": "Municipality",
+				"local": ""
 			},
 			"admin2": null
 		}
@@ -1775,8 +1877,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Region",
-				"en": "Division"
+				"en": "Region",
+				"local": "Region"
 			},
 			"admin2": null
 		}
@@ -1794,12 +1896,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Administrative region"
+				"en": "Region",
+				"local": "Région"
 			},
 			"admin2": {
-				"local": "Préfecture",
-				"en": "Prefecture"
+				"en": "Prefecture",
+				"local": "Préfecture"
 			}
 		}
 	},
@@ -1815,8 +1917,14 @@
 			"fr-GP"
 		],
 		"divisionTypes": {
-			"admin1": null,
-			"admin2": null
+			"admin1": {
+				"en": "Commune",
+				"local": "Commune"
+			},
+			"admin2": {
+				"en": "Canton",
+				"local": "Canton"
+			}
 		}
 	},
 	{
@@ -1834,13 +1942,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provincia",
-				"en": "Region"
+				"en": "Province",
+				"local": "Provincia"
 			},
-			"admin2": {
-				"local": null,
-				"en": "Province"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -1858,10 +1963,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Περιφέρεια",
-				"en": "Administrative region"
+				"en": "Religious community",
+				"local": "Θρησκευτική κοινότητα"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Regional unit",
+				"local": "Περιφερειακή ενότητα"
+			}
 		}
 	},
 	{
@@ -1893,10 +2001,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departamento",
-				"en": "Department"
+				"en": "Department",
+				"local": "Departamento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -1913,10 +2024,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Village",
-				"en": null
+				"en": "Village",
+				"local": "Village"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Village",
+				"local": "Village"
+			}
 		}
 	},
 	{
@@ -1933,13 +2047,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Região",
-				"en": "Province"
+				"en": "Region",
+				"local": "Região"
 			},
-			"admin2": {
-				"local": "Sector",
-				"en": "Region"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -1955,8 +2066,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Region",
-				"en": "Region"
+				"en": "Region",
+				"local": "Region"
 			},
 			"admin2": null
 		}
@@ -1977,8 +2088,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "香港政區",
-				"en": null
+				"en": "District",
+				"local": "香港政區"
 			},
 			"admin2": null
 		}
@@ -2012,10 +2123,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departamento",
-				"en": "Department"
+				"en": "Department",
+				"local": "Departamento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -2032,10 +2146,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Županija",
-				"en": "County"
+				"en": "County",
+				"local": "Županija"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Općina"
+			}
 		}
 	},
 	{
@@ -2052,10 +2169,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Depatman",
-				"en": "Department"
+				"en": "Department",
+				"local": "Depatman"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Arrondissement",
+				"local": "Lis awondisman"
+			}
 		}
 	},
 	{
@@ -2071,10 +2191,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Vármegye",
-				"en": "City with county rights"
+				"en": "County",
+				"local": "Vármegye"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Járás"
+			}
 		}
 	},
 	{
@@ -2093,12 +2216,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provinsi",
-				"en": "Geographical unit"
+				"en": "Province",
+				"local": "Provinsi"
 			},
 			"admin2": {
-				"local": "Kabupaten",
-				"en": "Province"
+				"en": "Regency",
+				"local": "Kabupaten"
 			}
 		}
 	},
@@ -2116,12 +2239,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "County",
+				"local": "County"
 			},
 			"admin2": {
-				"local": "County",
-				"en": "County"
+				"en": "Municipal district",
+				"local": "Municipal district"
 			}
 		}
 	},
@@ -2141,10 +2264,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "מחוזות",
-				"en": "District"
+				"en": "District",
+				"local": "מחוז"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Settlement",
+				"local": "התנחלות"
+			}
 		}
 	},
 	{
@@ -2160,10 +2286,7 @@
 			"gv"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "Parish",
-				"en": null
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -2205,10 +2328,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "State",
-				"en": "State"
+				"en": "State",
+				"local": "State"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "District"
+			}
 		}
 	},
 	{
@@ -2242,12 +2368,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظات",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
 			"admin2": {
-				"local": "قضاء",
-				"en": "Governorate"
+				"en": "District",
+				"local": "قضاء"
 			}
 		}
 	},
@@ -2265,10 +2391,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "استانهای",
-				"en": "Province"
+				"en": "Province",
+				"local": "استان"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "County",
+				"local": "شهرستان"
+			}
 		}
 	},
 	{
@@ -2289,13 +2418,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Landshlutar",
-				"en": "Region"
+				"en": "Constituency",
+				"local": "Kjördæmi"
 			},
-			"admin2": {
-				"local": "Sveitarfélög",
-				"en": "Municipality"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -2317,12 +2443,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Regione",
-				"en": "Region"
+				"en": "Region",
+				"local": "Regione"
 			},
 			"admin2": {
-				"local": "Provincia",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provincia"
 			}
 		}
 	},
@@ -2341,8 +2467,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": null
+				"en": "Parish",
+				"local": "Parish"
 			},
 			"admin2": null
 		}
@@ -2360,10 +2486,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": "Parish"
+				"en": "County",
+				"local": "County"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Parish",
+				"local": "Parish"
+			}
 		}
 	},
 	{
@@ -2380,8 +2509,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظة",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
 			"admin2": null
 		}
@@ -2399,10 +2528,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "都道府県",
-				"en": "Prefecture"
+				"en": "Prefecture",
+				"local": "都道府県"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "City",
+				"local": "日本の市"
+			}
 		}
 	},
 	{
@@ -2419,8 +2551,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "County",
-				"en": "County"
+				"en": "Province",
+				"local": "Province"
 			},
 			"admin2": null
 		}
@@ -2439,10 +2571,7 @@
 			"ru"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "Облустары",
-				"en": "Region"
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -2461,10 +2590,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "ខេត្តនៃកម្ពុជា",
-				"en": "Province"
+				"en": "Province",
+				"local": "ខេត្តនៃកម្ពុជា"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": ""
+			}
 		}
 	},
 	{
@@ -2480,10 +2612,7 @@
 			"gil"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "Island group",
-				"en": "Group of islands (20 inhabited islands)"
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -2501,8 +2630,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "جزيرة",
-				"en": "Island"
+				"en": "Volcanic island",
+				"local": "جزيرة"
 			},
 			"admin2": null
 		}
@@ -2520,13 +2649,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": "State"
+				"en": "Parish",
+				"local": "Parish"
 			},
-			"admin2": {
-				"local": null,
-				"en": "Parish"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -2542,10 +2668,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "도",
-				"en": "Province"
+				"en": "Province",
+				"local": "도"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "County",
+				"local": "군"
+			}
 		}
 	},
 	{
@@ -2562,10 +2691,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "광역시",
-				"en": "Province"
+				"en": "Metropolitan city",
+				"local": "광역시"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "County",
+				"local": "군"
+			}
 		}
 	},
 	{
@@ -2582,8 +2714,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظات",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
 			"admin2": null
 		}
@@ -2618,8 +2750,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Облыс",
-				"en": "Region"
+				"en": "Region",
+				"local": "Облыс"
 			},
 			"admin2": null
 		}
@@ -2639,10 +2771,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "ແຂວງຂອງປະເທດລາວ",
-				"en": "Province"
+				"en": "Province",
+				"local": "ແຂວງຂອງປະເທດລາວ"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "ເມືອງ"
+			}
 		}
 	},
 	{
@@ -2661,8 +2796,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظة",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
 			"admin2": null
 		}
@@ -2680,8 +2815,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Quarter",
-				"en": "District"
+				"en": "Quarter",
+				"local": "Quarter"
 			},
 			"admin2": null
 		}
@@ -2699,8 +2834,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Gemeinde",
-				"en": "Commune"
+				"en": "Municipality",
+				"local": "Gemeinde"
 			},
 			"admin2": null
 		}
@@ -2720,12 +2855,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "පළාත්",
-				"en": "Province"
+				"en": "Province",
+				"local": "පළාත"
 			},
 			"admin2": {
-				"local": "පරිපාලන දිස්ත්රික්ක",
-				"en": "District"
+				"en": "District",
+				"local": "පරිපාලන දිස්ත්රික්කය"
 			}
 		}
 	},
@@ -2742,8 +2877,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "County",
-				"en": "County"
+				"en": "County",
+				"local": "County"
 			},
 			"admin2": null
 		}
@@ -2764,8 +2899,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": "District"
+				"en": "District",
+				"local": "District"
 			},
 			"admin2": null
 		}
@@ -2785,12 +2920,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Apskritis",
-				"en": "County"
+				"en": "District municipality",
+				"local": "Rajono savivaldybė"
 			},
 			"admin2": {
-				"local": "Rajono savivaldybė",
-				"en": "District municipality"
+				"en": "Eldership",
+				"local": "Seniūnija"
 			}
 		}
 	},
@@ -2809,10 +2944,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Kanton",
-				"en": "Canton"
+				"en": "Canton",
+				"local": "Kanton"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Gemeng"
+			}
 		}
 	},
 	{
@@ -2830,10 +2968,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Bijušais novads",
-				"en": "Municipality"
+				"en": "Municipality",
+				"local": "Novads"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Parish",
+				"local": "Pagasts"
+			}
 		}
 	},
 	{
@@ -2851,8 +2992,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "شعبيات",
-				"en": "Popularate"
+				"en": "District",
+				"local": "شعبية"
 			},
 			"admin2": null
 		}
@@ -2872,12 +3013,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "جهة",
-				"en": "Region"
+				"en": "Region",
+				"local": "جهة"
 			},
 			"admin2": {
-				"local": "أقاليم",
-				"en": "Province"
+				"en": "Province",
+				"local": "إقليم"
 			}
 		}
 	},
@@ -2896,8 +3037,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "Quarter"
+				"en": "Commune",
+				"local": "Commune"
 			},
 			"admin2": null
 		}
@@ -2918,10 +3059,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Raion",
-				"en": "District"
+				"en": "District",
+				"local": "Raion"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Village",
+				"local": "Sat"
+			}
 		}
 	},
 	{
@@ -2942,8 +3086,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Општина",
-				"en": "Municipality"
+				"en": "Municipality",
+				"local": "Општина"
 			},
 			"admin2": null
 		}
@@ -2978,10 +3122,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "District"
+			}
 		}
 	},
 	{
@@ -2998,13 +3145,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "Chain (of islands)"
+				"en": "Reef island",
+				"local": ""
 			},
-			"admin2": {
-				"local": null,
-				"en": "Municipality"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -3024,10 +3168,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Општина",
-				"en": "Municipality"
+				"en": "Municipality",
+				"local": "Општина"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Општина"
+			}
 		}
 	},
 	{
@@ -3044,10 +3191,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Régions",
-				"en": "Region"
+				"en": "Region",
+				"local": "Régions"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Human settlement",
+				"local": "Établissement humain"
+			}
 		}
 	},
 	{
@@ -3063,8 +3213,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "တိုင်းဒေသကြီး",
-				"en": "Region"
+				"en": "Region",
+				"local": "တိုင်းဒေသကြီး"
 			},
 			"admin2": null
 		}
@@ -3083,10 +3233,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Аймаг",
-				"en": "Province"
+				"en": "Province",
+				"local": "Аймаг"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Сум"
+			}
 		}
 	},
 	{
@@ -3103,10 +3256,7 @@
 			"pt"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "澳门的堂区",
-				"en": null
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -3126,7 +3276,10 @@
 			"en-MP"
 		],
 		"divisionTypes": {
-			"admin1": null,
+			"admin1": {
+				"en": "Municipality",
+				"local": ""
+			},
 			"admin2": null
 		}
 	},
@@ -3142,8 +3295,14 @@
 			"fr-MQ"
 		],
 		"divisionTypes": {
-			"admin1": null,
-			"admin2": null
+			"admin1": {
+				"en": "Commune",
+				"local": "Commune"
+			},
+			"admin2": {
+				"en": "Canton",
+				"local": "Canton"
+			}
 		}
 	},
 	{
@@ -3164,10 +3323,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "ولاية",
-				"en": "Region"
+				"en": "Region",
+				"local": "ولاية"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Department",
+				"local": "مقاطعة"
+			}
 		}
 	},
 	{
@@ -3182,10 +3344,7 @@
 			"en-MS"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "Parish",
-				"en": null
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -3203,10 +3362,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Raħal",
-				"en": "Local council"
+				"en": "Region",
+				"local": "Reġjuni ta"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Town",
+				"local": "Raħal"
+			}
 		}
 	},
 	{
@@ -3224,8 +3386,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": "District"
+				"en": "District",
+				"local": "District"
 			},
 			"admin2": null
 		}
@@ -3244,8 +3406,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "އަތޮޅުތައް",
-				"en": "Administrative atoll"
+				"en": "Atoll",
+				"local": "އަތޮޅުތައް"
 			},
 			"admin2": null
 		}
@@ -3266,12 +3428,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "Region"
+				"en": "Region",
+				"local": ""
 			},
 			"admin2": {
-				"local": "Madera",
-				"en": "District"
+				"en": "District",
+				"local": "Madera"
 			}
 		}
 	},
@@ -3288,10 +3450,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Estado",
-				"en": "State"
+				"en": "State",
+				"local": "Estado"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -3314,10 +3479,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Negeri",
-				"en": "State"
+				"en": "State",
+				"local": "Negeri"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Division",
+				"local": "Bahagian"
+			}
 		}
 	},
 	{
@@ -3334,10 +3502,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Província",
-				"en": "Province"
+				"en": "Province",
+				"local": "Província"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Distritos"
+			}
 		}
 	},
 	{
@@ -3357,10 +3528,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Region",
-				"en": "Region"
+				"en": "Region",
+				"local": "Region"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Constituency",
+				"local": "Constituency"
+			}
 		}
 	},
 	{
@@ -3376,8 +3550,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": null
+				"en": "Commune",
+				"local": "Commune"
 			},
 			"admin2": null
 		}
@@ -3398,10 +3572,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Region"
+				"en": "Region",
+				"local": "Région"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Department",
+				"local": "Département"
+			}
 		}
 	},
 	{
@@ -3437,10 +3614,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "State",
-				"en": "State"
+				"en": "State",
+				"local": "State"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Local government area",
+				"local": "Local government area"
+			}
 		}
 	},
 	{
@@ -3457,10 +3637,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departamento",
-				"en": "Department"
+				"en": "Department",
+				"local": "Departamento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -3477,10 +3660,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provincie",
-				"en": "Province"
+				"en": "Country",
+				"local": "Land"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Province",
+				"local": "Provincie"
+			}
 		}
 	},
 	{
@@ -3500,10 +3686,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "County"
+				"en": "County",
+				"local": ""
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": ""
+			}
 		}
 	},
 	{
@@ -3520,8 +3709,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "Province"
+				"en": "Province",
+				"local": "प्रदेश"
 			},
 			"admin2": null
 		}
@@ -3540,8 +3729,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "District"
+				"en": "District",
+				"local": ""
 			},
 			"admin2": null
 		}
@@ -3577,10 +3766,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Region",
-				"en": "Region"
+				"en": "Region",
+				"local": "Region"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "District"
+			}
 		}
 	},
 	{
@@ -3599,8 +3791,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظة",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
 			"admin2": null
 		}
@@ -3619,10 +3811,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provincia",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provincia"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Distrito"
+			}
 		}
 	},
 	{
@@ -3640,10 +3835,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departmento",
-				"en": "Region"
+				"en": "Department",
+				"local": "Departmento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Province",
+				"local": "Provincia"
+			}
 		}
 	},
 	{
@@ -3660,10 +3858,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Subdivision administrative",
-				"en": null
+				"en": "Commune",
+				"local": "Commune"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Commune",
+				"local": "Commune"
+			}
 		}
 	},
 	{
@@ -3682,10 +3883,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "District"
+			}
 		}
 	},
 	{
@@ -3723,12 +3927,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Rehiyon",
-				"en": "Region"
+				"en": "Region",
+				"local": "Rehiyon"
 			},
 			"admin2": {
-				"local": "Lalawigan",
-				"en": "Province"
+				"en": "Province",
+				"local": "Lalawigan"
 			}
 		}
 	},
@@ -3750,10 +3954,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "صوبہ",
-				"en": "Province"
+				"en": "Province",
+				"local": "صوبہ"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Division",
+				"local": "ڈویژن"
+			}
 		}
 	},
 	{
@@ -3769,10 +3976,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Województwo",
-				"en": "Voivodship"
+				"en": "Voivodeship",
+				"local": "Województwo"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Powiat",
+				"local": "Powiat"
+			}
 		}
 	},
 	{
@@ -3788,10 +3998,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Division administrative de deuxième niveau",
-				"en": null
+				"en": "Commune",
+				"local": "Commune"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Island",
+				"local": "Île"
+			}
 		}
 	},
 	{
@@ -3824,8 +4037,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Municipality",
-				"en": null
+				"en": "Municipality",
+				"local": "Municipality"
 			},
 			"admin2": null
 		}
@@ -3843,10 +4056,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "منطقة",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Governorate",
+				"local": "محافظة"
+			}
 		}
 	},
 	{
@@ -3863,10 +4079,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Distrito",
-				"en": "District"
+				"en": "District",
+				"local": "Distrito"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Município"
+			}
 		}
 	},
 	{
@@ -3888,8 +4107,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "State"
+				"en": "State",
+				"local": ""
 			},
 			"admin2": null
 		}
@@ -3908,10 +4127,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departamento",
-				"en": "Department"
+				"en": "Department",
+				"local": "Departamento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -3928,10 +4150,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "بلديات",
-				"en": "Municipality"
+				"en": "Municipality",
+				"local": "بلدية"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Village",
+				"local": "قرية"
+			}
 		}
 	},
 	{
@@ -3946,8 +4171,14 @@
 			"fr-RE"
 		],
 		"divisionTypes": {
-			"admin1": null,
-			"admin2": null
+			"admin1": {
+				"en": "Arrondissement",
+				"local": "Arrondissement"
+			},
+			"admin2": {
+				"en": "Canton",
+				"local": "Canton"
+			}
 		}
 	},
 	{
@@ -3965,10 +4196,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Județ",
-				"en": "Department"
+				"en": "County",
+				"local": "Județ"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Commune",
+				"local": "Comună"
+			}
 		}
 	},
 	{
@@ -3987,12 +4221,12 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Округ",
-				"en": "District"
+				"en": "District",
+				"local": "Округ"
 			},
 			"admin2": {
-				"local": "Округ",
-				"en": "District"
+				"en": "Municipality / city",
+				"local": "Општина / град"
 			}
 		}
 	},
@@ -4031,10 +4265,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Субъект",
-				"en": "Administrative region"
+				"en": "Federal subject",
+				"local": "Субъект"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipal district",
+				"local": "Муниципальный район"
+			}
 		}
 	},
 	{
@@ -4053,10 +4290,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Intara",
-				"en": "Province"
+				"en": "Province",
+				"local": "Intara"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Uturere tw"
+			}
 		}
 	},
 	{
@@ -4072,8 +4312,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "منطقة",
-				"en": "Region"
+				"en": "Province",
+				"local": "منطقة"
 			},
 			"admin2": null
 		}
@@ -4092,8 +4332,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
 			"admin2": null
 		}
@@ -4112,8 +4352,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": "District"
+				"en": "District",
+				"local": "District"
 			},
 			"admin2": null
 		}
@@ -4133,8 +4373,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "ولاية",
-				"en": "State"
+				"en": "State",
+				"local": "ولاية"
 			},
 			"admin2": null
 		}
@@ -4155,10 +4395,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Län",
-				"en": "County"
+				"en": "County",
+				"local": "Län"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Kommun"
+			}
 		}
 	},
 	{
@@ -4194,8 +4437,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "First-level administrative division",
-				"en": "Geographical entity"
+				"en": "Island",
+				"local": "Island"
 			},
 			"admin2": null
 		}
@@ -4214,8 +4457,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Občina",
-				"en": "Municipality"
+				"en": "Municipality",
+				"local": "Občina"
 			},
 			"admin2": null
 		}
@@ -4251,10 +4494,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Kraje",
-				"en": "Region"
+				"en": "Region",
+				"local": "Kraje"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Okres"
+			}
 		}
 	},
 	{
@@ -4272,8 +4518,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
 			"admin2": null
 		}
@@ -4291,8 +4537,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Castelli",
-				"en": "Municipality"
+				"en": "Municipality",
+				"local": "Castelli"
 			},
 			"admin2": null
 		}
@@ -4313,10 +4559,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Region"
+				"en": "Region",
+				"local": "Région"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Department",
+				"local": "Département"
+			}
 		}
 	},
 	{
@@ -4335,10 +4584,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Gobolada",
-				"en": "Region"
+				"en": "Region",
+				"local": "Gobolada"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": ""
+			}
 		}
 	},
 	{
@@ -4358,10 +4610,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": "District"
+				"en": "District",
+				"local": "District"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Ressort",
+				"local": "Ressort"
+			}
 		}
 	},
 	{
@@ -4377,8 +4632,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "State",
-				"en": "State"
+				"en": "State",
+				"local": "State"
 			},
 			"admin2": null
 		}
@@ -4396,10 +4651,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Divisões administrativas autónomas",
-				"en": "District"
+				"en": "Electoral unit",
+				"local": "Círculo eleitoral"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Distritos"
+			}
 		}
 	},
 	{
@@ -4415,10 +4673,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departamento",
-				"en": "Department"
+				"en": "Department",
+				"local": "Departamento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -4456,10 +4717,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظة",
-				"en": "Province"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "منطقة"
+			}
 		}
 	},
 	{
@@ -4476,8 +4740,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Region",
-				"en": "Region"
+				"en": "Region",
+				"local": "Region"
 			},
 			"admin2": null
 		}
@@ -4513,10 +4777,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Province"
+				"en": "Province",
+				"local": "Région"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Department",
+				"local": "Départements"
+			}
 		}
 	},
 	{
@@ -4532,10 +4799,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "District",
-				"en": null
+				"en": "District",
+				"local": "District"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Island",
+				"local": "Île"
+			}
 		}
 	},
 	{
@@ -4556,10 +4826,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Région",
-				"en": "Region"
+				"en": "Region",
+				"local": "Région"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Prefecture",
+				"local": "Préfecture"
+			}
 		}
 	},
 	{
@@ -4576,10 +4849,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "จังหวัดของประเทศไทย",
-				"en": "Province"
+				"en": "Province",
+				"local": "จังหวัด"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Amphoe",
+				"local": "อำเภอ"
+			}
 		}
 	},
 	{
@@ -4596,10 +4872,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Вилоятҳои",
-				"en": "Region"
+				"en": "Region",
+				"local": "Вилоят"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Ноҳия"
+			}
 		}
 	},
 	{
@@ -4635,8 +4914,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Munisipiu",
-				"en": "Municipality"
+				"en": "Municipality",
+				"local": "Munisipiu"
 			},
 			"admin2": null
 		}
@@ -4656,10 +4935,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Welaýatlary",
-				"en": "Region"
+				"en": "Region",
+				"local": "Welaýatlary"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Etraplar we şäherler"
+			}
 		}
 	},
 	{
@@ -4676,10 +4958,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "ولاية",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "ولاية"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Delegation",
+				"local": "معتمدية"
+			}
 		}
 	},
 	{
@@ -4696,8 +4981,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "Division"
+				"en": "Division",
+				"local": ""
 			},
 			"admin2": null
 		}
@@ -4719,10 +5004,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Il",
-				"en": "Province"
+				"en": "Province",
+				"local": "Il"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Ilçe"
+			}
 		}
 	},
 	{
@@ -4742,8 +5030,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Regional corporation",
-				"en": "Region"
+				"en": "Regional corporation",
+				"local": "Regional corporation"
 			},
 			"admin2": null
 		}
@@ -4763,10 +5051,7 @@
 			"gil"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": null,
-				"en": "Island council"
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -4786,10 +5071,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "统计领土实体",
-				"en": "County"
+				"en": "City",
+				"local": "城市"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "區"
+			}
 		}
 	},
 	{
@@ -4807,10 +5095,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Mikoa",
-				"en": "Region"
+				"en": "Region",
+				"local": "Mikoa"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Wilaya za"
+			}
 		}
 	},
 	{
@@ -4830,10 +5121,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Область",
-				"en": "Region"
+				"en": "Oblast",
+				"local": "Область"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Raion",
+				"local": "Район"
+			}
 		}
 	},
 	{
@@ -4852,13 +5146,10 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Region",
-				"en": "Geographical region"
+				"en": "District",
+				"local": "District"
 			},
-			"admin2": {
-				"local": "District",
-				"en": "District"
-			}
+			"admin2": null
 		}
 	},
 	{
@@ -4874,8 +5165,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Insular area",
-				"en": "Islands, groups of islands"
+				"en": "Insular area",
+				"local": "Insular area"
 			},
 			"admin2": null
 		}
@@ -4896,10 +5187,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "State",
-				"en": "State"
+				"en": "State",
+				"local": "State"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "County",
+				"local": "County"
+			}
 		}
 	},
 	{
@@ -4915,10 +5209,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Departamento",
-				"en": "Department"
+				"en": "Department",
+				"local": "Departamento"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -4936,10 +5233,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Viloyatlari",
-				"en": "Region"
+				"en": "Region",
+				"local": "Viloyatlari"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "Tuman"
+			}
 		}
 	},
 	{
@@ -4974,8 +5274,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Parish",
-				"en": "Parish"
+				"en": "Parish",
+				"local": "Parish"
 			},
 			"admin2": null
 		}
@@ -4993,10 +5293,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Estado",
-				"en": "State"
+				"en": "State",
+				"local": "Estado"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Municipality",
+				"local": "Municipio"
+			}
 		}
 	},
 	{
@@ -5027,10 +5330,7 @@
 			"en-VI"
 		],
 		"divisionTypes": {
-			"admin1": {
-				"local": "Census district",
-				"en": null
-			},
+			"admin1": null,
 			"admin2": null
 		}
 	},
@@ -5051,10 +5351,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Tỉnh",
-				"en": "Province"
+				"en": "Province",
+				"local": "Tỉnh"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Rural district",
+				"local": "Huyện"
+			}
 		}
 	},
 	{
@@ -5072,8 +5375,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Provens",
-				"en": "Province"
+				"en": "Province",
+				"local": "Provens"
 			},
 			"admin2": null
 		}
@@ -5093,8 +5396,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "Administrative precinct"
+				"en": "Customary kingdom",
+				"local": ""
 			},
 			"admin2": null
 		}
@@ -5113,8 +5416,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": null,
-				"en": "District"
+				"en": "District",
+				"local": ""
 			},
 			"admin2": null
 		}
@@ -5133,8 +5436,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Rajonet",
-				"en": null
+				"en": "Municipality",
+				"local": "Komunat"
 			},
 			"admin2": null
 		}
@@ -5152,10 +5455,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "محافظة",
-				"en": "Governorate"
+				"en": "Governorate",
+				"local": "محافظة"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District",
+				"local": "مديرية"
+			}
 		}
 	},
 	{
@@ -5171,10 +5477,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Division administrative de deuxième niveau",
-				"en": null
+				"en": "Canton",
+				"local": "Canton"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "Commune",
+				"local": "Commune"
+			}
 		}
 	},
 	{
@@ -5200,10 +5509,13 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Izifundazwe zaseNingizimu",
-				"en": "Province"
+				"en": "Province",
+				"local": "Izifundazwe zaseNingizimu"
 			},
-			"admin2": null
+			"admin2": {
+				"en": "District municipality",
+				"local": ""
+			}
 		}
 	},
 	{
@@ -5225,8 +5537,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
 			"admin2": null
 		}
@@ -5247,8 +5559,8 @@
 		],
 		"divisionTypes": {
 			"admin1": {
-				"local": "Province",
-				"en": "Province"
+				"en": "Province",
+				"local": "Province"
 			},
 			"admin2": null
 		}

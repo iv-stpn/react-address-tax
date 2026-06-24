@@ -1,5 +1,10 @@
+import { COUNTRY_DATA } from "../data/countries.js";
 import type { AddressValue } from "../types.js";
-import { getCountryConfig } from "./countries.js";
+import {
+	addressFieldLabel,
+	getCountryConfig,
+	isAddressFieldRequired,
+} from "./address.js";
 import { getConsumptionTaxConfig } from "./tax.js";
 
 export interface ValidationError {
@@ -31,27 +36,53 @@ export function validatePostalCode(
 	return config.postalCodePattern.test(postalCode.trim());
 }
 
-export function validateAddress(value: AddressValue): ValidationResult {
+export function validateAddress(
+	value: AddressValue,
+	options?: { requireLevel1?: boolean },
+): ValidationResult {
 	const errors: ValidationError[] = [];
+	const requireLevel1 = options?.requireLevel1 ?? false;
 	const config = getCountryConfig(value.country);
 
-	if (!config) {
+	// A country must be selected, and it must be a real country code. Countries
+	// without a detailed address config are still valid — only the country is
+	// collected for them — so we don't require a config here.
+	const countryCode = value.country.trim().toUpperCase();
+	if (!countryCode || !COUNTRY_DATA[countryCode]) {
 		errors.push({
 			field: "country",
-			message: "Please select a valid country.",
+			message: "Please select a country.",
 		});
 		return { valid: false, errors };
 	}
 
-	for (const fieldConfig of config.addressFields) {
-		if (!fieldConfig.required) continue;
-		const fieldValue = value[fieldConfig.field as keyof AddressValue];
+	if (!config) {
+		// Recognized country, but no detailed address fields to validate.
+		return { valid: true, errors };
+	}
+
+	for (const field of config.addressFields) {
+		if (!isAddressFieldRequired(field, requireLevel1)) continue;
+		const fieldValue = value[field as keyof AddressValue];
 		if (!fieldValue || String(fieldValue).trim() === "") {
 			errors.push({
-				field: fieldConfig.field,
-				message: `${fieldConfig.label} is required.`,
+				field,
+				message: `${addressFieldLabel(value.country, field)} is required.`,
 			});
 		}
+	}
+
+	// level1 may not be part of a country's addressFields, but when it's
+	// required it must still be collected and validated — never optional.
+	if (
+		requireLevel1 &&
+		!config.addressFields.includes("level1") &&
+		(!value.level1 || value.level1.trim() === "")
+	) {
+		errors.push({
+			field: "level1",
+			message: `${addressFieldLabel(value.country, "level1")} is required.`,
+		});
 	}
 
 	if (

@@ -6,13 +6,46 @@ import type {
 	RenderContainerProps,
 	RenderInputProps,
 } from "../../types.js";
-import { getConsumptionTaxLabel } from "../../utils/countries.js";
-import { getConsumptionTaxConfig } from "../../utils/tax.js";
+import { getConsumptionTaxLabel } from "../../utils/address.js";
+import {
+	computeConsumptionTaxOutcome,
+	getConsumptionTaxConfig,
+	hasRegionalTax,
+} from "../../utils/tax.js";
 import {
 	normalizeConsumptionTax,
 	validateConsumptionTax,
 } from "../../utils/validation.js";
 import { AddressInput } from "../AddressInput/index.js";
+
+/**
+ * Resolve the two tax-rate states for a given buyer/jurisdiction:
+ * - `baseTax`: the rate that would apply if the seller had a nexus here (the
+ *   headline rate for the buyer, accounting for B2B reverse charge).
+ * - `effectiveTax`: `baseTax` when the seller actually has a nexus, else 0.
+ *
+ * The rate is computed under the hypothetical "seller has nexus" assumption, so
+ * `hasTaxIdentifier` only gates the reverse-charge treatment — not collection.
+ */
+function computeTaxRates(
+	country: string,
+	level1: string | undefined,
+	isBusiness: boolean,
+	hasTaxIdentifier: boolean,
+	isInNexus: boolean,
+): { baseTax: number; effectiveTax: number } {
+	const outcome = computeConsumptionTaxOutcome(
+		country,
+		isBusiness,
+		isBusiness && hasTaxIdentifier,
+		isInNexus,
+		level1,
+	);
+	return {
+		baseTax: outcome.baseTax ?? 0,
+		effectiveTax: outcome.effectiveTax ?? 0,
+	};
+}
 
 export function AddressTaxInput({
 	addressValue,
@@ -68,12 +101,26 @@ export function AddressTaxInput({
 	const consumptionTaxId = taxValue.consumptionTaxId ?? "";
 	const hasIdentifier = showTaxFields && hasTaxIdentifier;
 
+	const { baseTax, effectiveTax } = computeTaxRates(
+		country,
+		addressValue.level1,
+		isBusiness,
+		hasTaxIdentifier,
+		isInNexus,
+	);
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: mount-only — emit initial computed state; handlers cover subsequent changes
 	useEffect(() => {
-		if (hasIdentifier !== (taxValue.hasIdentifier ?? false)) {
+		if (
+			hasIdentifier !== (taxValue.hasIdentifier ?? false) ||
+			baseTax !== taxValue.baseTax ||
+			effectiveTax !== taxValue.effectiveTax
+		) {
 			onConsumptionTaxChange?.({
 				consumptionTaxId: consumptionTaxId || undefined,
 				hasIdentifier,
+				baseTax,
+				effectiveTax,
 			});
 		}
 	}, []);
@@ -96,12 +143,26 @@ export function AddressTaxInput({
 			onConsumptionTaxChange?.({
 				consumptionTaxId: consumptionTaxId || undefined,
 				hasIdentifier: false,
+				...computeTaxRates(
+					country,
+					addressValue.level1,
+					false,
+					hasTaxIdentifier,
+					isInNexus,
+				),
 			});
 		} else {
 			const newHasIdentifier = isInNexus && !!country && hasTaxIdentifier;
 			onConsumptionTaxChange?.({
 				consumptionTaxId: consumptionTaxId || undefined,
 				hasIdentifier: newHasIdentifier,
+				...computeTaxRates(
+					country,
+					addressValue.level1,
+					true,
+					hasTaxIdentifier,
+					isInNexus,
+				),
 			});
 		}
 	}
@@ -114,11 +175,25 @@ export function AddressTaxInput({
 			onConsumptionTaxChange?.({
 				consumptionTaxId: undefined,
 				hasIdentifier: false,
+				...computeTaxRates(
+					country,
+					addressValue.level1,
+					isBusiness,
+					false,
+					isInNexus,
+				),
 			});
 		} else {
 			onConsumptionTaxChange?.({
 				consumptionTaxId: consumptionTaxId || undefined,
 				hasIdentifier: showTaxFields,
+				...computeTaxRates(
+					country,
+					addressValue.level1,
+					isBusiness,
+					true,
+					isInNexus,
+				),
 			});
 		}
 	}
@@ -129,10 +204,22 @@ export function AddressTaxInput({
 		const newInNexus = !nexusList || nexusList.includes(newCountry);
 		const newHasIdentifier =
 			isBusiness && newInNexus && !!newCountry && hasTaxIdentifier;
-		if (newHasIdentifier !== hasIdentifier) {
+		const rates = computeTaxRates(
+			newCountry,
+			newAddress.level1,
+			isBusiness,
+			hasTaxIdentifier,
+			newInNexus,
+		);
+		if (
+			newHasIdentifier !== hasIdentifier ||
+			rates.baseTax !== baseTax ||
+			rates.effectiveTax !== effectiveTax
+		) {
 			onConsumptionTaxChange?.({
 				consumptionTaxId: consumptionTaxId || undefined,
 				hasIdentifier: newHasIdentifier,
+				...rates,
 			});
 		}
 	}
@@ -141,6 +228,8 @@ export function AddressTaxInput({
 		onConsumptionTaxChange?.({
 			consumptionTaxId: e.target.value || undefined,
 			hasIdentifier,
+			baseTax,
+			effectiveTax,
 		});
 		setTaxTouched(true);
 	}
@@ -151,6 +240,8 @@ export function AddressTaxInput({
 			onConsumptionTaxChange?.({
 				consumptionTaxId: normalized || undefined,
 				hasIdentifier,
+				baseTax,
+				effectiveTax,
 			});
 		}
 		setTaxTouched(true);
@@ -252,6 +343,7 @@ export function AddressTaxInput({
 				onChange={handleAddressChange}
 				onValidationChange={onValidationChange}
 				mode={mode}
+				requireLevel1={hasRegionalTax(country)}
 				defaultCountry={defaultCountry}
 				defaultRegion={defaultRegion}
 				disabled={disabled}

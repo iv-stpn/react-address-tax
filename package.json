@@ -1,5 +1,5 @@
 {
-  "name": "react-address-vat",
+  "name": "react-address-tax",
   "version": "0.1.0",
   "description": "Reusable React component for international structured address input with VAT validation",
   "keywords": [
@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/USERNAME/react-address-vat.git"
+    "url": "https://github.com/USERNAME/react-address-tax.git"
   },
   "type": "module",
   "main": "./dist/index.js",
@@ -42,7 +42,9 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "bun run build && bun run typecheck",
     "ladle": "ladle serve",
-    "gen:geonames": "bun run scripts/gen-geonames.ts"
+    "gen:geonames": "bun run scripts/gen-geonames.ts",
+    "gen:admin1": "bun run scripts/gen-admin1-options.ts",
+    "gen:countries": "bun run scripts/gen-countries.ts"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
@@ -51,6 +53,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
     "@ladle/react": "^5.1.1",
+    "@tailwindcss/vite": "^4.3.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -61,8 +64,12 @@
     "jsdom": "^29.1.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "tailwindcss": "^4.3.1",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^4.1.9"
+  },
+  "dependencies": {
+    "@types/node": "^26.0.0"
   }
 }

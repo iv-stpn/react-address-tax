@@ -1,4 +1,4 @@
-# react-address-vat
+# react-address-tax
 
 To install dependencies:
 
@@ -12,4 +12,5 @@ To run:
 bun run index.ts
 ```
 
-This project was created using `bun init` in bun v1.3.12. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+This project was created using `bun init` in bun v1.3.12. [Bun](https://bun.com)
+is a fast all-in-one JavaScript runtime.

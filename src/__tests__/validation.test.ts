@@ -70,7 +70,7 @@ describe("validateAddress", () => {
 	const validUS: AddressValue = {
 		line1: "123 Main St",
 		city: "New York",
-		state: "NY",
+		level1: "NY",
 		postalCode: "10001",
 		country: "US",
 	};
@@ -92,6 +92,40 @@ describe("validateAddress", () => {
 		const result = validateAddress({ ...validUS, country: "ZZ" });
 		expect(result.valid).toBe(false);
 		expect(result.errors[0]?.field).toBe("country");
+	});
+
+	it("treats level1 as optional by default", () => {
+		const result = validateAddress({ ...validUS, level1: "" });
+		expect(result.valid).toBe(true);
+	});
+
+	it("requires level1 when requireLevel1 option is set", () => {
+		const result = validateAddress(
+			{ ...validUS, level1: "" },
+			{ requireLevel1: true },
+		);
+		expect(result.valid).toBe(false);
+		expect(result.errors.some((e) => e.field === "level1")).toBe(true);
+	});
+
+	it("requires level1 even for countries without a level1 field in their config", () => {
+		// DE has no level1 field in its addressFields, so requireLevel1 must
+		// force it to be collected rather than silently ignoring it.
+		const deAddress: AddressValue = {
+			line1: "Unter den Linden 1",
+			city: "Berlin",
+			postalCode: "10117",
+			country: "DE",
+		};
+		expect(validateAddress(deAddress, { requireLevel1: true }).valid).toBe(
+			false,
+		);
+		expect(
+			validateAddress(
+				{ ...deAddress, level1: "BE" },
+				{ requireLevel1: true },
+			).valid,
+		).toBe(true);
 	});
 });
 

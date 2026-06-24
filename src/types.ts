@@ -4,7 +4,7 @@ export interface AddressValue {
 	line1: string;
 	line2?: string;
 	city: string;
-	state?: string;
+	level1?: string;
 	postalCode: string;
 	country: string;
 }
@@ -87,6 +87,14 @@ export interface AddressInputProps {
 	) => void;
 	/** Controls which fields are shown. Defaults to "full". */
 	mode?: AddressCollectionMode;
+	/**
+	 * Whether the level-1 (state/province/region) field is required.
+	 * Defaults to false, in which case the field is omitted entirely — it is
+	 * never shown as optional. Set true to collect it as a required field,
+	 * e.g. where downstream logic needs it (AddressTaxInput requires it for
+	 * countries whose tax rate varies by region).
+	 */
+	requireLevel1?: boolean;
 	/** Pre-selects a country and moves the country selector to the bottom of the form. */
 	defaultCountry?: string;
 	/** Pre-selects a state/region. */
@@ -104,6 +112,17 @@ export interface ConsumptionTaxValue {
 	consumptionTaxId?: string;
 	/** True when the business is presumed to hold a valid consumption tax identifier. */
 	hasIdentifier?: boolean;
+	/**
+	 * Consumption tax rate (%) that would apply if the seller had a nexus in the
+	 * resolved country/region — i.e. the headline rate for the buyer (accounting
+	 * for B2B reverse charge), ignoring whether the seller actually collects.
+	 */
+	baseTax?: number;
+	/**
+	 * Rate actually collectable: {@link baseTax} when the seller has a nexus in
+	 * the resolved country, 0 otherwise.
+	 */
+	effectiveTax?: number;
 }
 
 export type TaxType = "business" | "individual" | "either";

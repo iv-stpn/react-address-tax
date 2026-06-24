@@ -104,7 +104,7 @@ function buildHeadline(
 	category: TaxCategory,
 	o: ConsumptionTaxOutcome,
 ): string {
-	const { taxName, rate, state } = o;
+	const { taxName, effectiveTax: rate, state } = o;
 	switch (category) {
 		case "none":
 			return "No country selected";
@@ -182,7 +182,7 @@ function ConsumptionTaxPanel({
 						fontVariantNumeric: "tabular-nums",
 					}}
 				>
-					{formatRate(outcome.rate)}
+					{formatRate(outcome.effectiveTax)}
 				</span>
 			</div>
 			<table
@@ -275,7 +275,7 @@ export function AddressWrapper({ defaultCountry }: AddressWrapperProps) {
 		line1: "",
 		line2: "",
 		city: "",
-		state: "",
+		level1: "",
 		postalCode: "",
 		country: defaultCountry ?? "",
 	});
@@ -307,7 +307,7 @@ export function AddressTaxWrapper({
 		line1: "",
 		line2: "",
 		city: "",
-		state: "",
+		level1: "",
 		postalCode: "",
 		country: defaultCountry ?? "",
 	});
@@ -331,7 +331,8 @@ export function AddressTaxWrapper({
 		addressValue.country,
 		effectiveIsBusiness,
 		hasConsumptionTaxId,
-		addressValue.state,
+		hasNexus,
+		addressValue.level1,
 	);
 
 	return (
@@ -371,7 +372,16 @@ export function AddressTaxWrapper({
 			<pre style={jsonStyle}>{JSON.stringify(addressValue, null, 2)}</pre>
 			<span style={sectionLabelStyle}>Tax value</span>
 			<pre style={jsonStyle}>
-				{JSON.stringify({ ...taxValue, rate: outcome.rate }, null, 2)}
+				{JSON.stringify(
+					{
+						...taxValue,
+						baseTax: outcome.baseTax,
+						effectiveTax: outcome.effectiveTax,
+						hasNexus: outcome.hasNexus,
+					},
+					null,
+					2,
+				)}
 			</pre>
 		</div>
 	);
