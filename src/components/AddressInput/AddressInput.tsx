@@ -77,13 +77,22 @@ export interface AddressInputProps {
   defaultCountry?: string;
   /** Pre-selects a state/region. */
   defaultRegion?: string;
-  /** Placeholder shown in the country selector's empty option. Defaults to "— Select a country —". */
+  /** Placeholder shown in the country selector's empty option. Defaults to "Select country". */
   countryPlaceholder?: string;
+  /**
+   * Placeholder shown in the level-1 (state/province/region) administrative
+   * selector's empty option, as a function of the field's label.
+   * Defaults to `(label) => \`Select ${label}\``.
+   */
+  level1AdministrativePlaceholder?: (label: string) => string;
   disabled?: boolean;
   className?: string;
   classNames?: Partial<AddressInputClassNames>;
   renderInput?: (props: RenderInputProps) => ReactNode;
-  renderSelect?: (props: RenderSelectProps) => ReactNode;
+  /** Custom renderer for the country selector. */
+  renderCountrySelect?: (props: RenderSelectProps) => ReactNode;
+  /** Custom renderer for the level-1 (state/province/region) administrative selector. */
+  renderLevel1AdministrativeSelect?: (props: RenderSelectProps) => ReactNode;
   renderContainer?: (props: RenderContainerProps) => ReactNode;
 }
 
@@ -142,9 +151,11 @@ export function AddressInput({
   classNames,
   defaultCountry,
   defaultRegion,
-  countryPlaceholder = "— Select a country —",
+  countryPlaceholder = "Select country",
+  level1AdministrativePlaceholder = (label) => `Select ${label}`,
   renderInput,
-  renderSelect,
+  renderCountrySelect,
+  renderLevel1AdministrativeSelect,
   renderContainer,
 }: AddressInputProps) {
   const [touched, setTouched] = useState<Partial<Record<string, boolean>>>({});
@@ -218,8 +229,7 @@ export function AddressInput({
     );
   }
 
-  function renderSelectEl(props: RenderSelectProps) {
-    if (renderSelect) return renderSelect(props);
+  function defaultSelectEl(props: RenderSelectProps) {
     return (
       <select
         id={props.id}
@@ -233,7 +243,7 @@ export function AddressInput({
         aria-describedby={props["aria-describedby"]}
       >
         <option value="" disabled>
-          {props.placeholder ?? "— Select —"}
+          {props.placeholder ?? "Select"}
         </option>
         {props.options.map((opt) => (
           <option key={opt.value} value={opt.value}>
@@ -242,6 +252,16 @@ export function AddressInput({
         ))}
       </select>
     );
+  }
+
+  function renderCountrySelectEl(props: RenderSelectProps) {
+    if (renderCountrySelect) return renderCountrySelect(props);
+    return defaultSelectEl(props);
+  }
+
+  function renderLevel1AdministrativeSelectEl(props: RenderSelectProps) {
+    if (renderLevel1AdministrativeSelect) return renderLevel1AdministrativeSelect(props);
+    return defaultSelectEl(props);
   }
 
   function renderContainerEl(containerProps: RenderContainerProps) {
@@ -274,7 +294,7 @@ export function AddressInput({
     required: true,
     error: countryError,
     className: classNames?.field,
-    children: renderSelectEl({
+    children: renderCountrySelectEl({
       id: countryId,
       value: currentValue.country,
       onChange: handleField("country"),
@@ -303,7 +323,7 @@ export function AddressInput({
           const currentFieldValue = (currentValue[fieldKey as keyof AddressValue] as string | undefined) ?? "";
 
           const inputElement = fieldCfg.options
-            ? renderSelectEl({
+            ? renderLevel1AdministrativeSelectEl({
                 id: inputId,
                 value: currentFieldValue,
                 onChange: handleField(fieldKey),
@@ -314,7 +334,7 @@ export function AddressInput({
                 "aria-describedby": error ? `${inputId}-error` : undefined,
                 className: cn("rav-select", classNames?.select),
                 options: fieldCfg.options,
-                placeholder: `— Select ${fieldCfg.label} —`,
+                placeholder: level1AdministrativePlaceholder(fieldCfg.label),
               })
             : renderInputEl({
                 id: inputId,

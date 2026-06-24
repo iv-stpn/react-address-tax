@@ -70,12 +70,14 @@ function Flag({ code, label }: { code: string; label: string }) {
   );
 }
 
-function CountrySelect(props: RenderSelectProps & { placeholderOverride?: string }) {
+function TailwindCountrySelect(props: RenderSelectProps & { placeholderOverride?: string }) {
   const { options, value, onChange, disabled } = props;
   const placeholder = props.placeholderOverride ?? props.placeholder;
+
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -100,6 +102,9 @@ function CountrySelect(props: RenderSelectProps & { placeholderOverride?: string
   }, [open]);
 
   // When opening, focus the search box and reset the highlighted row.
+  // Keyed only on `open` so typing (which can produce a fresh `options`
+  // reference from the parent) doesn't wipe the query on every keystroke.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally runs only on open transitions
   useEffect(() => {
     if (open) {
       setQuery("");
@@ -107,7 +112,7 @@ function CountrySelect(props: RenderSelectProps & { placeholderOverride?: string
       setActiveIndex(sel >= 0 ? sel : 0);
       inputRef.current?.focus();
     }
-  }, [open, options, value]);
+  }, [open]);
 
   // Keep the highlighted row in view.
   useEffect(() => {
@@ -236,52 +241,169 @@ function CountrySelect(props: RenderSelectProps & { placeholderOverride?: string
 }
 
 function TailwindSelect(props: RenderSelectProps) {
-  // The country selector is rendered with a fixed id by AddressInput; swap it
-  // for a fully custom flag dropdown instead of a native <select>.
-  if (props.id === "rav-country") {
-    return <CountrySelect {...props} />;
+  const { options, value, onChange, disabled, placeholder } = props;
+
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const rootRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const listboxId = useId();
+
+  const selected = useMemo(() => options.find((o) => o.value === value), [options, value]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return options;
+    return options.filter((o) => o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q));
+  }, [options, query]);
+
+  // Close on outside click.
+  useEffect(() => {
+    if (!open) return;
+    function onDocClick(e: MouseEvent) {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [open]);
+
+  // When opening, focus the search box and reset the highlighted row.
+  // Keyed only on `open` so typing (which can produce a fresh `options`
+  // reference from the parent) doesn't wipe the query on every keystroke.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally runs only on open transitions
+  useEffect(() => {
+    if (open) {
+      setQuery("");
+      const sel = options.findIndex((o) => o.value === value);
+      setActiveIndex(sel >= 0 ? sel : 0);
+      inputRef.current?.focus();
+    }
+  }, [open]);
+
+  // Keep the highlighted row in view.
+  useEffect(() => {
+    if (!open) return;
+    const node = listRef.current?.children[activeIndex] as HTMLElement | undefined;
+    node?.scrollIntoView({ block: "nearest" });
+  }, [open, activeIndex]);
+
+  function commit(next: string) {
+    onChange({
+      target: { value: next },
+    } as unknown as Parameters<typeof onChange>[0]);
+    setOpen(false);
+  }
+
+  function onKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (!open) return setOpen(true);
+      setActiveIndex((i) => Math.min(i + 1, filtered.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((i) => Math.max(i - 1, 0));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const opt = filtered[activeIndex];
+      if (open && opt) commit(opt.value);
+      else setOpen(true);
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    }
   }
 
   return (
-    <div className="relative">
-      <select
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
         id={props.id}
-        value={props.value}
-        onChange={props.onChange}
-        onBlur={props.onBlur}
-        disabled={props.disabled}
+        disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listboxId : undefined}
         aria-required={props.required}
         aria-invalid={props["aria-invalid"]}
         aria-describedby={props["aria-describedby"]}
-        className="w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 pr-9 text-sm text-slate-900 shadow-sm transition focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+        onClick={() => !disabled && setOpen((o) => !o)}
+        onKeyDown={onKeyDown}
+        className="flex w-full items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-left text-sm text-slate-900 shadow-sm transition focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 aria-invalid:border-red-500 aria-invalid:focus:ring-red-500/30"
       >
-        {props.placeholder ? (
-          <option value="" disabled>
-            {props.placeholder}
-          </option>
-        ) : null}
-        {props.options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-      <svg
-        className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-slate-400"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          fillRule="evenodd"
-          d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z"
-          clipRule="evenodd"
-        />
-      </svg>
+        {selected ? (
+          <span className="truncate">{selected.label}</span>
+        ) : (
+          <span className="truncate text-slate-400">{placeholder ?? "Select an option"}</span>
+        )}
+        <svg
+          className={`ml-auto h-4 w-4 shrink-0 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
+
+      {open ? (
+        <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
+          <div className="border-b border-slate-100 p-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setActiveIndex(0);
+              }}
+              onKeyDown={onKeyDown}
+              placeholder="Search…"
+              className="w-full rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+            />
+          </div>
+          <ul ref={listRef} id={listboxId} role="listbox" className="max-h-64 overflow-y-auto py-1">
+            {filtered.length === 0 ? (
+              <li className="px-3 py-6 text-center text-sm text-slate-400">No matches</li>
+            ) : (
+              filtered.map((opt, i) => {
+                const isSelected = opt.value === value;
+                const isActive = i === activeIndex;
+                return (
+                  <li
+                    key={opt.value}
+                    role="option"
+                    aria-selected={isSelected}
+                    onMouseEnter={() => setActiveIndex(i)}
+                    onClick={() => commit(opt.value)}
+                    className={`flex cursor-pointer items-center gap-2.5 px-3 py-2 text-sm ${
+                      isActive ? "bg-indigo-50" : ""
+                    } ${isSelected ? "font-medium text-indigo-900" : "text-slate-700"}`}
+                  >
+                    <span className="truncate">{opt.label}</span>
+                    {isSelected ? (
+                      <svg className="ml-auto h-4 w-4 text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.3 3.29 6.8-6.79a1 1 0 0 1 1.4 0Z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    ) : null}
+                  </li>
+                );
+              })
+            )}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 }
-
 function TailwindCheckbox(props: RenderCheckboxProps) {
   return (
     <label className="flex cursor-pointer items-center gap-2.5 text-sm text-slate-700">
@@ -316,7 +438,12 @@ function TailwindContainer(props: RenderContainerProps) {
 
 const tailwindRenderers = {
   renderInput: TailwindInput,
-  renderSelect: TailwindSelect,
+  // Wrap the hook-bearing selects in JSX so AddressInput mounts them as their
+  // own components. The selects are rendered conditionally, and AddressInput
+  // invokes renderers as plain calls — returning elements keeps each select's
+  // hooks in its own fiber instead of leaking into AddressInput's hook list.
+  renderCountrySelect: (props: RenderSelectProps) => <TailwindCountrySelect {...props} />,
+  renderLevel1AdministrativeSelect: (props: RenderSelectProps) => <TailwindSelect {...props} />,
   renderCheckbox: TailwindCheckbox,
   renderContainer: TailwindContainer,
 } as const;
@@ -324,17 +451,14 @@ const tailwindRenderers = {
 /**
  * Variant of the renderer set with a custom country-dropdown placeholder.
  * AddressInput hardcodes the select placeholder, so we override it here on the
- * way into the custom CountrySelect.
+ * way into the custom renderCountrySelect.
  */
 function makeTailwindRenderers(countryPlaceholder: string) {
   return {
     ...tailwindRenderers,
-    renderSelect: (props: RenderSelectProps) =>
-      props.id === "rav-country" ? (
-        <CountrySelect {...props} placeholderOverride={countryPlaceholder} />
-      ) : (
-        <TailwindSelect {...props} />
-      ),
+    renderCountrySelect: (props: RenderSelectProps) => (
+      <TailwindCountrySelect {...props} placeholderOverride={countryPlaceholder} />
+    ),
   } as const;
 }
 

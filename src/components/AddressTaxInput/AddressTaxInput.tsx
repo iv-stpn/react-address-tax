@@ -38,14 +38,19 @@ export interface AddressTaxInputProps {
   mode?: AddressCollectionMode;
   defaultCountry?: string;
   defaultRegion?: string;
-  /** Placeholder shown in the country selector's empty option. Defaults to "— Select a country —". */
+  /** Placeholder shown in the country selector's empty option. Defaults to "Select country". */
   countryPlaceholder?: string;
+  /** Placeholder shown in the level-1 administrative selector's empty option, as a function of the field's label. */
+  level1AdministrativePlaceholder?: (label: string) => string;
   disabled?: boolean;
   className?: string;
   classNames?: Partial<AddressInputClassNames>;
   renderInput?: (props: RenderInputProps) => ReactNode;
   renderCheckbox?: (props: RenderCheckboxProps) => ReactNode;
-  renderSelect?: (props: RenderSelectProps) => ReactNode;
+  /** Custom renderer for the country selector. */
+  renderCountrySelect?: (props: RenderSelectProps) => ReactNode;
+  /** Custom renderer for the level-1 administrative selector. */
+  renderLevel1AdministrativeSelect?: (props: RenderSelectProps) => ReactNode;
   renderContainer?: (props: RenderContainerProps) => ReactNode;
 }
 
@@ -89,12 +94,14 @@ export function AddressTaxInput({
   defaultCountry,
   defaultRegion,
   countryPlaceholder,
+  level1AdministrativePlaceholder,
   disabled = false,
   className,
   classNames,
   renderInput,
   renderCheckbox,
-  renderSelect,
+  renderCountrySelect,
+  renderLevel1AdministrativeSelect,
   renderContainer,
 }: AddressTaxInputProps) {
   const [internalIsBusiness, setInternalIsBusiness] = useState(false);
@@ -307,10 +314,12 @@ export function AddressTaxInput({
         defaultCountry={defaultCountry}
         defaultRegion={defaultRegion}
         countryPlaceholder={countryPlaceholder}
+        level1AdministrativePlaceholder={level1AdministrativePlaceholder}
         disabled={disabled}
         classNames={classNames}
         renderInput={renderInput}
-        renderSelect={renderSelect}
+        renderCountrySelect={renderCountrySelect}
+        renderLevel1AdministrativeSelect={renderLevel1AdministrativeSelect}
         renderContainer={renderContainer}
       />
 
