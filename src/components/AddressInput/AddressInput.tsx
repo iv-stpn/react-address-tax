@@ -59,12 +59,26 @@ export interface RenderContainerProps {
   className?: string;
 }
 
+/** A single rendered field, paired with its type, passed to `renderFields`. */
+export interface RenderFieldEntry {
+  /** The field's key: "country" or one of the address field keys (line1, line2, city, level1, postalCode). */
+  type: string;
+  node: ReactNode;
+}
+
 export interface AddressInputProps {
   value: AddressValue;
   onChange: (value: AddressValue) => void;
   onValidationChange?: (valid: boolean, errors: ValidationError[]) => void;
   /** Controls which fields are shown. Defaults to "full". */
   mode?: AddressCollectionMode;
+  /**
+   * When true, the fields are rendered directly (in a Fragment) instead of being
+   * wrapped in a `rav-root` container. Use this when embedding AddressInput inside
+   * another component that already provides the root wrapper, to avoid nesting two
+   * `rav-root` elements. `className`/`classNames.root` are ignored in this mode.
+   */
+  inline?: boolean;
   /**
    * Whether the level-1 (state/province/region) field is required.
    * Defaults to false, in which case the field is omitted entirely — it is
@@ -94,6 +108,14 @@ export interface AddressInputProps {
   /** Custom renderer for the level-1 (state/province/region) administrative selector. */
   renderLevel1AdministrativeSelect?: (props: RenderSelectProps) => ReactNode;
   renderContainer?: (props: RenderContainerProps) => ReactNode;
+  /**
+   * Custom layout for the fields. Receives the list of rendered field nodes
+   * (each tagged with its `type`) in display order, and returns the node to
+   * render in place of the default inline layout. Use this to group fields onto
+   * the same line or into separate containers. When undefined, fields render
+   * inline as before.
+   */
+  renderFields?: (fields: RenderFieldEntry[]) => ReactNode;
 }
 
 const EMPTY_VALUE: AddressValue = {
@@ -145,6 +167,7 @@ export function AddressInput({
   onChange,
   onValidationChange,
   mode = "full",
+  inline = false,
   requireLevel1 = false,
   disabled = false,
   className,
@@ -157,6 +180,7 @@ export function AddressInput({
   renderCountrySelect,
   renderLevel1AdministrativeSelect,
   renderContainer,
+  renderFields,
 }: AddressInputProps) {
   const [touched, setTouched] = useState<Partial<Record<string, boolean>>>({});
   const [errors, setErrors] = useState<ValidationError[]>([]);
@@ -303,68 +327,81 @@ export function AddressInput({
       "aria-invalid": countryError !== undefined,
       "aria-describedby": countryError ? `${countryId}-error` : undefined,
       className: cn("rav-select", classNames?.select),
-      options: ALL_COUNTRY_OPTIONS.map((c) => ({
-        value: c.code,
-        label: c.name,
-      })),
+      options: ALL_COUNTRY_OPTIONS.map((c) => ({ value: c.code, label: c.name })),
       placeholder: countryPlaceholder,
     }),
   });
 
-  return (
-    <div className={cn("rav-root", className ?? classNames?.root)}>
-      {!countryAtBottom && countrySelector}
+  const fieldEntries: RenderFieldEntry[] = [];
 
-      {countryConfig &&
-        effectiveFieldOrder.map((fieldKey) => {
-          const fieldCfg = resolveAddressField(currentValue.country, fieldKey, requireLevel1);
-          const error = getError(fieldKey);
-          const inputId = `rav-${fieldKey}`;
-          const currentFieldValue = (currentValue[fieldKey as keyof AddressValue] as string | undefined) ?? "";
+  if (!countryAtBottom) fieldEntries.push({ type: "country", node: countrySelector });
 
-          const inputElement = fieldCfg.options
-            ? renderLevel1AdministrativeSelectEl({
-                id: inputId,
-                value: currentFieldValue,
-                onChange: handleField(fieldKey),
-                onBlur: () => setTouched((t) => ({ ...t, [fieldKey]: true })),
-                disabled,
-                required: fieldCfg.required,
-                "aria-invalid": error !== undefined,
-                "aria-describedby": error ? `${inputId}-error` : undefined,
-                className: cn("rav-select", classNames?.select),
-                options: fieldCfg.options,
-                placeholder: level1AdministrativePlaceholder(fieldCfg.label),
-              })
-            : renderInputEl({
-                id: inputId,
-                value: currentFieldValue,
-                onChange: handleField(fieldKey),
-                onBlur: () => setTouched((t) => ({ ...t, [fieldKey]: true })),
-                placeholder: fieldCfg.placeholder,
-                disabled,
-                required: fieldCfg.required,
-                "aria-invalid": error !== undefined,
-                "aria-describedby": error ? `${inputId}-error` : undefined,
-                className: cn("rav-input", classNames?.input),
-              });
+  if (countryConfig) {
+    for (const fieldKey of effectiveFieldOrder) {
+      const fieldCfg = resolveAddressField(currentValue.country, fieldKey, requireLevel1);
+      const error = getError(fieldKey);
+      const inputId = `rav-${fieldKey}`;
+      const currentFieldValue = (currentValue[fieldKey as keyof AddressValue] as string | undefined) ?? "";
 
-          return (
-            <Fragment key={fieldKey}>
-              {renderContainerEl({
-                id: inputId,
-                fieldKey,
-                label: fieldCfg.label,
-                required: fieldCfg.required,
-                error,
-                className: classNames?.field,
-                children: inputElement,
-              })}
-            </Fragment>
-          );
-        })}
+      const inputElement = fieldCfg.options
+        ? renderLevel1AdministrativeSelectEl({
+            id: inputId,
+            value: currentFieldValue,
+            onChange: handleField(fieldKey),
+            onBlur: () => setTouched((t) => ({ ...t, [fieldKey]: true })),
+            disabled,
+            required: fieldCfg.required,
+            "aria-invalid": error !== undefined,
+            "aria-describedby": error ? `${inputId}-error` : undefined,
+            className: cn("rav-select", classNames?.select),
+            options: fieldCfg.options,
+            placeholder: level1AdministrativePlaceholder(fieldCfg.label),
+          })
+        : renderInputEl({
+            id: inputId,
+            value: currentFieldValue,
+            onChange: handleField(fieldKey),
+            onBlur: () => setTouched((t) => ({ ...t, [fieldKey]: true })),
+            placeholder: fieldCfg.placeholder,
+            disabled,
+            required: fieldCfg.required,
+            "aria-invalid": error !== undefined,
+            "aria-describedby": error ? `${inputId}-error` : undefined,
+            className: cn("rav-input", classNames?.input),
+          });
 
-      {countryAtBottom && countrySelector}
-    </div>
+      fieldEntries.push({
+        type: fieldKey,
+        node: (
+          <Fragment key={fieldKey}>
+            {renderContainerEl({
+              id: inputId,
+              fieldKey,
+              label: fieldCfg.label,
+              required: fieldCfg.required,
+              error,
+              className: classNames?.field,
+              children: inputElement,
+            })}
+          </Fragment>
+        ),
+      });
+    }
+  }
+
+  if (countryAtBottom) fieldEntries.push({ type: "country", node: countrySelector });
+
+  const body = renderFields ? (
+    renderFields(fieldEntries)
+  ) : (
+    <>
+      {fieldEntries.map((entry) => (
+        <Fragment key={entry.type}>{entry.node}</Fragment>
+      ))}
+    </>
   );
+
+  if (inline) return body;
+
+  return <div className={cn("rav-root", className ?? classNames?.root)}>{body}</div>;
 }

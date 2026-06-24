@@ -5,7 +5,13 @@ import type { ConsumptionTaxValue, TaxType } from "../../utils/tax";
 import { computeConsumptionTaxOutcome, getConsumptionTaxConfig, hasRegionalTax } from "../../utils/tax";
 import type { ValidationError } from "../../utils/validation";
 import { normalizeConsumptionTax, validateConsumptionTax } from "../../utils/validation";
-import type { RenderCheckboxProps, RenderContainerProps, RenderInputProps, RenderSelectProps } from "../AddressInput";
+import type {
+  RenderCheckboxProps,
+  RenderContainerProps,
+  RenderFieldEntry,
+  RenderInputProps,
+  RenderSelectProps,
+} from "../AddressInput";
 import { AddressInput } from "../AddressInput/index";
 
 export interface AddressTaxInputProps {
@@ -52,6 +58,19 @@ export interface AddressTaxInputProps {
   /** Custom renderer for the level-1 administrative selector. */
   renderLevel1AdministrativeSelect?: (props: RenderSelectProps) => ReactNode;
   renderContainer?: (props: RenderContainerProps) => ReactNode;
+  /**
+   * Custom layout for the fields. Receives the list of rendered field nodes
+   * (each tagged with its `type`) in display order, and returns the node to
+   * render in place of the default inline layout. Use this to group fields onto
+   * the same line or into separate containers. When undefined, fields render
+   * inline as before.
+   *
+   * The `type` is "business" for the Business account checkbox, "country" or an
+   * address field key (line1, line2, city, level1, postalCode) for address
+   * fields, "noTaxIdentifier" for the "I don't have a tax id" checkbox, and
+   * "consumptionTaxId" for the tax identifier input.
+   */
+  renderFields?: (fields: RenderFieldEntry[]) => ReactNode;
 }
 
 /**
@@ -103,6 +122,7 @@ export function AddressTaxInput({
   renderCountrySelect,
   renderLevel1AdministrativeSelect,
   renderContainer,
+  renderFields,
 }: AddressTaxInputProps) {
   const [internalIsBusiness, setInternalIsBusiness] = useState(false);
   const [internalHasTaxIdentifier, setInternalHasTaxIdentifier] = useState(true);
@@ -292,24 +312,69 @@ export function AddressTaxInput({
 
   const consumptionTaxInputId = "rav-consumptionTaxId";
 
+  const businessCheckboxNode =
+    taxType === "either" ? (
+      <div className={cn("rav-field", classNames?.field)}>
+        {renderCheckboxEl({
+          checked: isBusiness,
+          onChange: handleBusinessChange,
+          disabled,
+          label: "Business account",
+        })}
+      </div>
+    ) : null;
+
+  const noTaxIdentifierNode = showTaxFields ? (
+    <div className={cn("rav-field", classNames?.field)}>
+      {renderCheckboxEl({
+        checked: !hasTaxIdentifier,
+        onChange: handleHasTaxIdentifierChange,
+        disabled,
+        label: `I don't have a ${consumptionTaxLabel}`,
+      })}
+    </div>
+  ) : null;
+
+  const consumptionTaxIdNode =
+    showTaxFields && hasTaxIdentifier
+      ? renderContainerEl({
+          id: consumptionTaxInputId,
+          fieldKey: "consumptionTaxId",
+          label: consumptionTaxLabel,
+          required: consumptionTaxRequired,
+          error: consumptionTaxError,
+          className: classNames?.field,
+          children: renderInputEl({
+            id: consumptionTaxInputId,
+            value: consumptionTaxId,
+            onChange: handleConsumptionTaxChange,
+            onBlur: handleConsumptionTaxBlur,
+            placeholder: taxConfig?.consumptionTaxExample,
+            disabled,
+            required: consumptionTaxRequired,
+            "aria-invalid": consumptionTaxInvalid,
+            "aria-describedby": consumptionTaxError ? `${consumptionTaxInputId}-error` : undefined,
+            className: cn("rav-input", classNames?.input),
+          }),
+        })
+      : null;
+
+  // Entries that bracket the address fields, in display order.
+  const beforeEntries: RenderFieldEntry[] = businessCheckboxNode ? [{ type: "business", node: businessCheckboxNode }] : [];
+  const afterEntries: RenderFieldEntry[] = [];
+  if (noTaxIdentifierNode) afterEntries.push({ type: "noTaxIdentifier", node: noTaxIdentifierNode });
+  if (consumptionTaxIdNode) afterEntries.push({ type: "consumptionTaxId", node: consumptionTaxIdNode });
+
   return (
     <div className={cn("rav-root", className ?? classNames?.root)}>
-      {taxType === "either" && (
-        <div className={cn("rav-field", classNames?.field)}>
-          {renderCheckboxEl({
-            checked: isBusiness,
-            onChange: handleBusinessChange,
-            disabled,
-            label: "Business account",
-          })}
-        </div>
-      )}
+      {!renderFields && businessCheckboxNode}
 
       <AddressInput
         value={addressValue}
         onChange={handleAddressChange}
         onValidationChange={onValidationChange}
         mode={mode}
+        inline
         requireLevel1={hasRegionalTax(country)}
         defaultCountry={defaultCountry}
         defaultRegion={defaultRegion}
@@ -321,40 +386,15 @@ export function AddressTaxInput({
         renderCountrySelect={renderCountrySelect}
         renderLevel1AdministrativeSelect={renderLevel1AdministrativeSelect}
         renderContainer={renderContainer}
+        renderFields={
+          renderFields ? (addressEntries) => renderFields([...beforeEntries, ...addressEntries, ...afterEntries]) : undefined
+        }
       />
 
-      {showTaxFields && (
+      {!renderFields && showTaxFields && (
         <>
-          <div className={cn("rav-field", classNames?.field)}>
-            {renderCheckboxEl({
-              checked: !hasTaxIdentifier,
-              onChange: handleHasTaxIdentifierChange,
-              disabled,
-              label: `I don't have a ${consumptionTaxLabel}`,
-            })}
-          </div>
-
-          {hasTaxIdentifier &&
-            renderContainerEl({
-              id: consumptionTaxInputId,
-              fieldKey: "consumptionTaxId",
-              label: consumptionTaxLabel,
-              required: consumptionTaxRequired,
-              error: consumptionTaxError,
-              className: classNames?.field,
-              children: renderInputEl({
-                id: consumptionTaxInputId,
-                value: consumptionTaxId,
-                onChange: handleConsumptionTaxChange,
-                onBlur: handleConsumptionTaxBlur,
-                placeholder: taxConfig?.consumptionTaxExample,
-                disabled,
-                required: consumptionTaxRequired,
-                "aria-invalid": consumptionTaxInvalid,
-                "aria-describedby": consumptionTaxError ? `${consumptionTaxInputId}-error` : undefined,
-                className: cn("rav-input", classNames?.input),
-              }),
-            })}
+          {noTaxIdentifierNode}
+          {consumptionTaxIdNode}
         </>
       )}
     </div>
