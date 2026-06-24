@@ -2,7 +2,7 @@
 // Types
 // ---------------------------------------------------------------------------
 
-import type { SupportedCountryCode } from "./address";
+import type { CountryCode } from "./address";
 
 export interface ConsumptionTaxValue {
   consumptionTaxId?: string;
@@ -140,7 +140,7 @@ function regional(base: Omit<TaxConfig, "baseConsumerTax">, rates: Record<string
 // Main tax config table
 // ---------------------------------------------------------------------------
 
-export const TAX_CONFIG: Record<SupportedCountryCode, CountryTaxEntry> = {
+export const TAX_CONFIG: Record<CountryCode, CountryTaxEntry> = {
   // ---- EU member states (all 27, standard VAT rates as of 2025) -----------
   AT: {
     ...eu(20, "MwSt"),
@@ -373,6 +373,212 @@ export const TAX_CONFIG: Record<SupportedCountryCode, CountryTaxEntry> = {
   MO: flat("No GST", null, null), // Macao (no consumption tax)
   PH: flat("VAT", 12, 3_000_000), // Philippines
   IN: flat("GST", 18, 4_000_000), // India (standard GST rate)
+
+  // ---- Rest of Europe (non-EU) ----------------------------------------------
+  // Standard VAT/GST rates; jurisdictions with no consumption tax use a null
+  // rate. Registration thresholds default to 0 (always collect on nexus) where
+  // a reliable figure isn't curated.
+  AX: flat("ALV", 25.5, 0), // Åland (Finnish VAT applies locally)
+  BY: flat("PDV", 20, 0), // Belarus
+  CS: flat("PDV", 20, 0), // Serbia and Montenegro (legacy code → Serbia rate)
+  FO: flat("MVG", 25, 0), // Faroe Islands
+  GG: flat("No VAT", null, null), // Guernsey
+  GI: flat("No VAT", null, null), // Gibraltar
+  IM: flat("VAT", 20, 0), // Isle of Man (UK VAT system)
+  JE: flat("GST", 5, 0), // Jersey
+  RU: flat("NDS", 20, 0), // Russia
+  SJ: flat("No VAT", null, null), // Svalbard and Jan Mayen
+  VA: flat("No VAT", null, null), // Vatican City
+  // ---- Africa ---------------------------------------------------------------
+  AO: flat("IVA", 14, 0), // Angola
+  BF: flat("TVA", 18, 0), // Burkina Faso
+  BI: flat("TVA", 18, 0), // Burundi
+  BJ: flat("TVA", 18, 0), // Benin
+  BW: flat("VAT", 14, 0), // Botswana
+  CD: flat("TVA", 16, 0), // DR Congo
+  CF: flat("TVA", 19, 0), // Central African Republic
+  CG: flat("TVA", 18, 0), // Republic of the Congo
+  CI: flat("TVA", 18, 0), // Ivory Coast
+  CM: flat("TVA", 19.25, 0), // Cameroon
+  CV: flat("IVA", 15, 0), // Cabo Verde
+  DJ: flat("TVA", 10, 0), // Djibouti
+  DZ: flat("TVA", 19, 0), // Algeria
+  EG: flat("VAT", 14, 0), // Egypt
+  EH: flat("No VAT", null, null), // Western Sahara
+  ER: flat("No VAT", null, null), // Eritrea
+  ET: flat("VAT", 15, 0), // Ethiopia
+  GA: flat("TVA", 18, 0), // Gabon
+  GH: flat("VAT", 15, 0), // Ghana
+  GM: flat("VAT", 15, 0), // Gambia
+  GN: flat("TVA", 18, 0), // Guinea
+  GQ: flat("IVA", 15, 0), // Equatorial Guinea
+  GW: flat("IVA", 17, 0), // Guinea-Bissau
+  KE: flat("VAT", 16, 0), // Kenya
+  KM: flat("No VAT", null, null), // Comoros
+  LR: flat("GST", 10, 0), // Liberia
+  LS: flat("VAT", 15, 0), // Lesotho
+  LY: flat("No VAT", null, null), // Libya
+  MA: flat("TVA", 20, 0), // Morocco
+  MG: flat("TVA", 20, 0), // Madagascar
+  ML: flat("TVA", 18, 0), // Mali
+  MR: flat("TVA", 16, 0), // Mauritania
+  MU: flat("VAT", 15, 0), // Mauritius
+  MW: flat("VAT", 16.5, 0), // Malawi
+  MZ: flat("IVA", 16, 0), // Mozambique
+  NA: flat("VAT", 15, 0), // Namibia
+  NE: flat("TVA", 19, 0), // Niger
+  NG: flat("VAT", 7.5, 0), // Nigeria
+  RE: flat("TVA", 8.5, 0), // Reunion (French overseas reduced rate)
+  RW: flat("VAT", 18, 0), // Rwanda
+  SC: flat("VAT", 15, 0), // Seychelles
+  SD: flat("VAT", 17, 0), // Sudan
+  SH: flat("No VAT", null, null), // Saint Helena
+  SL: flat("GST", 15, 0), // Sierra Leone
+  SN: flat("TVA", 18, 0), // Senegal
+  SO: flat("No VAT", null, null), // Somalia
+  SS: flat("VAT", 18, 0), // South Sudan
+  ST: flat("IVA", 15, 0), // Sao Tome and Principe
+  SZ: flat("VAT", 15, 0), // Eswatini
+  TD: flat("TVA", 18, 0), // Chad
+  TG: flat("TVA", 18, 0), // Togo
+  TN: flat("TVA", 19, 0), // Tunisia
+  TZ: flat("VAT", 18, 0), // Tanzania
+  UG: flat("VAT", 18, 0), // Uganda
+  YT: flat("No VAT", null, null), // Mayotte (VAT not applicable)
+  ZA: flat("VAT", 15, 0), // South Africa
+  ZM: flat("VAT", 16, 0), // Zambia
+  ZW: flat("VAT", 15, 0), // Zimbabwe
+
+  // ---- Antarctica & uninhabited territories (no consumption tax) ------------
+  AQ: flat("No VAT", null, null), // Antarctica
+  BV: flat("No VAT", null, null), // Bouvet Island
+  GS: flat("No VAT", null, null), // South Georgia and the South Sandwich Islands
+  HM: flat("No VAT", null, null), // Heard Island and McDonald Islands
+  TF: flat("No VAT", null, null), // French Southern Territories
+  // ---- Rest of Asia ---------------------------------------------------------
+  AF: flat("No VAT", null, null), // Afghanistan
+  AM: flat("VAT", 20, 0), // Armenia
+  AZ: flat("VAT", 18, 0), // Azerbaijan
+  BD: flat("VAT", 15, 0), // Bangladesh
+  BH: flat("VAT", 10, 0), // Bahrain
+  BN: flat("No VAT", null, null), // Brunei
+  BT: flat("No VAT", null, null), // Bhutan
+  CC: flat("No VAT", null, null), // Cocos Islands
+  CN: flat("VAT", 13, 0), // China
+  ID: flat("PPN", 11, 0), // Indonesia
+  IO: flat("No VAT", null, null), // British Indian Ocean Territory
+  IQ: flat("No VAT", null, null), // Iraq
+  IR: flat("VAT", 10, 0), // Iran
+  JO: flat("GST", 16, 0), // Jordan
+  KG: flat("VAT", 12, 0), // Kyrgyzstan
+  KH: flat("VAT", 10, 0), // Cambodia
+  KP: flat("No VAT", null, null), // North Korea
+  KW: flat("No VAT", null, null), // Kuwait
+  KZ: flat("VAT", 12, 0), // Kazakhstan
+  LA: flat("VAT", 10, 0), // Laos
+  LB: flat("VAT", 11, 0), // Lebanon
+  LK: flat("VAT", 18, 0), // Sri Lanka
+  MM: flat("CT", 5, 0), // Myanmar (commercial tax)
+  MN: flat("VAT", 10, 0), // Mongolia
+  MV: flat("GST", 8, 0), // Maldives
+  MY: flat("SST", 8, 0), // Malaysia (sales & service tax)
+  NP: flat("VAT", 13, 0), // Nepal
+  OM: flat("VAT", 5, 0), // Oman
+  PK: flat("GST", 18, 0), // Pakistan
+  PS: flat("VAT", 16, 0), // Palestinian Territory
+  QA: flat("No VAT", null, null), // Qatar
+  SA: flat("VAT", 15, 0), // Saudi Arabia
+  SY: flat("No VAT", null, null), // Syria
+  TH: flat("VAT", 7, 0), // Thailand
+  TJ: flat("VAT", 14, 0), // Tajikistan
+  TM: flat("VAT", 15, 0), // Turkmenistan
+  UZ: flat("VAT", 12, 0), // Uzbekistan
+  VN: flat("VAT", 10, 0), // Vietnam
+  YE: flat("GST", 5, 0), // Yemen
+  // ---- Rest of North America & Caribbean ------------------------------------
+  AG: flat("ABST", 15, 0), // Antigua and Barbuda
+  AI: flat("GST", 13, 0), // Anguilla
+  AN: flat("No VAT", null, null), // Netherlands Antilles (dissolved)
+  AW: flat("No VAT", null, null), // Aruba (turnover tax, no VAT)
+  BB: flat("VAT", 17.5, 0), // Barbados
+  BL: flat("No VAT", null, null), // Saint Barthelemy
+  BM: flat("No VAT", null, null), // Bermuda
+  BQ: flat("No VAT", null, null), // Bonaire, Saint Eustatius and Saba
+  BS: flat("VAT", 10, 0), // Bahamas
+  BZ: flat("GST", 12.5, 0), // Belize
+  CR: flat("IVA", 13, 0), // Costa Rica
+  CU: flat("No VAT", null, null), // Cuba
+  CW: flat("OB", 6, 0), // Curacao (turnover tax)
+  DM: flat("VAT", 15, 0), // Dominica
+  DO: flat("ITBIS", 18, 0), // Dominican Republic
+  GD: flat("VAT", 15, 0), // Grenada
+  GL: flat("No VAT", null, null), // Greenland
+  GP: flat("TVA", 8.5, 0), // Guadeloupe (French overseas reduced rate)
+  GT: flat("IVA", 12, 0), // Guatemala
+  HN: flat("ISV", 15, 0), // Honduras
+  HT: flat("TCA", 10, 0), // Haiti
+  JM: flat("GCT", 15, 0), // Jamaica
+  KN: flat("VAT", 17, 0), // Saint Kitts and Nevis
+  KY: flat("No VAT", null, null), // Cayman Islands
+  LC: flat("VAT", 12.5, 0), // Saint Lucia
+  MF: flat("No VAT", null, null), // Saint Martin
+  MQ: flat("TVA", 8.5, 0), // Martinique (French overseas reduced rate)
+  MS: flat("No VAT", null, null), // Montserrat
+  MX: flat("IVA", 16, 0), // Mexico
+  NI: flat("IVA", 15, 0), // Nicaragua
+  PA: flat("ITBMS", 7, 0), // Panama
+  PM: flat("No VAT", null, null), // Saint Pierre and Miquelon
+  PR: flat("IVU", 11.5, 0), // Puerto Rico
+  SV: flat("IVA", 13, 0), // El Salvador
+  SX: flat("TOT", 5, 0), // Sint Maarten (turnover tax)
+  TC: flat("No VAT", null, null), // Turks and Caicos Islands
+  TT: flat("VAT", 12.5, 0), // Trinidad and Tobago
+  VC: flat("VAT", 16, 0), // Saint Vincent and the Grenadines
+  VG: flat("No VAT", null, null), // British Virgin Islands
+  VI: flat("No VAT", null, null), // U.S. Virgin Islands
+  // ---- Rest of Oceania ------------------------------------------------------
+  AS: flat("No VAT", null, null), // American Samoa
+  CK: flat("VAT", 15, 0), // Cook Islands
+  CX: flat("No VAT", null, null), // Christmas Island
+  FJ: flat("VAT", 15, 0), // Fiji
+  FM: flat("No VAT", null, null), // Micronesia
+  GU: flat("No VAT", null, null), // Guam
+  KI: flat("VAT", 12.5, 0), // Kiribati
+  MH: flat("No VAT", null, null), // Marshall Islands
+  MP: flat("No VAT", null, null), // Northern Mariana Islands
+  NC: flat("TGC", 11, 0), // New Caledonia
+  NF: flat("No VAT", null, null), // Norfolk Island
+  NR: flat("No VAT", null, null), // Nauru
+  NU: flat("No VAT", null, null), // Niue
+  PF: flat("TVA", 16, 0), // French Polynesia
+  PG: flat("GST", 10, 0), // Papua New Guinea
+  PN: flat("No VAT", null, null), // Pitcairn
+  PW: flat("PGST", 10, 0), // Palau
+  SB: flat("GST", 10, 0), // Solomon Islands
+  TK: flat("No VAT", null, null), // Tokelau
+  TL: flat("No VAT", null, null), // Timor-Leste
+  TO: flat("CT", 15, 0), // Tonga
+  TV: flat("No VAT", null, null), // Tuvalu
+  UM: flat("No VAT", null, null), // United States Minor Outlying Islands
+  VU: flat("VAT", 15, 0), // Vanuatu
+  WF: flat("No VAT", null, null), // Wallis and Futuna
+  WS: flat("VAGST", 15, 0), // Samoa
+
+  // ---- South America --------------------------------------------------------
+  AR: flat("IVA", 21, 0), // Argentina
+  BO: flat("IVA", 13, 0), // Bolivia
+  BR: flat("ICMS", 17, 0), // Brazil (representative state ICMS rate)
+  CL: flat("IVA", 19, 0), // Chile
+  CO: flat("IVA", 19, 0), // Colombia
+  EC: flat("IVA", 15, 0), // Ecuador
+  FK: flat("No VAT", null, null), // Falkland Islands
+  GF: flat("No VAT", null, null), // French Guiana (VAT not applicable)
+  GY: flat("VAT", 14, 0), // Guyana
+  PE: flat("IGV", 18, 0), // Peru
+  PY: flat("IVA", 10, 0), // Paraguay
+  SR: flat("VAT", 10, 0), // Suriname
+  UY: flat("IVA", 22, 0), // Uruguay
+  VE: flat("IVA", 16, 0), // Venezuela
 };
 
 // ---------------------------------------------------------------------------
@@ -386,7 +592,7 @@ function isRegional(entry: CountryTaxEntry): entry is Record<string, TaxConfig> 
 
 /** True when a country's tax rate varies by state/province. */
 export function hasRegionalTax(country: string): boolean {
-  const entry = TAX_CONFIG[country.toUpperCase() as SupportedCountryCode];
+  const entry = TAX_CONFIG[country.toUpperCase() as CountryCode];
   return !!entry && isRegional(entry);
 }
 
@@ -396,7 +602,7 @@ export function hasRegionalTax(country: string): boolean {
  * countries these fields are identical across regions, so any entry serves.
  */
 export function getConsumptionTaxConfig(country: string): TaxConfig | undefined {
-  const entry = TAX_CONFIG[country.toUpperCase() as SupportedCountryCode];
+  const entry = TAX_CONFIG[country.toUpperCase() as CountryCode];
   if (!entry) return undefined;
   return isRegional(entry) ? Object.values(entry)[0] : entry;
 }
@@ -459,7 +665,7 @@ export function computeConsumptionTaxOutcome(
 ): ConsumptionTaxOutcome {
   if (!country) return { ...EMPTY_OUTCOME, hasNexus };
 
-  const entry = TAX_CONFIG[country.toUpperCase() as SupportedCountryCode];
+  const entry = TAX_CONFIG[country.toUpperCase() as CountryCode];
   if (!entry) return { ...EMPTY_OUTCOME, hasNexus };
 
   const { config, regionResolved } = resolveConfig(entry, state);

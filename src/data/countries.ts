@@ -18,8 +18,266 @@ export interface CountryData {
   };
 }
 
+// ISO 3166-1 alpha-2 code for every country GeoNames knows about.
+export const COUNTRY_CODES = [
+  "AD",
+  "AE",
+  "AF",
+  "AG",
+  "AI",
+  "AL",
+  "AM",
+  "AN",
+  "AO",
+  "AQ",
+  "AR",
+  "AS",
+  "AT",
+  "AU",
+  "AW",
+  "AX",
+  "AZ",
+  "BA",
+  "BB",
+  "BD",
+  "BE",
+  "BF",
+  "BG",
+  "BH",
+  "BI",
+  "BJ",
+  "BL",
+  "BM",
+  "BN",
+  "BO",
+  "BQ",
+  "BR",
+  "BS",
+  "BT",
+  "BV",
+  "BW",
+  "BY",
+  "BZ",
+  "CA",
+  "CC",
+  "CD",
+  "CF",
+  "CG",
+  "CH",
+  "CI",
+  "CK",
+  "CL",
+  "CM",
+  "CN",
+  "CO",
+  "CR",
+  "CS",
+  "CU",
+  "CV",
+  "CW",
+  "CX",
+  "CY",
+  "CZ",
+  "DE",
+  "DJ",
+  "DK",
+  "DM",
+  "DO",
+  "DZ",
+  "EC",
+  "EE",
+  "EG",
+  "EH",
+  "ER",
+  "ES",
+  "ET",
+  "FI",
+  "FJ",
+  "FK",
+  "FM",
+  "FO",
+  "FR",
+  "GA",
+  "GB",
+  "GD",
+  "GE",
+  "GF",
+  "GG",
+  "GH",
+  "GI",
+  "GL",
+  "GM",
+  "GN",
+  "GP",
+  "GQ",
+  "GR",
+  "GS",
+  "GT",
+  "GU",
+  "GW",
+  "GY",
+  "HK",
+  "HM",
+  "HN",
+  "HR",
+  "HT",
+  "HU",
+  "ID",
+  "IE",
+  "IL",
+  "IM",
+  "IN",
+  "IO",
+  "IQ",
+  "IR",
+  "IS",
+  "IT",
+  "JE",
+  "JM",
+  "JO",
+  "JP",
+  "KE",
+  "KG",
+  "KH",
+  "KI",
+  "KM",
+  "KN",
+  "KP",
+  "KR",
+  "KW",
+  "KY",
+  "KZ",
+  "LA",
+  "LB",
+  "LC",
+  "LI",
+  "LK",
+  "LR",
+  "LS",
+  "LT",
+  "LU",
+  "LV",
+  "LY",
+  "MA",
+  "MC",
+  "MD",
+  "ME",
+  "MF",
+  "MG",
+  "MH",
+  "MK",
+  "ML",
+  "MM",
+  "MN",
+  "MO",
+  "MP",
+  "MQ",
+  "MR",
+  "MS",
+  "MT",
+  "MU",
+  "MV",
+  "MW",
+  "MX",
+  "MY",
+  "MZ",
+  "NA",
+  "NC",
+  "NE",
+  "NF",
+  "NG",
+  "NI",
+  "NL",
+  "NO",
+  "NP",
+  "NR",
+  "NU",
+  "NZ",
+  "OM",
+  "PA",
+  "PE",
+  "PF",
+  "PG",
+  "PH",
+  "PK",
+  "PL",
+  "PM",
+  "PN",
+  "PR",
+  "PS",
+  "PT",
+  "PW",
+  "PY",
+  "QA",
+  "RE",
+  "RO",
+  "RS",
+  "RU",
+  "RW",
+  "SA",
+  "SB",
+  "SC",
+  "SD",
+  "SE",
+  "SG",
+  "SH",
+  "SI",
+  "SJ",
+  "SK",
+  "SL",
+  "SM",
+  "SN",
+  "SO",
+  "SR",
+  "SS",
+  "ST",
+  "SV",
+  "SX",
+  "SY",
+  "SZ",
+  "TC",
+  "TD",
+  "TF",
+  "TG",
+  "TH",
+  "TJ",
+  "TK",
+  "TL",
+  "TM",
+  "TN",
+  "TO",
+  "TR",
+  "TT",
+  "TV",
+  "TW",
+  "TZ",
+  "UA",
+  "UG",
+  "UM",
+  "US",
+  "UY",
+  "UZ",
+  "VA",
+  "VC",
+  "VE",
+  "VG",
+  "VI",
+  "VN",
+  "VU",
+  "WF",
+  "WS",
+  "XK",
+  "YE",
+  "YT",
+  "ZA",
+  "ZM",
+  "ZW",
+] as const;
+
+export type CountryCode = (typeof COUNTRY_CODES)[number];
+
 // Fully populated: every country GeoNames knows about, keyed by alpha-2 code.
-export const COUNTRY_DATA: Record<string, CountryData> = {
+export const COUNTRY_DATA: Record<CountryCode, CountryData> = {
   AD: {
     code: "AD",
     iso3: "AND",
@@ -30,8 +288,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:AD)*(\\d{3})$",
     languages: ["ca"],
     administrativeLabels: {
-      level1: { en: "Parish", local: "Parròquia" },
-      level2: { en: "Settlement", local: "Ciutat" },
+      level1: {
+        en: "Parish",
+        local: "Parròquia",
+      },
+      level2: {
+        en: "Settlement",
+        local: "Ciutat",
+      },
     },
   },
   AE: {
@@ -44,7 +308,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^\\d{5}-\\d{5}$",
     languages: ["ar-AE", "fa", "en", "hi", "ur"],
     administrativeLabels: {
-      level1: { en: "Emirate", local: "إمارة" },
+      level1: {
+        en: "Emirate",
+        local: "إمارة",
+      },
       level2: null,
     },
   },
@@ -58,8 +325,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fa-AF", "ps", "uz-AF", "tk"],
     administrativeLabels: {
-      level1: { en: "Province", local: "ولایت" },
-      level2: { en: "District", local: "ولسوالی" },
+      level1: {
+        en: "Province",
+        local: "ولایت",
+      },
+      level2: {
+        en: "District",
+        local: "ولسوالی",
+      },
     },
   },
   AG: {
@@ -72,7 +345,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-AG"],
     administrativeLabels: {
-      level1: { en: "Parish/Dependency", local: "Parish" },
+      level1: {
+        en: "Parish/Dependency",
+        local: "Parish",
+      },
       level2: null,
     },
   },
@@ -85,7 +361,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(?:AZ)*(\\d{4})$",
     languages: ["en-AI"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   AL: {
     code: "AL",
@@ -97,8 +376,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["sq", "el"],
     administrativeLabels: {
-      level1: { en: "County", local: "Qarku" },
-      level2: { en: "District", local: "Rrethet" },
+      level1: {
+        en: "County",
+        local: "Qarku",
+      },
+      level2: {
+        en: "District",
+        local: "Rrethet",
+      },
     },
   },
   AM: {
@@ -111,8 +396,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["hy"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Մարզ" },
-      level2: { en: "Village", local: "Գյուղ" },
+      level1: {
+        en: "Province",
+        local: "Մարզ",
+      },
+      level2: {
+        en: "Village",
+        local: "Գյուղ",
+      },
     },
   },
   AN: {
@@ -124,7 +415,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Guilder",
     postalCodeRegex: null,
     languages: ["nl-AN", "en", "es"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   AO: {
     code: "AO",
@@ -136,8 +430,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["pt-AO"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Província" },
-      level2: { en: "Municipality", local: "Município" },
+      level1: {
+        en: "Province",
+        local: "Província",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Município",
+      },
     },
   },
   AQ: {
@@ -149,7 +449,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "",
     postalCodeRegex: null,
     languages: [],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   AR: {
     code: "AR",
@@ -161,8 +464,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^[A-Z]?\\d{4}[A-Z]{0,3}$",
     languages: ["es-AR", "en", "it", "de", "fr", "gn"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Provincia" },
-      level2: { en: "Department", local: "Departamento" },
+      level1: {
+        en: "Province",
+        local: "Provincia",
+      },
+      level2: {
+        en: "Department",
+        local: "Departamento",
+      },
     },
   },
   AS: {
@@ -175,8 +484,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "96799",
     languages: ["en-AS", "sm", "to"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
-      level2: { en: "County", local: "County" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
+      level2: {
+        en: "County",
+        local: "County",
+      },
     },
   },
   AT: {
@@ -189,8 +504,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["de-AT", "hr", "hu", "sl"],
     administrativeLabels: {
-      level1: { en: "Federal state", local: "Bundesland" },
-      level2: { en: "District", local: "Bezirk" },
+      level1: {
+        en: "Federal state",
+        local: "Bundesland",
+      },
+      level2: {
+        en: "District",
+        local: "Bezirk",
+      },
     },
   },
   AU: {
@@ -203,8 +524,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["en-AU"],
     administrativeLabels: {
-      level1: { en: "State/Territory", local: "External territory" },
-      level2: { en: "Local government area", local: "Local government area" },
+      level1: {
+        en: "State/Territory",
+        local: "External territory",
+      },
+      level2: {
+        en: "Local government area",
+        local: "Local government area",
+      },
     },
   },
   AW: {
@@ -216,7 +543,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Guilder",
     postalCodeRegex: null,
     languages: ["nl-AW", "pap", "es", "en"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   AX: {
     code: "AX",
@@ -227,7 +557,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Euro",
     postalCodeRegex: "^(?:FI)*(\\d{5})$",
     languages: ["sv-AX"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   AZ: {
     code: "AZ",
@@ -239,7 +572,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:AZ )*(\\d{4})$",
     languages: ["az", "ru", "hy"],
     administrativeLabels: {
-      level1: { en: "District/City", local: "Rayonu" },
+      level1: {
+        en: "District/City",
+        local: "Rayonu",
+      },
       level2: null,
     },
   },
@@ -253,8 +589,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["bs", "hr-BA", "sr-BA"],
     administrativeLabels: {
-      level1: { en: "Political division", local: "Administrativna podjela" },
-      level2: { en: "Region", local: "Regije Republike Srpske" },
+      level1: {
+        en: "Political division",
+        local: "Administrativna podjela",
+      },
+      level2: {
+        en: "Region",
+        local: "Regije Republike Srpske",
+      },
     },
   },
   BB: {
@@ -267,7 +609,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:BB)*(\\d{5})$",
     languages: ["en-BB"],
     administrativeLabels: {
-      level1: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "Parish",
+        local: "Parish",
+      },
       level2: null,
     },
   },
@@ -281,8 +626,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["bn-BD", "en"],
     administrativeLabels: {
-      level1: { en: "Division", local: "বিভাগ" },
-      level2: { en: "District", local: "জেলা" },
+      level1: {
+        en: "Division",
+        local: "বিভাগ",
+      },
+      level2: {
+        en: "District",
+        local: "জেলা",
+      },
     },
   },
   BE: {
@@ -295,8 +646,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["nl-BE", "fr-BE", "de-BE"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Gewest" },
-      level2: { en: "Province", local: "Provincie" },
+      level1: {
+        en: "Region",
+        local: "Gewest",
+      },
+      level2: {
+        en: "Province",
+        local: "Provincie",
+      },
     },
   },
   BF: {
@@ -309,8 +666,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-BF", "mos"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Région" },
-      level2: { en: "Province", local: "Province" },
+      level1: {
+        en: "Region",
+        local: "Région",
+      },
+      level2: {
+        en: "Province",
+        local: "Province",
+      },
     },
   },
   BG: {
@@ -323,8 +686,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["bg", "tr-BG", "rom"],
     administrativeLabels: {
-      level1: { en: "Oblast", local: "Oбласт" },
-      level2: { en: "Municipality", local: "Община" },
+      level1: {
+        en: "Oblast",
+        local: "Oбласт",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Община",
+      },
     },
   },
   BH: {
@@ -337,7 +706,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{3}\\d?)$",
     languages: ["ar-BH", "en", "fa", "ur"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
       level2: null,
     },
   },
@@ -351,8 +723,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-BI", "rn"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Province" },
-      level2: { en: "Commune", local: "Commune" },
+      level1: {
+        en: "Province",
+        local: "Province",
+      },
+      level2: {
+        en: "Commune",
+        local: "Commune",
+      },
     },
   },
   BJ: {
@@ -365,8 +743,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-BJ"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Département" },
-      level2: { en: "Commune", local: "Commune" },
+      level1: {
+        en: "Department",
+        local: "Département",
+      },
+      level2: {
+        en: "Commune",
+        local: "Commune",
+      },
     },
   },
   BL: {
@@ -378,7 +762,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Euro",
     postalCodeRegex: "^(\\d{5})$",
     languages: ["fr"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   BM: {
     code: "BM",
@@ -390,7 +777,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^([A-Z]{2}\\d{2})$",
     languages: ["en-BM", "pt"],
     administrativeLabels: {
-      level1: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "Parish",
+        local: "Parish",
+      },
       level2: null,
     },
   },
@@ -404,8 +794,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^([A-Z]{2}\\d{4})$",
     languages: ["ms-BN", "en-BN"],
     administrativeLabels: {
-      level1: { en: "District", local: "Daerah" },
-      level2: { en: "Mukim", local: "Mukim Negara" },
+      level1: {
+        en: "District",
+        local: "Daerah",
+      },
+      level2: {
+        en: "Mukim",
+        local: "Mukim Negara",
+      },
     },
   },
   BO: {
@@ -418,8 +814,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["es-BO", "qu", "ay"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departamento" },
-      level2: { en: "Province", local: "Provincia" },
+      level1: {
+        en: "Department",
+        local: "Departamento",
+      },
+      level2: {
+        en: "Province",
+        local: "Provincia",
+      },
     },
   },
   BQ: {
@@ -431,7 +833,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: null,
     languages: ["nl", "pap", "en"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   BR: {
     code: "BR",
@@ -443,8 +848,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^\\d{5}-\\d{3}$",
     languages: ["pt-BR", "es", "en", "fr"],
     administrativeLabels: {
-      level1: { en: "Federative unit", local: "Unidade federativa" },
-      level2: { en: "Municipality", local: "Município" },
+      level1: {
+        en: "Federative unit",
+        local: "Unidade federativa",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Município",
+      },
     },
   },
   BS: {
@@ -457,7 +868,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-BS"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
       level2: null,
     },
   },
@@ -471,8 +885,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["dz"],
     administrativeLabels: {
-      level1: { en: "District", local: "རྫོང་ཁག" },
-      level2: { en: "Gewog", local: "" },
+      level1: {
+        en: "District",
+        local: "རྫོང་ཁག",
+      },
+      level2: {
+        en: "Gewog",
+        local: "",
+      },
     },
   },
   BV: {
@@ -484,7 +904,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Krone",
     postalCodeRegex: null,
     languages: [],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   BW: {
     code: "BW",
@@ -496,7 +919,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-BW", "tn-BW"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
       level2: null,
     },
   },
@@ -510,8 +936,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["be", "ru"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Вобласць" },
-      level2: { en: "District", local: "Раён" },
+      level1: {
+        en: "Region",
+        local: "Вобласць",
+      },
+      level2: {
+        en: "District",
+        local: "Раён",
+      },
     },
   },
   BZ: {
@@ -524,7 +956,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-BZ", "es"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
       level2: null,
     },
   },
@@ -538,8 +973,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^([ABCEGHJKLMNPRSTVXY]\\d[ABCEGHJKLMNPRSTVWXYZ]) ?(\\d[ABCEGHJKLMNPRSTVWXYZ]\\d)$ ",
     languages: ["en-CA", "fr-CA", "iu"],
     administrativeLabels: {
-      level1: { en: "Province/Territory", local: "Province" },
-      level2: { en: "Regional district", local: "Regional district" },
+      level1: {
+        en: "Province/Territory",
+        local: "Province",
+      },
+      level2: {
+        en: "Regional district",
+        local: "Regional district",
+      },
     },
   },
   CC: {
@@ -551,7 +992,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(\\d{4})$",
     languages: ["ms-CC", "en"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   CD: {
     code: "CD",
@@ -563,8 +1007,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-CD", "ln", "ktu", "kg", "sw", "lua"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Provinces" },
-      level2: { en: "Commune", local: "Commune" },
+      level1: {
+        en: "Province",
+        local: "Provinces",
+      },
+      level2: {
+        en: "Commune",
+        local: "Commune",
+      },
     },
   },
   CF: {
@@ -577,7 +1027,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-CF", "sg", "ln", "kg"],
     administrativeLabels: {
-      level1: { en: "Prefecture", local: "Préfecture" },
+      level1: {
+        en: "Prefecture",
+        local: "Préfecture",
+      },
       level2: null,
     },
   },
@@ -591,7 +1044,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-CG", "kg", "ln-CG"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Département" },
+      level1: {
+        en: "Department",
+        local: "Département",
+      },
       level2: null,
     },
   },
@@ -605,8 +1061,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["de-CH", "fr-CH", "it-CH", "rm"],
     administrativeLabels: {
-      level1: { en: "Canton", local: "Kanton" },
-      level2: { en: "Municipality", local: "Gemeinde" },
+      level1: {
+        en: "Canton",
+        local: "Kanton",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Gemeinde",
+      },
     },
   },
   CI: {
@@ -619,7 +1081,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-CI"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Région" },
+      level1: {
+        en: "Region",
+        local: "Région",
+      },
       level2: null,
     },
   },
@@ -632,7 +1097,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: null,
     languages: ["en-CK", "mi"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   CL: {
     code: "CL",
@@ -644,8 +1112,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{7})$",
     languages: ["es-CL"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Región" },
-      level2: { en: "Province", local: "Provincia" },
+      level1: {
+        en: "Region",
+        local: "Región",
+      },
+      level2: {
+        en: "Province",
+        local: "Provincia",
+      },
     },
   },
   CM: {
@@ -658,8 +1132,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-CM", "fr-CM"],
     administrativeLabels: {
-      level1: { en: "Electoral unit", local: "Electoral unit" },
-      level2: { en: "Department", local: "Department" },
+      level1: {
+        en: "Electoral unit",
+        local: "Electoral unit",
+      },
+      level2: {
+        en: "Department",
+        local: "Department",
+      },
     },
   },
   CN: {
@@ -672,8 +1152,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["zh-CN", "yue", "wuu", "dta", "ug", "za"],
     administrativeLabels: {
-      level1: { en: "Province", local: "省" },
-      level2: { en: "Prefecture-level city", local: "地级市" },
+      level1: {
+        en: "Province",
+        local: "省",
+      },
+      level2: {
+        en: "Prefecture-level city",
+        local: "地级市",
+      },
     },
   },
   CO: {
@@ -686,8 +1172,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["es-CO"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departamento" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "Department",
+        local: "Departamento",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   CR: {
@@ -700,8 +1192,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["es-CR", "en"],
     administrativeLabels: {
-      level1: { en: "Electoral unit", local: "Circunscripción electoral" },
-      level2: { en: "Canton", local: "Cantón" },
+      level1: {
+        en: "Electoral unit",
+        local: "Circunscripción electoral",
+      },
+      level2: {
+        en: "Canton",
+        local: "Cantón",
+      },
     },
   },
   CS: {
@@ -713,7 +1211,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dinar",
     postalCodeRegex: "^(\\d{5})$",
     languages: ["cu", "hu", "sq", "sr"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   CU: {
     code: "CU",
@@ -725,8 +1226,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:CP)*(\\d{5})$",
     languages: ["es-CU", "pap"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Provincia" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "Province",
+        local: "Provincia",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   CV: {
@@ -739,8 +1246,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["pt-CV"],
     administrativeLabels: {
-      level1: { en: "Concelho", local: "Municipio" },
-      level2: { en: "Freguesia", local: "Freguesia" },
+      level1: {
+        en: "Concelho",
+        local: "Municipio",
+      },
+      level2: {
+        en: "Freguesia",
+        local: "Freguesia",
+      },
     },
   },
   CW: {
@@ -752,7 +1265,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Guilder",
     postalCodeRegex: null,
     languages: ["nl", "pap"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   CX: {
     code: "CX",
@@ -763,7 +1279,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(\\d{4})$",
     languages: ["en", "zh", "ms-CX"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   CY: {
     code: "CY",
@@ -775,8 +1294,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["el-CY", "tr-CY", "en"],
     administrativeLabels: {
-      level1: { en: "District", local: "Επαρχία" },
-      level2: { en: "Community", local: "Κοινότητα" },
+      level1: {
+        en: "District",
+        local: "Επαρχία",
+      },
+      level2: {
+        en: "Community",
+        local: "Κοινότητα",
+      },
     },
   },
   CZ: {
@@ -789,8 +1314,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^\\d{3}\\s?\\d{2}$",
     languages: ["cs", "sk"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Kraj" },
-      level2: { en: "Municipal part", local: "Část obce" },
+      level1: {
+        en: "Region",
+        local: "Kraj",
+      },
+      level2: {
+        en: "Municipal part",
+        local: "Část obce",
+      },
     },
   },
   DE: {
@@ -803,8 +1334,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["de"],
     administrativeLabels: {
-      level1: { en: "Federated state", local: "Bundesland" },
-      level2: { en: "Urban municipality", local: "Stadt" },
+      level1: {
+        en: "Federated state",
+        local: "Bundesland",
+      },
+      level2: {
+        en: "Urban municipality",
+        local: "Stadt",
+      },
     },
   },
   DJ: {
@@ -817,8 +1354,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-DJ", "ar", "so-DJ", "aa"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Région" },
-      level2: { en: "Sub-prefecture", local: "Sous-préfecture" },
+      level1: {
+        en: "Region",
+        local: "Région",
+      },
+      level2: {
+        en: "Sub-prefecture",
+        local: "Sous-préfecture",
+      },
     },
   },
   DK: {
@@ -831,8 +1374,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["da-DK", "en", "fo", "de-DK"],
     administrativeLabels: {
-      level1: { en: "County", local: "Dansk amt" },
-      level2: { en: "Municipality", local: "Kommune" },
+      level1: {
+        en: "County",
+        local: "Dansk amt",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Kommune",
+      },
     },
   },
   DM: {
@@ -845,7 +1394,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-DM"],
     administrativeLabels: {
-      level1: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "Parish",
+        local: "Parish",
+      },
       level2: null,
     },
   },
@@ -859,7 +1411,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["es-DO"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Provincia" },
+      level1: {
+        en: "Province",
+        local: "Provincia",
+      },
       level2: null,
     },
   },
@@ -873,8 +1428,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ar-DZ"],
     administrativeLabels: {
-      level1: { en: "Province", local: "ولاية" },
-      level2: { en: "District", local: "دائرة" },
+      level1: {
+        en: "Province",
+        local: "ولاية",
+      },
+      level2: {
+        en: "District",
+        local: "دائرة",
+      },
     },
   },
   EC: {
@@ -887,8 +1448,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^([a-zA-Z]\\d{4}[a-zA-Z])$",
     languages: ["es-EC"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Provincia" },
-      level2: { en: "Canton", local: "Cantón" },
+      level1: {
+        en: "Province",
+        local: "Provincia",
+      },
+      level2: {
+        en: "Canton",
+        local: "Cantón",
+      },
     },
   },
   EE: {
@@ -901,7 +1468,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["et", "ru"],
     administrativeLabels: {
-      level1: { en: "County", local: "Maakond" },
+      level1: {
+        en: "County",
+        local: "Maakond",
+      },
       level2: null,
     },
   },
@@ -915,8 +1485,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ar-EG", "en", "fr"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
-      level2: { en: "Marka", local: "مركز" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
+      level2: {
+        en: "Marka",
+        local: "مركز",
+      },
     },
   },
   EH: {
@@ -928,7 +1504,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dirham",
     postalCodeRegex: null,
     languages: ["ar", "mey"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   ER: {
     code: "ER",
@@ -939,7 +1518,13 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Nakfa",
     postalCodeRegex: null,
     languages: ["aa-ER", "ar", "tig", "kun", "ti-ER"],
-    administrativeLabels: { level1: { en: "Region", local: "" }, level2: null },
+    administrativeLabels: {
+      level1: {
+        en: "Region",
+        local: "",
+      },
+      level2: null,
+    },
   },
   ES: {
     code: "ES",
@@ -951,8 +1536,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["es-ES", "ca", "gl", "eu", "oc"],
     administrativeLabels: {
-      level1: { en: "Autonomous community", local: "Comunidad autónoma" },
-      level2: { en: "Province", local: "Provincia" },
+      level1: {
+        en: "Autonomous community",
+        local: "Comunidad autónoma",
+      },
+      level2: {
+        en: "Province",
+        local: "Provincia",
+      },
     },
   },
   ET: {
@@ -965,8 +1556,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["am", "en-ET", "om-ET", "ti-ET", "so-ET", "sid"],
     administrativeLabels: {
-      level1: { en: "Region/Chartered city", local: "" },
-      level2: { en: "District", local: "" },
+      level1: {
+        en: "Region/Chartered city",
+        local: "",
+      },
+      level2: {
+        en: "District",
+        local: "",
+      },
     },
   },
   FI: {
@@ -979,8 +1576,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:FI)*(\\d{5})$",
     languages: ["fi-FI", "sv-FI", "smn"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Maakunta" },
-      level2: { en: "Municipality", local: "Kunta" },
+      level1: {
+        en: "Region",
+        local: "Maakunta",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Kunta",
+      },
     },
   },
   FJ: {
@@ -993,7 +1596,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-FJ", "fj"],
     administrativeLabels: {
-      level1: { en: "Division", local: "Division" },
+      level1: {
+        en: "Division",
+        local: "Division",
+      },
       level2: null,
     },
   },
@@ -1006,7 +1612,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Pound",
     postalCodeRegex: "FIQQ 1ZZ",
     languages: ["en-FK"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   FM: {
     code: "FM",
@@ -1018,7 +1627,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["en-FM", "chk", "pon", "yap", "kos", "uli", "woe", "nkr", "kpg"],
     administrativeLabels: {
-      level1: { en: "State", local: "State" },
+      level1: {
+        en: "State",
+        local: "State",
+      },
       level2: null,
     },
   },
@@ -1031,7 +1643,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Krone",
     postalCodeRegex: "^(?:FO)*(\\d{3})$",
     languages: ["fo", "da-FO"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   FR: {
     code: "FR",
@@ -1043,8 +1658,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["fr-FR", "frp", "br", "co", "ca", "eu", "oc"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Région" },
-      level2: { en: "Department", local: "Département" },
+      level1: {
+        en: "Region",
+        local: "Région",
+      },
+      level2: {
+        en: "Department",
+        local: "Département",
+      },
     },
   },
   GA: {
@@ -1057,7 +1678,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-GA"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Province" },
+      level1: {
+        en: "Province",
+        local: "Province",
+      },
       level2: null,
     },
   },
@@ -1072,8 +1696,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
       "^([Gg][Ii][Rr]\\s?0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\\s?[0-9][A-Za-z]{2})$",
     languages: ["en-GB", "cy-GB", "gd"],
     administrativeLabels: {
-      level1: { en: "Constituent country", local: "Constituent country" },
-      level2: { en: "Council area", local: "Council area" },
+      level1: {
+        en: "Constituent country",
+        local: "Constituent country",
+      },
+      level2: {
+        en: "Council area",
+        local: "Council area",
+      },
     },
   },
   GD: {
@@ -1086,7 +1716,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-GD"],
     administrativeLabels: {
-      level1: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "Parish",
+        local: "Parish",
+      },
       level2: null,
     },
   },
@@ -1100,8 +1733,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["ka", "ru", "hy", "az"],
     administrativeLabels: {
-      level1: { en: "Mkhare", local: "Მხარე" },
-      level2: { en: "Municipality", local: "Მუნიციპალიტეტი" },
+      level1: {
+        en: "Mkhare",
+        local: "Მხარე",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Მუნიციპალიტეტი",
+      },
     },
   },
   GF: {
@@ -1114,8 +1753,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^((97|98)3\\d{2})$",
     languages: ["fr-GF"],
     administrativeLabels: {
-      level1: { en: "Arrondissement", local: "Arrondissement" },
-      level2: { en: "Canton", local: "Canton" },
+      level1: {
+        en: "Arrondissement",
+        local: "Arrondissement",
+      },
+      level2: {
+        en: "Canton",
+        local: "Canton",
+      },
     },
   },
   GG: {
@@ -1129,8 +1774,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
       "^((?:(?:[A-PR-UWYZ][A-HK-Y]\\d[ABEHMNPRV-Y0-9]|[A-PR-UWYZ]\\d[A-HJKPS-UW0-9])\\s\\d[ABD-HJLNP-UW-Z]{2})|GIR\\s?0AA)$",
     languages: ["en", "nrf"],
     administrativeLabels: {
-      level1: { en: "Island", local: "Island" },
-      level2: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "Island",
+        local: "Island",
+      },
+      level2: {
+        en: "Parish",
+        local: "Parish",
+      },
     },
   },
   GH: {
@@ -1143,8 +1794,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-GH", "ak", "ee", "tw"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Region" },
-      level2: { en: "District", local: "District" },
+      level1: {
+        en: "Region",
+        local: "Region",
+      },
+      level2: {
+        en: "District",
+        local: "District",
+      },
     },
   },
   GI: {
@@ -1156,7 +1813,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Pound",
     postalCodeRegex: "GX11 1AA",
     languages: ["en-GI", "es", "it", "pt"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   GL: {
     code: "GL",
@@ -1168,7 +1828,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["kl", "da-GL", "en"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "" },
+      level1: {
+        en: "Municipality",
+        local: "",
+      },
       level2: null,
     },
   },
@@ -1182,7 +1845,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-GM", "mnk", "wof", "wo", "ff"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Region" },
+      level1: {
+        en: "Region",
+        local: "Region",
+      },
       level2: null,
     },
   },
@@ -1196,8 +1862,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-GN"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Région" },
-      level2: { en: "Prefecture", local: "Préfecture" },
+      level1: {
+        en: "Region",
+        local: "Région",
+      },
+      level2: {
+        en: "Prefecture",
+        local: "Préfecture",
+      },
     },
   },
   GP: {
@@ -1210,8 +1882,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^((97|98)\\d{3})$",
     languages: ["fr-GP"],
     administrativeLabels: {
-      level1: { en: "Commune", local: "Commune" },
-      level2: { en: "Canton", local: "Canton" },
+      level1: {
+        en: "Commune",
+        local: "Commune",
+      },
+      level2: {
+        en: "Canton",
+        local: "Canton",
+      },
     },
   },
   GQ: {
@@ -1224,7 +1902,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["es-GQ", "fr", "pt"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Provincia" },
+      level1: {
+        en: "Province",
+        local: "Provincia",
+      },
       level2: null,
     },
   },
@@ -1238,8 +1919,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["el-GR", "en", "fr"],
     administrativeLabels: {
-      level1: { en: "Religious community", local: "Θρησκευτική κοινότητα" },
-      level2: { en: "Regional unit", local: "Περιφερειακή ενότητα" },
+      level1: {
+        en: "Religious community",
+        local: "Θρησκευτική κοινότητα",
+      },
+      level2: {
+        en: "Regional unit",
+        local: "Περιφερειακή ενότητα",
+      },
     },
   },
   GS: {
@@ -1251,7 +1938,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Pound",
     postalCodeRegex: "SIQQ 1ZZ",
     languages: ["en"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   GT: {
     code: "GT",
@@ -1263,8 +1953,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["es-GT"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departamento" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "Department",
+        local: "Departamento",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   GU: {
@@ -1277,8 +1973,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(969\\d{2})$",
     languages: ["en-GU", "ch-GU"],
     administrativeLabels: {
-      level1: { en: "Village", local: "Village" },
-      level2: { en: "Village", local: "Village" },
+      level1: {
+        en: "Village",
+        local: "Village",
+      },
+      level2: {
+        en: "Village",
+        local: "Village",
+      },
     },
   },
   GW: {
@@ -1291,7 +1993,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["pt-GW", "pov"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Região" },
+      level1: {
+        en: "Region",
+        local: "Região",
+      },
       level2: null,
     },
   },
@@ -1305,7 +2010,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-GY"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Region" },
+      level1: {
+        en: "Region",
+        local: "Region",
+      },
       level2: null,
     },
   },
@@ -1319,7 +2027,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["zh-HK", "yue", "zh", "en"],
     administrativeLabels: {
-      level1: { en: "District", local: "香港政區" },
+      level1: {
+        en: "District",
+        local: "香港政區",
+      },
       level2: null,
     },
   },
@@ -1332,7 +2043,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(\\d{4})$",
     languages: [],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   HN: {
     code: "HN",
@@ -1344,8 +2058,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["es-HN", "cab", "miq"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departamento" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "Department",
+        local: "Departamento",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   HR: {
@@ -1358,8 +2078,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:HR)*(\\d{5})$",
     languages: ["hr-HR", "sr"],
     administrativeLabels: {
-      level1: { en: "County", local: "Županija" },
-      level2: { en: "Municipality", local: "Općina" },
+      level1: {
+        en: "County",
+        local: "Županija",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Općina",
+      },
     },
   },
   HT: {
@@ -1372,8 +2098,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:HT)*(\\d{4})$",
     languages: ["ht", "fr-HT"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Depatman" },
-      level2: { en: "Arrondissement", local: "Lis awondisman" },
+      level1: {
+        en: "Department",
+        local: "Depatman",
+      },
+      level2: {
+        en: "Arrondissement",
+        local: "Lis awondisman",
+      },
     },
   },
   HU: {
@@ -1386,8 +2118,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["hu-HU"],
     administrativeLabels: {
-      level1: { en: "County", local: "Vármegye" },
-      level2: { en: "District", local: "Járás" },
+      level1: {
+        en: "County",
+        local: "Vármegye",
+      },
+      level2: {
+        en: "District",
+        local: "Járás",
+      },
     },
   },
   ID: {
@@ -1400,8 +2138,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["id", "en", "nl", "jv"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Provinsi" },
-      level2: { en: "Regency", local: "Kabupaten" },
+      level1: {
+        en: "Province",
+        local: "Provinsi",
+      },
+      level2: {
+        en: "Regency",
+        local: "Kabupaten",
+      },
     },
   },
   IE: {
@@ -1414,8 +2158,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(D6W|[AC-FHKNPRTV-Y][0-9]{2})\\s?([AC-FHKNPRTV-Y0-9]{4})",
     languages: ["en-IE", "ga-IE"],
     administrativeLabels: {
-      level1: { en: "County/City", local: "County" },
-      level2: { en: "Municipal district", local: "Municipal district" },
+      level1: {
+        en: "County/City",
+        local: "County",
+      },
+      level2: {
+        en: "Municipal district",
+        local: "Municipal district",
+      },
     },
   },
   IL: {
@@ -1428,8 +2178,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{7}|\\d{5})$",
     languages: ["he", "ar-IL", "en-IL", ""],
     administrativeLabels: {
-      level1: { en: "District", local: "מחוז" },
-      level2: { en: "Settlement", local: "התנחלות" },
+      level1: {
+        en: "District",
+        local: "מחוז",
+      },
+      level2: {
+        en: "Settlement",
+        local: "התנחלות",
+      },
     },
   },
   IM: {
@@ -1442,7 +2198,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex:
       "^((?:(?:[A-PR-UWYZ][A-HK-Y]\\d[ABEHMNPRV-Y0-9]|[A-PR-UWYZ]\\d[A-HJKPS-UW0-9])\\s\\d[ABD-HJLNP-UW-Z]{2})|GIR\\s?0AA)$",
     languages: ["en", "gv"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   IN: {
     code: "IN",
@@ -1481,8 +2240,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
       "inc",
     ],
     administrativeLabels: {
-      level1: { en: "State", local: "State" },
-      level2: { en: "District", local: "District" },
+      level1: {
+        en: "State",
+        local: "State",
+      },
+      level2: {
+        en: "District",
+        local: "District",
+      },
     },
   },
   IO: {
@@ -1494,7 +2259,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "BBND 1ZZ",
     languages: ["en-IO"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   IQ: {
     code: "IQ",
@@ -1506,8 +2274,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ar-IQ", "ku", "hy"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
-      level2: { en: "District", local: "قضاء" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
+      level2: {
+        en: "District",
+        local: "قضاء",
+      },
     },
   },
   IR: {
@@ -1520,8 +2294,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{10})$",
     languages: ["fa-IR", "ku"],
     administrativeLabels: {
-      level1: { en: "Province", local: "استان" },
-      level2: { en: "County", local: "شهرستان" },
+      level1: {
+        en: "Province",
+        local: "استان",
+      },
+      level2: {
+        en: "County",
+        local: "شهرستان",
+      },
     },
   },
   IS: {
@@ -1534,7 +2314,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{3})$",
     languages: ["is", "en", "de", "da", "sv", "no"],
     administrativeLabels: {
-      level1: { en: "Constituency", local: "Kjördæmi" },
+      level1: {
+        en: "Constituency",
+        local: "Kjördæmi",
+      },
       level2: null,
     },
   },
@@ -1548,8 +2331,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["it-IT", "de-IT", "fr-IT", "sc", "ca", "co", "sl"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Regione" },
-      level2: { en: "Province", local: "Provincia" },
+      level1: {
+        en: "Region",
+        local: "Regione",
+      },
+      level2: {
+        en: "Province",
+        local: "Provincia",
+      },
     },
   },
   JE: {
@@ -1563,7 +2352,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
       "^((?:(?:[A-PR-UWYZ][A-HK-Y]\\d[ABEHMNPRV-Y0-9]|[A-PR-UWYZ]\\d[A-HJKPS-UW0-9])\\s\\d[ABD-HJLNP-UW-Z]{2})|GIR\\s?0AA)$",
     languages: ["en", "fr", "nrf"],
     administrativeLabels: {
-      level1: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "Parish",
+        local: "Parish",
+      },
       level2: null,
     },
   },
@@ -1577,8 +2369,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-JM"],
     administrativeLabels: {
-      level1: { en: "County", local: "County" },
-      level2: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "County",
+        local: "County",
+      },
+      level2: {
+        en: "Parish",
+        local: "Parish",
+      },
     },
   },
   JO: {
@@ -1591,7 +2389,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ar-JO", "en"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
       level2: null,
     },
   },
@@ -1605,8 +2406,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^\\d{3}-\\d{4}$",
     languages: ["ja"],
     administrativeLabels: {
-      level1: { en: "Prefecture", local: "都道府県" },
-      level2: { en: "City", local: "日本の市" },
+      level1: {
+        en: "Prefecture",
+        local: "都道府県",
+      },
+      level2: {
+        en: "City",
+        local: "日本の市",
+      },
     },
   },
   KE: {
@@ -1619,7 +2426,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["en-KE", "sw-KE"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Province" },
+      level1: {
+        en: "Province",
+        local: "Province",
+      },
       level2: null,
     },
   },
@@ -1632,7 +2442,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Som",
     postalCodeRegex: "^(\\d{6})$",
     languages: ["ky", "uz", "ru"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   KH: {
     code: "KH",
@@ -1644,8 +2457,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["km", "fr", "en"],
     administrativeLabels: {
-      level1: { en: "Province", local: "ខេត្តនៃកម្ពុជា" },
-      level2: { en: "District", local: "" },
+      level1: {
+        en: "Province",
+        local: "ខេត្តនៃកម្ពុជា",
+      },
+      level2: {
+        en: "District",
+        local: "",
+      },
     },
   },
   KI: {
@@ -1657,7 +2476,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: null,
     languages: ["en-KI", "gil"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   KM: {
     code: "KM",
@@ -1669,7 +2491,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["ar", "fr-KM"],
     administrativeLabels: {
-      level1: { en: "Volcanic island", local: "جزيرة" },
+      level1: {
+        en: "Volcanic island",
+        local: "جزيرة",
+      },
       level2: null,
     },
   },
@@ -1683,7 +2508,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-KN"],
     administrativeLabels: {
-      level1: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "Parish",
+        local: "Parish",
+      },
       level2: null,
     },
   },
@@ -1697,8 +2525,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["ko-KP"],
     administrativeLabels: {
-      level1: { en: "Province/Municipality", local: "도" },
-      level2: { en: "County", local: "군" },
+      level1: {
+        en: "Province/Municipality",
+        local: "도",
+      },
+      level2: {
+        en: "County",
+        local: "군",
+      },
     },
   },
   KR: {
@@ -1711,8 +2545,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ko-KR", "en"],
     administrativeLabels: {
-      level1: { en: "Metropolitan city", local: "광역시" },
-      level2: { en: "County", local: "군" },
+      level1: {
+        en: "Metropolitan city",
+        local: "광역시",
+      },
+      level2: {
+        en: "County",
+        local: "군",
+      },
     },
   },
   KW: {
@@ -1725,7 +2565,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ar-KW", "en"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
       level2: null,
     },
   },
@@ -1738,7 +2581,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: null,
     languages: ["en-KY"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   KZ: {
     code: "KZ",
@@ -1750,7 +2596,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["kk", "ru"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Облыс" },
+      level1: {
+        en: "Region",
+        local: "Облыс",
+      },
       level2: null,
     },
   },
@@ -1764,8 +2613,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["lo", "fr", "en"],
     administrativeLabels: {
-      level1: { en: "Province", local: "ແຂວງຂອງປະເທດລາວ" },
-      level2: { en: "District", local: "ເມືອງ" },
+      level1: {
+        en: "Province",
+        local: "ແຂວງຂອງປະເທດລາວ",
+      },
+      level2: {
+        en: "District",
+        local: "ເມືອງ",
+      },
     },
   },
   LB: {
@@ -1778,7 +2633,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4}(\\d{4})?)$",
     languages: ["ar-LB", "fr-LB", "en", "hy"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
       level2: null,
     },
   },
@@ -1792,7 +2650,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-LC"],
     administrativeLabels: {
-      level1: { en: "Quarter", local: "Quarter" },
+      level1: {
+        en: "Quarter",
+        local: "Quarter",
+      },
       level2: null,
     },
   },
@@ -1806,7 +2667,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["de-LI"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Gemeinde" },
+      level1: {
+        en: "Municipality",
+        local: "Gemeinde",
+      },
       level2: null,
     },
   },
@@ -1820,8 +2684,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["si", "ta", "en"],
     administrativeLabels: {
-      level1: { en: "Province", local: "පළාත" },
-      level2: { en: "District", local: "පරිපාලන දිස්ත්රික්කය" },
+      level1: {
+        en: "Province",
+        local: "පළාත",
+      },
+      level2: {
+        en: "District",
+        local: "පරිපාලන දිස්ත්රික්කය",
+      },
     },
   },
   LR: {
@@ -1834,7 +2704,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["en-LR"],
     administrativeLabels: {
-      level1: { en: "County", local: "County" },
+      level1: {
+        en: "County",
+        local: "County",
+      },
       level2: null,
     },
   },
@@ -1848,7 +2721,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{3})$",
     languages: ["en-LS", "st", "zu", "xh"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
       level2: null,
     },
   },
@@ -1862,8 +2738,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:LT)*(\\d{5})$",
     languages: ["lt", "ru", "pl"],
     administrativeLabels: {
-      level1: { en: "District municipality", local: "Rajono savivaldybė" },
-      level2: { en: "Eldership", local: "Seniūnija" },
+      level1: {
+        en: "District municipality",
+        local: "Rajono savivaldybė",
+      },
+      level2: {
+        en: "Eldership",
+        local: "Seniūnija",
+      },
     },
   },
   LU: {
@@ -1876,8 +2758,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:L-)?\\d{4}$",
     languages: ["lb", "de-LU", "fr-LU"],
     administrativeLabels: {
-      level1: { en: "Canton", local: "Kanton" },
-      level2: { en: "Municipality", local: "Gemeng" },
+      level1: {
+        en: "Canton",
+        local: "Kanton",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Gemeng",
+      },
     },
   },
   LV: {
@@ -1890,8 +2778,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:LV)*(\\d{4})$",
     languages: ["lv", "ru", "lt"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Novads" },
-      level2: { en: "Parish", local: "Pagasts" },
+      level1: {
+        en: "Municipality",
+        local: "Novads",
+      },
+      level2: {
+        en: "Parish",
+        local: "Pagasts",
+      },
     },
   },
   LY: {
@@ -1904,7 +2798,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["ar-LY", "it", "en"],
     administrativeLabels: {
-      level1: { en: "District", local: "شعبية" },
+      level1: {
+        en: "District",
+        local: "شعبية",
+      },
       level2: null,
     },
   },
@@ -1918,8 +2815,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ar-MA", "ber", "fr"],
     administrativeLabels: {
-      level1: { en: "Region", local: "جهة" },
-      level2: { en: "Province", local: "إقليم" },
+      level1: {
+        en: "Region",
+        local: "جهة",
+      },
+      level2: {
+        en: "Province",
+        local: "إقليم",
+      },
     },
   },
   MC: {
@@ -1932,7 +2835,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["fr-MC", "en", "it"],
     administrativeLabels: {
-      level1: { en: "Commune", local: "Commune" },
+      level1: {
+        en: "Commune",
+        local: "Commune",
+      },
       level2: null,
     },
   },
@@ -1946,8 +2852,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^MD-\\d{4}$",
     languages: ["ro", "ru", "gag", "tr"],
     administrativeLabels: {
-      level1: { en: "District/Municipality", local: "Raion" },
-      level2: { en: "Village", local: "Sat" },
+      level1: {
+        en: "District/Municipality",
+        local: "Raion",
+      },
+      level2: {
+        en: "Village",
+        local: "Sat",
+      },
     },
   },
   ME: {
@@ -1960,7 +2872,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["sr", "hu", "bs", "sq", "hr", "rom"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Општина" },
+      level1: {
+        en: "Municipality",
+        local: "Општина",
+      },
       level2: null,
     },
   },
@@ -1973,7 +2888,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Euro",
     postalCodeRegex: "^(\\d{5})$",
     languages: ["fr"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   MG: {
     code: "MG",
@@ -1985,8 +2903,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{3})$",
     languages: ["fr-MG", "mg"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Province" },
-      level2: { en: "District", local: "District" },
+      level1: {
+        en: "Province",
+        local: "Province",
+      },
+      level2: {
+        en: "District",
+        local: "District",
+      },
     },
   },
   MH: {
@@ -1999,7 +2923,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^969\\d{2}(-\\d{4})$",
     languages: ["mh", "en-MH"],
     administrativeLabels: {
-      level1: { en: "Reef island", local: "" },
+      level1: {
+        en: "Reef island",
+        local: "",
+      },
       level2: null,
     },
   },
@@ -2013,8 +2940,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["mk", "sq", "tr", "rmm", "sr"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Општина" },
-      level2: { en: "Municipality", local: "Општина" },
+      level1: {
+        en: "Municipality",
+        local: "Општина",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Општина",
+      },
     },
   },
   ML: {
@@ -2027,8 +2960,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-ML", "bm"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Régions" },
-      level2: { en: "Human settlement", local: "Établissement humain" },
+      level1: {
+        en: "Region",
+        local: "Régions",
+      },
+      level2: {
+        en: "Human settlement",
+        local: "Établissement humain",
+      },
     },
   },
   MM: {
@@ -2041,7 +2980,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["my"],
     administrativeLabels: {
-      level1: { en: "Region/State", local: "တိုင်းဒေသကြီး" },
+      level1: {
+        en: "Region/State",
+        local: "တိုင်းဒေသကြီး",
+      },
       level2: null,
     },
   },
@@ -2055,8 +2997,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["mn", "ru"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Аймаг" },
-      level2: { en: "District", local: "Сум" },
+      level1: {
+        en: "Province",
+        local: "Аймаг",
+      },
+      level2: {
+        en: "District",
+        local: "Сум",
+      },
     },
   },
   MO: {
@@ -2068,7 +3016,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Pataca",
     postalCodeRegex: "^(\\d{6})$",
     languages: ["zh", "zh-MO", "pt"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   MP: {
     code: "MP",
@@ -2080,7 +3031,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^9695\\d{1}$",
     languages: ["fil", "tl", "zh", "ch-MP", "en-MP"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "" },
+      level1: {
+        en: "Municipality",
+        local: "",
+      },
       level2: null,
     },
   },
@@ -2094,8 +3048,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["fr-MQ"],
     administrativeLabels: {
-      level1: { en: "Commune", local: "Commune" },
-      level2: { en: "Canton", local: "Canton" },
+      level1: {
+        en: "Commune",
+        local: "Commune",
+      },
+      level2: {
+        en: "Canton",
+        local: "Canton",
+      },
     },
   },
   MR: {
@@ -2108,8 +3068,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["ar-MR", "fuc", "snk", "fr", "mey", "wo"],
     administrativeLabels: {
-      level1: { en: "Region", local: "ولاية" },
-      level2: { en: "Department", local: "مقاطعة" },
+      level1: {
+        en: "Region",
+        local: "ولاية",
+      },
+      level2: {
+        en: "Department",
+        local: "مقاطعة",
+      },
     },
   },
   MS: {
@@ -2121,7 +3087,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: null,
     languages: ["en-MS"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   MT: {
     code: "MT",
@@ -2133,8 +3102,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^[A-Z]{3}\\s?\\d{4}$",
     languages: ["mt", "en-MT"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Reġjuni ta" },
-      level2: { en: "Town", local: "Raħal" },
+      level1: {
+        en: "Region",
+        local: "Reġjuni ta",
+      },
+      level2: {
+        en: "Town",
+        local: "Raħal",
+      },
     },
   },
   MU: {
@@ -2147,7 +3122,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-MU", "bho", "fr"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
       level2: null,
     },
   },
@@ -2161,7 +3139,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["dv", "en"],
     administrativeLabels: {
-      level1: { en: "Atoll/City", local: "އަތޮޅުތައް" },
+      level1: {
+        en: "Atoll/City",
+        local: "އަތޮޅުތައް",
+      },
       level2: null,
     },
   },
@@ -2175,8 +3156,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["ny", "yao", "tum", "swk"],
     administrativeLabels: {
-      level1: { en: "Region", local: "" },
-      level2: { en: "District", local: "Madera" },
+      level1: {
+        en: "Region",
+        local: "",
+      },
+      level2: {
+        en: "District",
+        local: "Madera",
+      },
     },
   },
   MX: {
@@ -2189,8 +3176,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["es-MX"],
     administrativeLabels: {
-      level1: { en: "State", local: "Estado" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "State",
+        local: "Estado",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   MY: {
@@ -2203,8 +3196,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ms-MY", "en", "zh", "ta", "te", "ml", "pa", "th"],
     administrativeLabels: {
-      level1: { en: "State/Federal territory", local: "Negeri" },
-      level2: { en: "Division", local: "Bahagian" },
+      level1: {
+        en: "State/Federal territory",
+        local: "Negeri",
+      },
+      level2: {
+        en: "Division",
+        local: "Bahagian",
+      },
     },
   },
   MZ: {
@@ -2217,8 +3216,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["pt-MZ", "vmw"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Província" },
-      level2: { en: "District", local: "Distritos" },
+      level1: {
+        en: "Province",
+        local: "Província",
+      },
+      level2: {
+        en: "District",
+        local: "Distritos",
+      },
     },
   },
   NA: {
@@ -2231,8 +3236,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-NA", "af", "de", "hz", "naq"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Region" },
-      level2: { en: "Constituency", local: "Constituency" },
+      level1: {
+        en: "Region",
+        local: "Region",
+      },
+      level2: {
+        en: "Constituency",
+        local: "Constituency",
+      },
     },
   },
   NC: {
@@ -2245,7 +3256,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["fr-NC"],
     administrativeLabels: {
-      level1: { en: "Commune", local: "Commune" },
+      level1: {
+        en: "Commune",
+        local: "Commune",
+      },
       level2: null,
     },
   },
@@ -2259,8 +3273,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["fr-NE", "ha", "kr", "dje"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Région" },
-      level2: { en: "Department", local: "Département" },
+      level1: {
+        en: "Region",
+        local: "Région",
+      },
+      level2: {
+        en: "Department",
+        local: "Département",
+      },
     },
   },
   NF: {
@@ -2272,7 +3292,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(\\d{4})$",
     languages: ["en-NF"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   NG: {
     code: "NG",
@@ -2284,8 +3307,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["en-NG", "ha", "yo", "ig", "ff"],
     administrativeLabels: {
-      level1: { en: "State", local: "State" },
-      level2: { en: "Local government area", local: "Local government area" },
+      level1: {
+        en: "State",
+        local: "State",
+      },
+      level2: {
+        en: "Local government area",
+        local: "Local government area",
+      },
     },
   },
   NI: {
@@ -2298,8 +3327,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{7})$",
     languages: ["es-NI", "en"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departamento" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "Department",
+        local: "Departamento",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   NL: {
@@ -2312,8 +3347,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4}\\s?[a-zA-Z]{2})$",
     languages: ["nl-NL", "fy-NL"],
     administrativeLabels: {
-      level1: { en: "Country", local: "Land" },
-      level2: { en: "Province", local: "Provincie" },
+      level1: {
+        en: "Country",
+        local: "Land",
+      },
+      level2: {
+        en: "Province",
+        local: "Provincie",
+      },
     },
   },
   NO: {
@@ -2326,8 +3367,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["no", "nb", "nn", "se", "fi"],
     administrativeLabels: {
-      level1: { en: "County", local: "" },
-      level2: { en: "Municipality", local: "" },
+      level1: {
+        en: "County",
+        local: "",
+      },
+      level2: {
+        en: "Municipality",
+        local: "",
+      },
     },
   },
   NP: {
@@ -2340,7 +3387,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ne", "en"],
     administrativeLabels: {
-      level1: { en: "Province", local: "प्रदेश" },
+      level1: {
+        en: "Province",
+        local: "प्रदेश",
+      },
       level2: null,
     },
   },
@@ -2354,7 +3404,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "NRU68",
     languages: ["na", "en-NR"],
     administrativeLabels: {
-      level1: { en: "District", local: "" },
+      level1: {
+        en: "District",
+        local: "",
+      },
       level2: null,
     },
   },
@@ -2367,7 +3420,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(\\d{4})$",
     languages: ["niu", "en-NU"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   NZ: {
     code: "NZ",
@@ -2379,8 +3435,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["en-NZ", "mi"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Region" },
-      level2: { en: "District", local: "District" },
+      level1: {
+        en: "Region",
+        local: "Region",
+      },
+      level2: {
+        en: "District",
+        local: "District",
+      },
     },
   },
   OM: {
@@ -2393,7 +3455,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{3})$",
     languages: ["ar-OM", "en", "bal", "ur"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
       level2: null,
     },
   },
@@ -2407,8 +3472,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["es-PA", "en"],
     administrativeLabels: {
-      level1: { en: "Province/Indigenous region", local: "Provincia" },
-      level2: { en: "District", local: "Distrito" },
+      level1: {
+        en: "Province/Indigenous region",
+        local: "Provincia",
+      },
+      level2: {
+        en: "District",
+        local: "Distrito",
+      },
     },
   },
   PE: {
@@ -2421,8 +3492,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["es-PE", "qu", "ay"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departmento" },
-      level2: { en: "Province", local: "Provincia" },
+      level1: {
+        en: "Department",
+        local: "Departmento",
+      },
+      level2: {
+        en: "Province",
+        local: "Provincia",
+      },
     },
   },
   PF: {
@@ -2435,8 +3512,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^((97|98)7\\d{2})$",
     languages: ["fr-PF", "ty"],
     administrativeLabels: {
-      level1: { en: "Commune", local: "Commune" },
-      level2: { en: "Commune", local: "Commune" },
+      level1: {
+        en: "Commune",
+        local: "Commune",
+      },
+      level2: {
+        en: "Commune",
+        local: "Commune",
+      },
     },
   },
   PG: {
@@ -2449,8 +3532,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{3})$",
     languages: ["en-PG", "ho", "meu", "tpi"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Province" },
-      level2: { en: "District", local: "District" },
+      level1: {
+        en: "Province",
+        local: "Province",
+      },
+      level2: {
+        en: "District",
+        local: "District",
+      },
     },
   },
   PH: {
@@ -2487,8 +3576,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
       "abx",
     ],
     administrativeLabels: {
-      level1: { en: "Region", local: "Rehiyon" },
-      level2: { en: "Province", local: "Lalawigan" },
+      level1: {
+        en: "Region",
+        local: "Rehiyon",
+      },
+      level2: {
+        en: "Province",
+        local: "Lalawigan",
+      },
     },
   },
   PK: {
@@ -2501,8 +3596,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ur-PK", "en-PK", "pa", "sd", "ps", "brh"],
     administrativeLabels: {
-      level1: { en: "Province", local: "صوبہ" },
-      level2: { en: "Division", local: "ڈویژن" },
+      level1: {
+        en: "Province",
+        local: "صوبہ",
+      },
+      level2: {
+        en: "Division",
+        local: "ڈویژن",
+      },
     },
   },
   PL: {
@@ -2515,8 +3616,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^\\d{2}-\\d{3}$",
     languages: ["pl"],
     administrativeLabels: {
-      level1: { en: "Voivodeship", local: "Województwo" },
-      level2: { en: "Powiat", local: "Powiat" },
+      level1: {
+        en: "Voivodeship",
+        local: "Województwo",
+      },
+      level2: {
+        en: "Powiat",
+        local: "Powiat",
+      },
     },
   },
   PM: {
@@ -2529,8 +3636,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(97500)$",
     languages: ["fr-PM"],
     administrativeLabels: {
-      level1: { en: "Commune", local: "Commune" },
-      level2: { en: "Island", local: "Île" },
+      level1: {
+        en: "Commune",
+        local: "Commune",
+      },
+      level2: {
+        en: "Island",
+        local: "Île",
+      },
     },
   },
   PN: {
@@ -2542,7 +3655,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "PCRN 1ZZ",
     languages: ["en-PN"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   PR: {
     code: "PR",
@@ -2554,7 +3670,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^00[679]\\d{2}(?:-\\d{4})?$",
     languages: ["en-PR", "es-PR"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Municipality" },
+      level1: {
+        en: "Municipality",
+        local: "Municipality",
+      },
       level2: null,
     },
   },
@@ -2568,8 +3687,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["ar-PS"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
-      level2: { en: "Governorate", local: "محافظة" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
+      level2: {
+        en: "Governorate",
+        local: "محافظة",
+      },
     },
   },
   PT: {
@@ -2582,8 +3707,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^\\d{4}-\\d{3}\\s?[a-zA-Z]{0,25}$",
     languages: ["pt-PT", "mwl"],
     administrativeLabels: {
-      level1: { en: "District", local: "Distrito" },
-      level2: { en: "Municipality", local: "Município" },
+      level1: {
+        en: "District",
+        local: "Distrito",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Município",
+      },
     },
   },
   PW: {
@@ -2595,7 +3726,13 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(96940)$",
     languages: ["pau", "sov", "en-PW", "tox", "ja", "fil", "zh"],
-    administrativeLabels: { level1: { en: "State", local: "" }, level2: null },
+    administrativeLabels: {
+      level1: {
+        en: "State",
+        local: "",
+      },
+      level2: null,
+    },
   },
   PY: {
     code: "PY",
@@ -2607,8 +3744,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["es-PY", "gn"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departamento" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "Department",
+        local: "Departamento",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   QA: {
@@ -2621,8 +3764,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["ar-QA", "es"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "بلدية" },
-      level2: { en: "Village", local: "قرية" },
+      level1: {
+        en: "Municipality",
+        local: "بلدية",
+      },
+      level2: {
+        en: "Village",
+        local: "قرية",
+      },
     },
   },
   RE: {
@@ -2635,8 +3784,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^((97|98)(4|7|8)\\d{2})$",
     languages: ["fr-RE"],
     administrativeLabels: {
-      level1: { en: "Arrondissement", local: "Arrondissement" },
-      level2: { en: "Canton", local: "Canton" },
+      level1: {
+        en: "Arrondissement",
+        local: "Arrondissement",
+      },
+      level2: {
+        en: "Canton",
+        local: "Canton",
+      },
     },
   },
   RO: {
@@ -2649,8 +3804,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["ro", "hu", "rom"],
     administrativeLabels: {
-      level1: { en: "County", local: "Județ" },
-      level2: { en: "Commune", local: "Comună" },
+      level1: {
+        en: "County",
+        local: "Județ",
+      },
+      level2: {
+        en: "Commune",
+        local: "Comună",
+      },
     },
   },
   RS: {
@@ -2663,8 +3824,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["sr", "hu", "bs", "rom"],
     administrativeLabels: {
-      level1: { en: "District", local: "Округ" },
-      level2: { en: "Municipality / city", local: "Општина / град" },
+      level1: {
+        en: "District",
+        local: "Округ",
+      },
+      level2: {
+        en: "Municipality / city",
+        local: "Општина / град",
+      },
     },
   },
   RU: {
@@ -2701,8 +3868,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
       "nog",
     ],
     administrativeLabels: {
-      level1: { en: "Federal subject", local: "Субъект" },
-      level2: { en: "Municipal district", local: "Муниципальный район" },
+      level1: {
+        en: "Federal subject",
+        local: "Субъект",
+      },
+      level2: {
+        en: "Municipal district",
+        local: "Муниципальный район",
+      },
     },
   },
   RW: {
@@ -2715,8 +3888,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["rw", "en-RW", "fr-RW", "sw"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Intara" },
-      level2: { en: "District", local: "Uturere tw" },
+      level1: {
+        en: "Province",
+        local: "Intara",
+      },
+      level2: {
+        en: "District",
+        local: "Uturere tw",
+      },
     },
   },
   SA: {
@@ -2729,7 +3908,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ar-SA"],
     administrativeLabels: {
-      level1: { en: "Province", local: "منطقة" },
+      level1: {
+        en: "Province",
+        local: "منطقة",
+      },
       level2: null,
     },
   },
@@ -2743,7 +3925,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-SB", "tpi"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Province" },
+      level1: {
+        en: "Province",
+        local: "Province",
+      },
       level2: null,
     },
   },
@@ -2757,7 +3942,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-SC", "fr-SC"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
       level2: null,
     },
   },
@@ -2771,7 +3959,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["ar-SD", "en", "fia"],
     administrativeLabels: {
-      level1: { en: "State", local: "ولاية" },
+      level1: {
+        en: "State",
+        local: "ولاية",
+      },
       level2: null,
     },
   },
@@ -2785,8 +3976,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:SE)?\\d{3}\\s\\d{2}$",
     languages: ["sv-SE", "se", "sma", "fi-SE"],
     administrativeLabels: {
-      level1: { en: "County", local: "Län" },
-      level2: { en: "Municipality", local: "Kommun" },
+      level1: {
+        en: "County",
+        local: "Län",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Kommun",
+      },
     },
   },
   SG: {
@@ -2798,7 +3995,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(\\d{6})$",
     languages: ["cmn", "en-SG", "ms-SG", "ta-SG", "zh-SG"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   SH: {
     code: "SH",
@@ -2810,7 +4010,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(STHL1ZZ)$",
     languages: ["en-SH"],
     administrativeLabels: {
-      level1: { en: "Island", local: "Island" },
+      level1: {
+        en: "Island",
+        local: "Island",
+      },
       level2: null,
     },
   },
@@ -2824,7 +4027,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:SI)*(\\d{4})$",
     languages: ["sl", "sh"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Občina" },
+      level1: {
+        en: "Municipality",
+        local: "Občina",
+      },
       level2: null,
     },
   },
@@ -2837,7 +4043,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Krone",
     postalCodeRegex: "^(\\d{4})$",
     languages: ["no", "ru"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   SK: {
     code: "SK",
@@ -2849,8 +4058,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^\\d{3}\\s?\\d{2}$",
     languages: ["sk", "hu"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Kraje" },
-      level2: { en: "District", local: "Okres" },
+      level1: {
+        en: "Region",
+        local: "Kraje",
+      },
+      level2: {
+        en: "District",
+        local: "Okres",
+      },
     },
   },
   SL: {
@@ -2863,7 +4078,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-SL", "men", "tem"],
     administrativeLabels: {
-      level1: { en: "Province/Area", local: "Province" },
+      level1: {
+        en: "Province/Area",
+        local: "Province",
+      },
       level2: null,
     },
   },
@@ -2877,7 +4095,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(4789\\d)$",
     languages: ["it-SM"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Castelli" },
+      level1: {
+        en: "Municipality",
+        local: "Castelli",
+      },
       level2: null,
     },
   },
@@ -2891,8 +4112,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["fr-SN", "wo", "fuc", "mnk"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Région" },
-      level2: { en: "Department", local: "Département" },
+      level1: {
+        en: "Region",
+        local: "Région",
+      },
+      level2: {
+        en: "Department",
+        local: "Département",
+      },
     },
   },
   SO: {
@@ -2905,8 +4132,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^([A-Z]{2}\\d{5})$",
     languages: ["so-SO", "ar-SO", "it", "en-SO"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Gobolada" },
-      level2: { en: "District", local: "" },
+      level1: {
+        en: "Region",
+        local: "Gobolada",
+      },
+      level2: {
+        en: "District",
+        local: "",
+      },
     },
   },
   SR: {
@@ -2919,8 +4152,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["nl-SR", "en", "srn", "hns", "jv"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
-      level2: { en: "Ressort", local: "Ressort" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
+      level2: {
+        en: "Ressort",
+        local: "Ressort",
+      },
     },
   },
   SS: {
@@ -2933,7 +4172,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en"],
     administrativeLabels: {
-      level1: { en: "State", local: "State" },
+      level1: {
+        en: "State",
+        local: "State",
+      },
       level2: null,
     },
   },
@@ -2947,8 +4189,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["pt-ST"],
     administrativeLabels: {
-      level1: { en: "Electoral unit", local: "Círculo eleitoral" },
-      level2: { en: "District", local: "Distritos" },
+      level1: {
+        en: "Electoral unit",
+        local: "Círculo eleitoral",
+      },
+      level2: {
+        en: "District",
+        local: "Distritos",
+      },
     },
   },
   SV: {
@@ -2961,8 +4209,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(?:CP)*(\\d{4})$",
     languages: ["es-SV"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departamento" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "Department",
+        local: "Departamento",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   SX: {
@@ -2974,7 +4228,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Guilder",
     postalCodeRegex: null,
     languages: ["nl", "en"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   SY: {
     code: "SY",
@@ -2986,8 +4243,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["ar-SY", "ku", "hy", "arc", "fr", "en"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
-      level2: { en: "District", local: "منطقة" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
+      level2: {
+        en: "District",
+        local: "منطقة",
+      },
     },
   },
   SZ: {
@@ -3000,7 +4263,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^([A-Z]\\d{3})$",
     languages: ["en-SZ", "ss-SZ"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Region" },
+      level1: {
+        en: "Region",
+        local: "Region",
+      },
       level2: null,
     },
   },
@@ -3013,7 +4279,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^(TKCA 1ZZ)$",
     languages: ["en-TC"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   TD: {
     code: "TD",
@@ -3025,8 +4294,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(TKCA 1ZZ)$",
     languages: ["fr-TD", "ar-TD", "sre"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Région" },
-      level2: { en: "Department", local: "Départements" },
+      level1: {
+        en: "Province",
+        local: "Région",
+      },
+      level2: {
+        en: "Department",
+        local: "Départements",
+      },
     },
   },
   TF: {
@@ -3039,8 +4314,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
-      level2: { en: "Island", local: "Île" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
+      level2: {
+        en: "Island",
+        local: "Île",
+      },
     },
   },
   TG: {
@@ -3053,8 +4334,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["fr-TG", "ee", "hna", "kbp", "dag", "ha"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Région" },
-      level2: { en: "Prefecture", local: "Préfecture" },
+      level1: {
+        en: "Region",
+        local: "Région",
+      },
+      level2: {
+        en: "Prefecture",
+        local: "Préfecture",
+      },
     },
   },
   TH: {
@@ -3067,8 +4354,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["th", "en"],
     administrativeLabels: {
-      level1: { en: "Province", local: "จังหวัด" },
-      level2: { en: "Amphoe", local: "อำเภอ" },
+      level1: {
+        en: "Province",
+        local: "จังหวัด",
+      },
+      level2: {
+        en: "Amphoe",
+        local: "อำเภอ",
+      },
     },
   },
   TJ: {
@@ -3081,8 +4374,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["tg", "ru"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Вилоят" },
-      level2: { en: "District", local: "Ноҳия" },
+      level1: {
+        en: "Region",
+        local: "Вилоят",
+      },
+      level2: {
+        en: "District",
+        local: "Ноҳия",
+      },
     },
   },
   TK: {
@@ -3094,7 +4393,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: null,
     languages: ["tkl", "en-TK"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   TL: {
     code: "TL",
@@ -3106,7 +4408,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["tet", "pt-TL", "id", "en"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Munisipiu" },
+      level1: {
+        en: "Municipality",
+        local: "Munisipiu",
+      },
       level2: null,
     },
   },
@@ -3120,8 +4425,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["tk", "ru", "uz"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Welaýatlary" },
-      level2: { en: "District", local: "Etraplar we şäherler" },
+      level1: {
+        en: "Region",
+        local: "Welaýatlary",
+      },
+      level2: {
+        en: "District",
+        local: "Etraplar we şäherler",
+      },
     },
   },
   TN: {
@@ -3134,8 +4445,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["ar-TN", "fr"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "ولاية" },
-      level2: { en: "Delegation", local: "معتمدية" },
+      level1: {
+        en: "Governorate",
+        local: "ولاية",
+      },
+      level2: {
+        en: "Delegation",
+        local: "معتمدية",
+      },
     },
   },
   TO: {
@@ -3148,7 +4465,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["to", "en-TO"],
     administrativeLabels: {
-      level1: { en: "Division", local: "" },
+      level1: {
+        en: "Division",
+        local: "",
+      },
       level2: null,
     },
   },
@@ -3162,8 +4482,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["tr-TR", "ku", "diq", "az", "av"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Il" },
-      level2: { en: "District", local: "Ilçe" },
+      level1: {
+        en: "Province",
+        local: "Il",
+      },
+      level2: {
+        en: "District",
+        local: "Ilçe",
+      },
     },
   },
   TT: {
@@ -3176,7 +4502,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-TT", "hns", "fr", "es", "zh"],
     administrativeLabels: {
-      level1: { en: "Regional corporation", local: "Regional corporation" },
+      level1: {
+        en: "Regional corporation",
+        local: "Regional corporation",
+      },
       level2: null,
     },
   },
@@ -3189,7 +4518,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: null,
     languages: ["tvl", "en", "sm", "gil"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   TW: {
     code: "TW",
@@ -3201,8 +4533,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["zh-TW", "zh", "nan", "hak"],
     administrativeLabels: {
-      level1: { en: "City", local: "城市" },
-      level2: { en: "District", local: "區" },
+      level1: {
+        en: "City",
+        local: "城市",
+      },
+      level2: {
+        en: "District",
+        local: "區",
+      },
     },
   },
   TZ: {
@@ -3215,8 +4553,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["sw-TZ", "en", "ar"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Mikoa" },
-      level2: { en: "District", local: "Wilaya za" },
+      level1: {
+        en: "Region",
+        local: "Mikoa",
+      },
+      level2: {
+        en: "District",
+        local: "Wilaya za",
+      },
     },
   },
   UA: {
@@ -3229,8 +4573,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["uk", "ru-UA", "rom", "pl", "hu"],
     administrativeLabels: {
-      level1: { en: "Oblast", local: "Область" },
-      level2: { en: "Raion", local: "Район" },
+      level1: {
+        en: "Oblast",
+        local: "Область",
+      },
+      level2: {
+        en: "Raion",
+        local: "Район",
+      },
     },
   },
   UG: {
@@ -3243,7 +4593,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-UG", "lg", "sw", "ar"],
     administrativeLabels: {
-      level1: { en: "District", local: "District" },
+      level1: {
+        en: "District",
+        local: "District",
+      },
       level2: null,
     },
   },
@@ -3257,7 +4610,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-UM"],
     administrativeLabels: {
-      level1: { en: "Insular area", local: "Insular area" },
+      level1: {
+        en: "Insular area",
+        local: "Insular area",
+      },
       level2: null,
     },
   },
@@ -3271,8 +4627,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^\\d{5}(-\\d{4})?$",
     languages: ["en-US", "es-US", "haw", "fr"],
     administrativeLabels: {
-      level1: { en: "State", local: "State" },
-      level2: { en: "County", local: "County" },
+      level1: {
+        en: "State",
+        local: "State",
+      },
+      level2: {
+        en: "County",
+        local: "County",
+      },
     },
   },
   UY: {
@@ -3285,8 +4647,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["es-UY"],
     administrativeLabels: {
-      level1: { en: "Department", local: "Departamento" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "Department",
+        local: "Departamento",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   UZ: {
@@ -3299,8 +4667,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["uz", "ru", "tg"],
     administrativeLabels: {
-      level1: { en: "Region", local: "Viloyatlari" },
-      level2: { en: "District", local: "Tuman" },
+      level1: {
+        en: "Region",
+        local: "Viloyatlari",
+      },
+      level2: {
+        en: "District",
+        local: "Tuman",
+      },
     },
   },
   VA: {
@@ -3312,7 +4686,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Euro",
     postalCodeRegex: "^(\\d{5})$",
     languages: ["la", "it", "fr"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   VC: {
     code: "VC",
@@ -3324,7 +4701,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-VC", "fr"],
     administrativeLabels: {
-      level1: { en: "Parish", local: "Parish" },
+      level1: {
+        en: "Parish",
+        local: "Parish",
+      },
       level2: null,
     },
   },
@@ -3338,8 +4718,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["es-VE"],
     administrativeLabels: {
-      level1: { en: "State", local: "Estado" },
-      level2: { en: "Municipality", local: "Municipio" },
+      level1: {
+        en: "State",
+        local: "Estado",
+      },
+      level2: {
+        en: "Municipality",
+        local: "Municipio",
+      },
     },
   },
   VG: {
@@ -3351,7 +4737,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: null,
     languages: ["en-VG"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   VI: {
     code: "VI",
@@ -3362,7 +4751,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     currencyName: "Dollar",
     postalCodeRegex: "^008\\d{2}(?:-\\d{4})?$",
     languages: ["en-VI"],
-    administrativeLabels: { level1: null, level2: null },
+    administrativeLabels: {
+      level1: null,
+      level2: null,
+    },
   },
   VN: {
     code: "VN",
@@ -3374,8 +4766,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{6})$",
     languages: ["vi", "en", "fr", "zh", "km"],
     administrativeLabels: {
-      level1: { en: "Province/Municipality", local: "Tỉnh" },
-      level2: { en: "Rural district", local: "Huyện" },
+      level1: {
+        en: "Province/Municipality",
+        local: "Tỉnh",
+      },
+      level2: {
+        en: "Rural district",
+        local: "Huyện",
+      },
     },
   },
   VU: {
@@ -3388,7 +4786,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["bi", "en-VU", "fr-VU"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Provens" },
+      level1: {
+        en: "Province",
+        local: "Provens",
+      },
       level2: null,
     },
   },
@@ -3402,7 +4803,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(986\\d{2})$",
     languages: ["wls", "fud", "fr-WF"],
     administrativeLabels: {
-      level1: { en: "Customary kingdom", local: "" },
+      level1: {
+        en: "Customary kingdom",
+        local: "",
+      },
       level2: null,
     },
   },
@@ -3416,7 +4820,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "AS 96799",
     languages: ["sm", "en-WS"],
     administrativeLabels: {
-      level1: { en: "District", local: "" },
+      level1: {
+        en: "District",
+        local: "",
+      },
       level2: null,
     },
   },
@@ -3430,7 +4837,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["sq", "sr"],
     administrativeLabels: {
-      level1: { en: "Municipality", local: "Komunat" },
+      level1: {
+        en: "Municipality",
+        local: "Komunat",
+      },
       level2: null,
     },
   },
@@ -3444,8 +4854,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["ar-YE"],
     administrativeLabels: {
-      level1: { en: "Governorate", local: "محافظة" },
-      level2: { en: "District", local: "مديرية" },
+      level1: {
+        en: "Governorate",
+        local: "محافظة",
+      },
+      level2: {
+        en: "District",
+        local: "مديرية",
+      },
     },
   },
   YT: {
@@ -3458,8 +4874,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["fr-YT"],
     administrativeLabels: {
-      level1: { en: "Canton", local: "Canton" },
-      level2: { en: "Commune", local: "Commune" },
+      level1: {
+        en: "Canton",
+        local: "Canton",
+      },
+      level2: {
+        en: "Commune",
+        local: "Commune",
+      },
     },
   },
   ZA: {
@@ -3472,8 +4894,14 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{4})$",
     languages: ["zu", "xh", "af", "nso", "en-ZA", "tn", "st", "ts", "ss", "ve", "nr"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Izifundazwe zaseNingizimu" },
-      level2: { en: "District municipality", local: "" },
+      level1: {
+        en: "Province",
+        local: "Izifundazwe zaseNingizimu",
+      },
+      level2: {
+        en: "District municipality",
+        local: "",
+      },
     },
   },
   ZM: {
@@ -3486,7 +4914,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: "^(\\d{5})$",
     languages: ["en-ZM", "bem", "loz", "lun", "lue", "ny", "toi"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Province" },
+      level1: {
+        en: "Province",
+        local: "Province",
+      },
       level2: null,
     },
   },
@@ -3500,7 +4931,10 @@ export const COUNTRY_DATA: Record<string, CountryData> = {
     postalCodeRegex: null,
     languages: ["en-ZW", "sn", "nr", "nd"],
     administrativeLabels: {
-      level1: { en: "Province", local: "Province" },
+      level1: {
+        en: "Province",
+        local: "Province",
+      },
       level2: null,
     },
   },

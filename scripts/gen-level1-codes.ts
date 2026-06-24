@@ -10,9 +10,32 @@
 //   label -> English division name
 //
 // Run with: bun run scripts/gen-level1-codes.ts
+import { spawn } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+// Biome force-excludes src/data, so it won't format these files even via
+// `--stdin-file-path` pointing at the real path (an excluded path makes Biome
+// echo stdin unchanged). Format the source through stdin under a neutral,
+// non-excluded filename — Biome only needs the extension to pick the formatter —
+// so it applies the repo's real config before we write.
+function formatTs(source: string): Promise<string> {
+  return new Promise((resolvePromise, reject) => {
+    const child = spawn("bunx", ["biome", "format", "--stdin-file-path=gen-output.ts"]);
+    let out = "";
+    let err = "";
+    child.stdout.on("data", (d) => {
+      out += d;
+    });
+    child.stderr.on("data", (d) => {
+      err += d;
+    });
+    child.on("error", reject);
+    child.on("close", (code) => (code === 0 ? resolvePromise(out) : reject(new Error(err || `biome exited ${code}`))));
+    child.stdin.end(source);
+  });
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const inFile = resolve(__dirname, "../data/level1-administrative-codes.json");
@@ -50,5 +73,5 @@ for (const code of Object.keys(level1).sort()) {
   blocks.push(`export const level1Admin_${code} = [\n${entries}\n] as const satisfies readonly AdministrativeDivisionOption[];`);
 }
 
-await writeFile(outFile, `${header}\n${blocks.join("\n\n")}\n`);
+await writeFile(outFile, await formatTs(`${header}\n${blocks.join("\n\n")}\n`));
 console.log(`wrote ${outFile} (${Object.keys(level1).length} countries)`);

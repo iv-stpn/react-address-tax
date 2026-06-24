@@ -12,14 +12,14 @@ export type {
   AddressInputClassNames,
   AddressValue,
   CountryAddressConfig,
-  SupportedCountryCode as CountryCode,
+  CountryCode,
 } from "./utils/address";
 export {
   COUNTRIES_ADDRESSES as COUNTRIES,
+  COUNTRY_CODES,
   COUNTRY_LIST,
   getConsumptionTaxLabel,
   getCountryConfig,
-  SUPPORTED_COUNTRY_CODES as COUNTRY_CODES,
 } from "./utils/address";
 export type { ConsumptionTaxValue, TaxType } from "./utils/tax";
 export type { ValidationError, ValidationResult } from "./utils/validation";

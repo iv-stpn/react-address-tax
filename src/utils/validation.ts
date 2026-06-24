@@ -1,4 +1,4 @@
-import { COUNTRY_DATA } from "../data/countries";
+import { COUNTRY_DATA, type CountryCode } from "../data/countries";
 import type { AddressValue } from "./address";
 import { addressFieldLabel, getCountryConfig, isAddressFieldRequired } from "./address";
 import { getConsumptionTaxConfig } from "./tax";
@@ -35,7 +35,7 @@ export function validateAddress(value: AddressValue, options?: { requireLevel1?:
   // without a detailed address config are still valid — only the country is
   // collected for them — so we don't require a config here.
   const countryCode = value.country.trim().toUpperCase();
-  if (!countryCode || !COUNTRY_DATA[countryCode]) {
+  if (!countryCode || !COUNTRY_DATA[countryCode as CountryCode]) {
     errors.push({
       field: "country",
       message: "Please select a country.",
