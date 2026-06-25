@@ -1,5 +1,11 @@
 # react-address-tax
 
+## 1.0.1
+
+### Patch Changes
+
+- [`829a9cb`](https://github.com/iv-stpn/react-address-tax/commit/829a9cb784e57e842a793e30d0277ab4bad7019c) Thanks [@iv-stpn](https://github.com/iv-stpn)! - Add `consumptionTaxLabel` and `localConsumptionTaxLabel` to `ConsumptionTaxValue`. The `onConsumptionTaxChange` callback now includes both the English tax label (e.g., "VAT", "GST", "Sales Tax") and the local language label (e.g., "TVA", "MwSt", "消費税"), making it easier to display localized tax information without additional lookups.
+
 ## 1.0.0
 
 ### Major Changes
