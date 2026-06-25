@@ -1,7 +1,7 @@
 import { COUNTRY_DATA, type CountryCode } from "../data/countries";
-import type { AddressFieldKey, AddressValue } from "./address";
-import { addressFieldLabel, getCountryConfig, isAddressFieldRequired } from "./address";
-import { getConsumptionTaxConfig } from "./tax";
+import type { AddressCollectionMode, AddressFieldKey, AddressValue } from "./address";
+import { addressFieldLabel, getCountryConfig, isAddressFieldRequired, isEUCountry } from "./address";
+import { getConsumptionTaxConfig, hasRegionalTax } from "./tax";
 
 export interface ValidationError {
   field: string;
@@ -85,6 +85,76 @@ export function validateAddress(
   }
 
   return { valid: errors.length === 0, errors };
+}
+
+/**
+ * The address fields actually collected for a given collection mode and country
+ * — the same set the inputs render and gate validity on. Pure derivation of
+ * {@link AddressCollectionMode} semantics:
+ * - "full": the country's full field set.
+ * - "region": only the level-1 region (when required), nothing else.
+ * - "regionMinimal": full set for EU countries; otherwise just the region.
+ * - "minimal": full set for EU countries; just the region for countries with
+ *   per-region tax (US, CA); country only otherwise.
+ *
+ * `level1` is never optional: it is included only when {@link requireLevel1} is
+ * set (added even for countries whose config lacks it), and stripped otherwise.
+ * Returns an empty list when only the country is collected, or when the country
+ * is empty/unrecognized.
+ */
+export function computeEffectiveFields(mode: AddressCollectionMode, country: string, requireLevel1 = false): AddressFieldKey[] {
+  const countryConfig = getCountryConfig(country);
+  if (!country || !countryConfig) return [];
+  const allFields = countryConfig.addressFields;
+
+  const withLevel1 = (base: AddressFieldKey[], required: boolean): AddressFieldKey[] => {
+    if (required) {
+      return base.includes("level1") ? base : [...base, "level1"];
+    }
+    return base.filter((f) => f !== "level1");
+  };
+
+  switch (mode) {
+    case "full":
+      return withLevel1(allFields, requireLevel1);
+    case "region":
+      return requireLevel1 ? ["level1"] : [];
+    case "regionMinimal":
+      return isEUCountry(country) ? withLevel1(allFields, requireLevel1) : requireLevel1 ? ["level1"] : [];
+    default:
+      if (isEUCountry(country)) return withLevel1(allFields, requireLevel1);
+      if (hasRegionalTax(country)) return requireLevel1 ? ["level1"] : [];
+      return [];
+  }
+}
+
+/**
+ * Whether an address is valid for a given collection mode. Only the fields
+ * actually collected for that mode/country gate validity, so e.g. "minimal"
+ * mode is valid as soon as a recognized country (and region, where required) is
+ * present, even though "full" mode would also require the street, city, etc.
+ *
+ * The address only needs to contain a `country` at minimum; any other fields
+ * default to empty. By default `level1` is optional; pass
+ * `{ requireLevel1: true }` to require it (it is forced on automatically for
+ * countries with per-region tax, mirroring the inputs).
+ */
+export function isValidAddress(
+  value: Partial<AddressValue> & Pick<AddressValue, "country">,
+  mode: AddressCollectionMode,
+  options?: { requireLevel1?: boolean },
+): boolean {
+  const requireLevel1 = (options?.requireLevel1 ?? false) || hasRegionalTax(value.country);
+  const fields = computeEffectiveFields(mode, value.country, requireLevel1);
+  const full: AddressValue = {
+    line1: value.line1 ?? "",
+    line2: value.line2,
+    city: value.city ?? "",
+    level1: value.level1,
+    postalCode: value.postalCode ?? "",
+    country: value.country,
+  };
+  return validateAddress(full, { requireLevel1, fields }).valid;
 }
 
 export function normalizeConsumptionTax(consumptionTaxId: string): string {

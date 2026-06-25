@@ -26,6 +26,8 @@ export {
 export type { ConsumptionTaxValue, TaxType } from "./utils/tax";
 export type { ValidationError, ValidationResult } from "./utils/validation";
 export {
+  computeEffectiveFields,
+  isValidAddress,
   normalizeConsumptionTax,
   validateAddress,
   validateConsumptionTax,

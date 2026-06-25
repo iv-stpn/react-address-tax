@@ -15,13 +15,11 @@ import type {
   AddressFieldKey,
   AddressInputClassNames,
   AddressValue,
-  CountryAddressConfig,
   ValidationMode,
 } from "../../utils/address";
-import { ALL_COUNTRY_OPTIONS, getCountryConfig, isEUCountry, resolveAddressField } from "../../utils/address";
-import { hasRegionalTax } from "../../utils/tax";
+import { ALL_COUNTRY_OPTIONS, getCountryConfig, resolveAddressField } from "../../utils/address";
 import type { ValidationError, ValidationResult } from "../../utils/validation";
-import { validateAddress } from "../../utils/validation";
+import { computeEffectiveFields, validateAddress } from "../../utils/validation";
 
 export interface RenderInputProps {
   id: string;
@@ -155,41 +153,6 @@ const EMPTY_VALUE: AddressValue = {
   country: "",
 };
 
-function computeEffectiveFields(
-  mode: AddressCollectionMode,
-  country: string,
-  countryConfig: CountryAddressConfig | undefined,
-  requireLevel1 = false,
-): AddressFieldKey[] {
-  if (!country || !countryConfig) return [];
-  const allFields = countryConfig.addressFields;
-
-  // level1 is never optional: it is collected only when required, otherwise
-  // it is omitted entirely. `withLevel1` enforces that invariant on a base
-  // field list — adding level1 when required (even for countries whose config
-  // lacks it), and stripping it otherwise.
-  const withLevel1 = (base: AddressFieldKey[], required: boolean): AddressFieldKey[] => {
-    if (required) {
-      return base.includes("level1") ? base : [...base, "level1"];
-    }
-    return base.filter((f) => f !== "level1");
-  };
-
-  switch (mode) {
-    case "full":
-      return withLevel1(allFields, requireLevel1);
-    case "region":
-      return requireLevel1 ? ["level1"] : [];
-    case "regionMinimal":
-      return isEUCountry(country) ? withLevel1(allFields, requireLevel1) : requireLevel1 ? ["level1"] : [];
-    case "minimal":
-    default:
-      if (isEUCountry(country)) return withLevel1(allFields, requireLevel1);
-      if (hasRegionalTax(country)) return requireLevel1 ? ["level1"] : [];
-      return [];
-  }
-}
-
 export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(function AddressInput(
   {
     value,
@@ -234,7 +197,7 @@ export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(fu
       // so minimal/region modes report valid as soon as the country (and region
       // when required) are provided — even though the country's full field set
       // would otherwise be required.
-      const fields = computeEffectiveFields(mode, val.country, getCountryConfig(val.country), requireLevel1);
+      const fields = computeEffectiveFields(mode, val.country, requireLevel1);
       const result = validateAddress(val, { requireLevel1, fields });
       setErrors(result.errors);
       onValidationChange?.(result.valid, result.errors);
@@ -255,7 +218,7 @@ export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(fu
   validateRef.current = () => {
     const result = runValidation(currentValue);
     // Reveal every error by marking all collected fields (plus country) touched.
-    const allFields = ["country", ...computeEffectiveFields(mode, currentValue.country, countryConfig, requireLevel1)];
+    const allFields = ["country", ...computeEffectiveFields(mode, currentValue.country, requireLevel1)];
     setTouched((t) => ({ ...t, ...Object.fromEntries(allFields.map((f) => [f, true])) }));
     return result;
   };
@@ -289,7 +252,7 @@ export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(fu
 
   const cn = (base: string, custom?: string) => [base, custom].filter(Boolean).join(" ");
 
-  const effectiveFieldOrder = computeEffectiveFields(mode, currentValue.country, countryConfig, requireLevel1);
+  const effectiveFieldOrder = computeEffectiveFields(mode, currentValue.country, requireLevel1);
 
   // --- Default render helpers ---
 

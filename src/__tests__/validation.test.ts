@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { AddressValue } from "../utils/address";
-import { normalizeConsumptionTax, validateAddress, validateConsumptionTax, validatePostalCode } from "../utils/validation";
+import {
+  computeEffectiveFields,
+  isValidAddress,
+  normalizeConsumptionTax,
+  validateAddress,
+  validateConsumptionTax,
+  validatePostalCode,
+} from "../utils/validation";
 
 describe("validateConsumptionTax", () => {
   it("validates German VAT numbers", () => {
@@ -136,6 +143,59 @@ describe("validateAddress", () => {
       country: "JP",
     };
     expect(validateAddress(onlyCountry, { fields: [] }).valid).toBe(true);
+  });
+});
+
+describe("computeEffectiveFields", () => {
+  it("returns the full field set for 'full' mode", () => {
+    expect(computeEffectiveFields("full", "DE")).toEqual(["line1", "line2", "postalCode", "city"]);
+  });
+
+  it("collects only the country for non-EU, non-regional countries in minimal mode", () => {
+    expect(computeEffectiveFields("minimal", "JP")).toEqual([]);
+  });
+
+  it("collects the full set for EU countries in minimal mode", () => {
+    expect(computeEffectiveFields("minimal", "FR")).toContain("city");
+  });
+
+  it("collects only the region for regional countries in minimal mode when required", () => {
+    expect(computeEffectiveFields("minimal", "US", true)).toEqual(["level1"]);
+    expect(computeEffectiveFields("minimal", "US", false)).toEqual([]);
+  });
+
+  it("returns an empty list for an empty or unknown country", () => {
+    expect(computeEffectiveFields("full", "")).toEqual([]);
+    expect(computeEffectiveFields("full", "ZZ")).toEqual([]);
+  });
+});
+
+describe("isValidAddress", () => {
+  it("requires only a recognized country in minimal mode for non-regional countries", () => {
+    expect(isValidAddress({ country: "JP" }, "minimal")).toBe(true);
+    expect(isValidAddress({ country: "ZZ" }, "minimal")).toBe(false);
+    expect(isValidAddress({ country: "" }, "minimal")).toBe(false);
+  });
+
+  it("requires a region for regional countries (auto-forced) in minimal mode", () => {
+    expect(isValidAddress({ country: "US" }, "minimal")).toBe(false);
+    expect(isValidAddress({ country: "US", level1: "NY" }, "minimal")).toBe(true);
+  });
+
+  it("requires the full address in full mode", () => {
+    expect(isValidAddress({ country: "DE" }, "full")).toBe(false);
+    expect(isValidAddress({ country: "DE", line1: "Unter den Linden 1", city: "Berlin", postalCode: "10117" }, "full")).toBe(
+      true,
+    );
+  });
+
+  it("validates the postal-code format when present", () => {
+    expect(isValidAddress({ country: "DE", line1: "a", city: "b", postalCode: "bad" }, "full")).toBe(false);
+  });
+
+  it("honors an explicit requireLevel1 option", () => {
+    expect(isValidAddress({ country: "JP" }, "region", { requireLevel1: true })).toBe(false);
+    expect(isValidAddress({ country: "JP", level1: "13" }, "region", { requireLevel1: true })).toBe(true);
   });
 });
 
