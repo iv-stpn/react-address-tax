@@ -12,6 +12,7 @@ export type {
   AddressFieldKey,
   AddressInputClassNames,
   AddressValue,
+  AddressValueInput,
   CountryAddressConfig,
   CountryCode,
   ValidationMode,

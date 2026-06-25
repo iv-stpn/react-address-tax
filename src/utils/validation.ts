@@ -1,5 +1,5 @@
 import { COUNTRY_DATA, type CountryCode } from "../data/countries";
-import type { AddressCollectionMode, AddressFieldKey, AddressValue } from "./address";
+import type { AddressCollectionMode, AddressFieldKey, AddressValue, AddressValueInput } from "./address";
 import { addressFieldLabel, getCountryConfig, isAddressFieldRequired, isEUCountry } from "./address";
 import { getConsumptionTaxConfig, hasRegionalTax } from "./tax";
 
@@ -26,7 +26,7 @@ export function validatePostalCode(postalCode: string, countryCode: string): boo
   return config.postalCodePattern.test(postalCode.trim());
 }
 
-export function validateAddress(value: AddressValue, mode: AddressCollectionMode = "full"): ValidationResult {
+export function validateAddress(value: AddressValueInput, mode: AddressCollectionMode = "full"): ValidationResult {
   const errors: ValidationError[] = [];
   const config = getCountryConfig(value.country);
 

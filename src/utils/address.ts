@@ -255,6 +255,16 @@ export interface AddressValue {
   country: string;
 }
 
+/**
+ * An {@link AddressValue} where every field is optional and nullable, except
+ * `country`, which is strictly required. This is the input shape accepted by
+ * {@link validateAddress}: callers may pass a partially-filled address (e.g.
+ * straight from a form) without defaulting the missing fields first.
+ */
+export type AddressValueInput = {
+  [K in keyof Omit<AddressValue, "country">]?: AddressValue[K] | null;
+} & Pick<AddressValue, "country">;
+
 /** Controls which address fields are collected. */
 export type AddressCollectionMode =
   /** Country only; region also for countries with per-region tax rules (US, CA); full address for EU countries. */

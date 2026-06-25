@@ -144,6 +144,20 @@ describe("validateAddress", () => {
     };
     expect(validateAddress(onlyCountry, "minimal").valid).toBe(true);
   });
+
+  it("accepts a partial/nullable address with only country required", () => {
+    // Every field except country is optional and nullable; minimal mode for a
+    // non-regional country is valid with just the country present.
+    expect(validateAddress({ country: "JP" }, "minimal").valid).toBe(true);
+    expect(validateAddress({ country: "JP", line1: null, city: null, postalCode: null }, "minimal").valid).toBe(true);
+  });
+
+  it("treats null required fields as missing in full mode", () => {
+    const result = validateAddress({ country: "US", line1: null, city: null, postalCode: null });
+    expect(result.valid).toBe(false);
+    expect(result.errors.some((e) => e.field === "line1")).toBe(true);
+    expect(result.errors.some((e) => e.field === "city")).toBe(true);
+  });
 });
 
 describe("computeEffectiveFields", () => {
