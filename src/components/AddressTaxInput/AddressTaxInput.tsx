@@ -1,8 +1,12 @@
 import { type ChangeEvent, forwardRef, type ReactNode, useEffect, useState } from "react";
 import type { AddressCollectionMode, AddressValue, ValidationMode } from "../../utils/address";
-import { getConsumptionTaxLabel } from "../../utils/address";
 import type { ConsumptionTaxValue, TaxType } from "../../utils/tax";
-import { computeConsumptionTaxOutcome, getConsumptionTaxConfig, hasRegionalTax } from "../../utils/tax";
+import {
+  computeConsumptionTaxOutcome,
+  getBusinessTaxNumberLabel,
+  getConsumptionTaxConfig,
+  hasRegionalTax,
+} from "../../utils/tax";
 import type { ValidationError } from "../../utils/validation";
 import { normalizeConsumptionTax, validateConsumptionTax } from "../../utils/validation";
 import type {
@@ -162,7 +166,7 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
   const isInNexus = !nexusList || nexusList.includes(country);
   const showTaxFields = isBusiness && isInNexus && !!country;
 
-  const consumptionTaxLabel = country ? getConsumptionTaxLabel(country) : "Consumption Tax ID";
+  const businessTaxNumberLabel = (country ? getBusinessTaxNumberLabel(country) : null) ?? "Tax ID";
 
   const hasIdentifier = showTaxFields && hasTaxIdentifier;
 
@@ -180,7 +184,7 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
 
   const consumptionTaxInvalid = taxTouched && !!consumptionTaxId ? !validateConsumptionTax(consumptionTaxId, country) : false;
   const consumptionTaxError = consumptionTaxInvalid
-    ? `Invalid ${consumptionTaxLabel} format. Expected: ${taxConfig?.consumptionTaxExample ?? ""}.`
+    ? `Invalid ${businessTaxNumberLabel} format. Expected: ${taxConfig?.consumptionTaxExample ?? ""}.`
     : undefined;
 
   function handleBusinessChange(e: ChangeEvent<HTMLInputElement>) {
@@ -345,7 +349,7 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
         checked: !hasTaxIdentifier,
         onChange: handleHasTaxIdentifierChange,
         disabled,
-        label: `I don't have a ${consumptionTaxLabel}`,
+        label: `I don't have a ${businessTaxNumberLabel}`,
       })}
     </div>
   ) : null;
@@ -355,7 +359,7 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
       ? renderContainerEl({
           id: consumptionTaxInputId,
           fieldKey: "consumptionTaxId",
-          label: consumptionTaxLabel,
+          label: businessTaxNumberLabel,
           required: consumptionTaxRequired,
           error: consumptionTaxError,
           children: renderInputEl({

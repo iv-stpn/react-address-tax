@@ -19,13 +19,13 @@ export {
   COUNTRIES_ADDRESSES as COUNTRIES,
   COUNTRY_CODES,
   COUNTRY_LIST,
-  getConsumptionTaxLabel,
   getCountryConfig,
   isAddressFieldRequired,
   isEUCountry,
   resolveAddressField,
 } from "./utils/address";
 export type {
+  ConsumptionTaxLabels,
   ConsumptionTaxOutcome,
   ConsumptionTaxValue,
   CountryTaxEntry,
@@ -36,7 +36,10 @@ export type {
 } from "./utils/tax";
 export {
   computeConsumptionTaxOutcome,
+  getBusinessTaxNumberLabel,
   getConsumptionTaxConfig,
+  getConsumptionTaxLabel,
+  getLocalConsumptionTaxLabel,
   hasRegionalTax,
 } from "./utils/tax";
 export type { ValidationError, ValidationResult } from "./utils/validation";

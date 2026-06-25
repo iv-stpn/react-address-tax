@@ -13,7 +13,13 @@
 import countries from "../data/countries.json";
 import { level1Admin_CA, level1Admin_US } from "../src/data/level1-administrative-codes";
 import { POSTAL_CODE_DATA } from "../src/data/postal-codes";
-import { getConsumptionTaxConfig, hasRegionalTax, TAX_CONFIG } from "../src/utils/tax";
+import {
+  getConsumptionTaxConfig,
+  getConsumptionTaxLabel,
+  getLocalConsumptionTaxLabel,
+  hasRegionalTax,
+  TAX_CONFIG,
+} from "../src/utils/tax";
 
 const README = new URL("../README.md", import.meta.url).pathname;
 const START = "<!-- COVERAGE_TABLE_START -->";
@@ -43,11 +49,21 @@ function postalExample(code: string): string {
   return POSTAL_CODE_DATA[code]?.placeholder ?? "?";
 }
 
+function taxLabel(code: string, region?: string): string {
+  const en = getConsumptionTaxLabel(code, region);
+  const local = getLocalConsumptionTaxLabel(code, region);
+  if (!en && !local) return "";
+  if (!en) return local!;
+  if (!local || en === local) return en;
+  return `${en} (${local})`;
+}
+
 function vatCell(code: string): string {
   const cfg = getConsumptionTaxConfig(code);
   if (!cfg?.consumptionTaxPattern) return "❌";
   const example = cfg.consumptionTaxExample ?? cfg.consumptionTaxPattern.source;
-  return `✅ ${cfg.taxName} (${example})`;
+  const label = taxLabel(code);
+  return `✅ ${label} (${example})`;
 }
 
 // Registration threshold above which a seller must collect consumption tax in
@@ -97,10 +113,12 @@ function buildRows(): Row[] {
       const rates = Object.values(entry as Record<string, { baseConsumerTax: number | null }>)
         .map((r) => r.baseConsumerTax)
         .filter((r): r is number => r != null);
-      tax = `${Math.min(...rates)}–${Math.max(...rates)}% (regional) ✅`;
+      const label = taxLabel(code);
+      tax = `${Math.min(...rates)}–${Math.max(...rates)}% ${label} (regional) ✅`;
     } else {
       const base = getConsumptionTaxConfig(code)?.baseConsumerTax;
-      tax = base == null ? "None ✅" : `${base}% ✅`;
+      const label = taxLabel(code);
+      tax = base == null ? "None ✅" : `${base}% ${label} ✅`;
     }
 
     rows.push({
@@ -123,6 +141,7 @@ function buildRows(): Row[] {
     if (entry && hasRegionalTax(code)) {
       for (const [region, cfg] of Object.entries(entry as Record<string, { baseConsumerTax: number | null }>)) {
         const rate = cfg.baseConsumerTax;
+        const label = taxLabel(code, region);
         rows.push({
           code: `${code}-${region}`,
           cells: {
@@ -130,7 +149,7 @@ function buildRows(): Row[] {
             Country: `${c.name} — ${regionLabel(code, region)}`,
             "Last verified": "—",
             "Address format": "↳",
-            "Consumption tax": rate == null ? "None ✅" : `${rate}% ✅`,
+            "Consumption tax": rate == null ? "None ✅" : `${rate}% ${label} ✅`,
             "Nexus minimum": "↳",
             "VAT number": "↳",
             "Postal code": "↳",

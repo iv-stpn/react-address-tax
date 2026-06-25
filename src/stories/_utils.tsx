@@ -87,8 +87,16 @@ function formatRate(rate: number | null): string {
   return `${rate}%`;
 }
 
+function formatTaxLabel(o: ConsumptionTaxOutcome): string | null {
+  const { consumptionTaxLabel: en, localConsumptionTaxLabel: local } = o;
+  if (!en && !local) return null;
+  if (!en) return local;
+  if (!local || en === local) return en;
+  return `${en} / ${local}`;
+}
+
 function buildHeadline(category: TaxCategory, o: ConsumptionTaxOutcome): string {
-  const { taxName, effectiveTax: rate, state } = o;
+  const { consumptionTaxLabel: taxName, effectiveTax: rate, state } = o;
   switch (category) {
     case "none":
       return "No country selected";
@@ -149,17 +157,31 @@ function ConsumptionTaxPanel({ outcome, noNexus = false }: { outcome: Consumptio
           TAX
         </span>
         <span style={{ fontWeight: 600, color: c.text, fontSize: 14 }}>{buildHeadline(category, outcome)}</span>
-        <span
+        <div
           style={{
             marginLeft: "auto",
-            fontWeight: 700,
-            fontSize: 18,
-            color: c.badge,
-            fontVariantNumeric: "tabular-nums",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: 1,
           }}
         >
-          {formatRate(outcome.effectiveTax)}
-        </span>
+          <span
+            style={{
+              fontWeight: 700,
+              fontSize: 18,
+              color: c.badge,
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {formatRate(outcome.effectiveTax)}
+          </span>
+          {formatTaxLabel(outcome) && (
+            <span style={{ fontSize: 10, fontWeight: 600, color: c.badge, opacity: 0.75, letterSpacing: "0.04em" }}>
+              {formatTaxLabel(outcome)}
+            </span>
+          )}
+        </div>
       </div>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
         <tbody>

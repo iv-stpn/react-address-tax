@@ -20,10 +20,10 @@ export {
   COUNTRIES_ADDRESSES as COUNTRIES,
   COUNTRY_CODES,
   COUNTRY_LIST,
-  getConsumptionTaxLabel,
   getCountryConfig,
 } from "./utils/address";
-export type { ConsumptionTaxValue, TaxType } from "./utils/tax";
+export type { ConsumptionTaxLabels, ConsumptionTaxValue, TaxType } from "./utils/tax";
+export { getBusinessTaxNumberLabel, getConsumptionTaxLabel, getLocalConsumptionTaxLabel } from "./utils/tax";
 export type { ValidationError, ValidationResult } from "./utils/validation";
 export {
   computeEffectiveFields,
