@@ -1,5 +1,19 @@
 # react-address-tax
 
+## 0.3.1
+
+### Patch Changes
+
+- [`9cf2704`](https://github.com/iv-stpn/react-address-tax/commit/9cf27043e704d44e0c21cdf3b49f88935f794a40) Thanks [@iv-stpn](https://github.com/iv-stpn)! - Add isValidAddress and computeEffectiveFields utilities
+
+  Export two new validation utilities from react-address-tax/utils:
+
+  - `isValidAddress(value, mode, options?)` - Validates whether an address is valid for a given collection mode. Only the fields actually collected for that mode/country gate validity, so minimal mode can be valid with just a country (or country + region for regional countries like US/CA).
+
+  - `computeEffectiveFields(mode, country, requireLevel1?)` - Returns the address fields that are actually collected and validated for a given mode and country. Useful for building custom forms or understanding validation requirements.
+
+  These functions share the same logic used internally by AddressInput and AddressTaxInput components.
+
 ## 0.3.0
 
 ### Minor Changes
