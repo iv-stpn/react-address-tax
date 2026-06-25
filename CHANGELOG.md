@@ -1,5 +1,17 @@
 # react-address-tax
 
+## 1.2.1
+
+### Patch Changes
+
+- [`5f045a7`](https://github.com/iv-stpn/react-address-tax/commit/5f045a7f353ed4e48223c1d8b8eac34c4411c7c1) Thanks [@iv-stpn](https://github.com/iv-stpn)! - EU member states are now always counted as having a consumption-tax obligation, even when `nexusList` is empty or omits them.
+
+  Previously, `isInNexus` was derived solely from `nexusList` (`!nexusList || nexusList.includes(country)`), so an empty list — or a list that didn't include an EU country — caused EU countries to be treated as out-of-nexus: tax identifier fields were hidden and `effectiveTax` fell back to 0. EU countries (OSS / one-stop-shop) always carry a collection obligation, so they are now treated as in-nexus regardless of the supplied list. Non-EU countries continue to follow `nexusList` as before.
+
+  **New Features:**
+
+  - Added exported `isEUCountry(country)` helper in `utils/tax`, returning `true` for countries whose tax system is OSS.
+
 ## 1.2.0
 
 ### Minor Changes
