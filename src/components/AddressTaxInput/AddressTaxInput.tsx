@@ -101,11 +101,13 @@ function computeTaxRates(
   isBusiness: boolean,
   hasTaxIdentifier: boolean,
   isInNexus: boolean,
-): { baseTax: number; effectiveTax: number } {
+): { baseTax: number; effectiveTax: number; consumptionTaxLabel: string | null; localConsumptionTaxLabel: string | null } {
   const outcome = computeConsumptionTaxOutcome(country, isBusiness, isBusiness && hasTaxIdentifier, isInNexus, level1);
   return {
     baseTax: outcome.baseTax ?? 0,
     effectiveTax: outcome.effectiveTax ?? 0,
+    consumptionTaxLabel: outcome.consumptionTaxLabel,
+    localConsumptionTaxLabel: outcome.localConsumptionTaxLabel,
   };
 }
 
@@ -170,7 +172,7 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
 
   const hasIdentifier = showTaxFields && hasTaxIdentifier;
 
-  const { baseTax, effectiveTax } = computeTaxRates(country, addressValue.level1, isBusiness, hasTaxIdentifier, isInNexus);
+  const { baseTax, effectiveTax, consumptionTaxLabel, localConsumptionTaxLabel } = computeTaxRates(country, addressValue.level1, isBusiness, hasTaxIdentifier, isInNexus);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only — emit initial computed state; handlers cover subsequent changes
   useEffect(() => {
@@ -179,6 +181,8 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
       hasIdentifier,
       baseTax,
       effectiveTax,
+      consumptionTaxLabel,
+      localConsumptionTaxLabel,
     });
   }, []);
 
@@ -251,6 +255,8 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
       hasIdentifier,
       baseTax,
       effectiveTax,
+      consumptionTaxLabel,
+      localConsumptionTaxLabel,
     });
     setTaxTouched(true);
   }
@@ -264,6 +270,8 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
         hasIdentifier,
         baseTax,
         effectiveTax,
+        consumptionTaxLabel,
+        localConsumptionTaxLabel,
       });
     }
     setTaxTouched(true);

@@ -19,6 +19,10 @@ export interface ConsumptionTaxValue {
    * the resolved country, 0 otherwise.
    */
   effectiveTax?: number;
+  /** English name of the consumption tax (e.g. "VAT", "GST", "Sales Tax"), or null when the country has no consumption tax. */
+  consumptionTaxLabel?: string | null;
+  /** Local name of the tax in the country's own language (e.g. "TVA", "MwSt", "消費税"), or null when the country has no consumption tax. */
+  localConsumptionTaxLabel?: string | null;
 }
 
 export type TaxType = "business" | "individual" | "either";
