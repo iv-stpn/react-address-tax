@@ -6,6 +6,7 @@ import {
   getBusinessTaxNumberLabel,
   getConsumptionTaxConfig,
   hasRegionalTax,
+  isEUCountry,
 } from "../../utils/tax";
 import type { ValidationError } from "../../utils/validation";
 import { normalizeConsumptionTax, validateConsumptionTax } from "../../utils/validation";
@@ -165,7 +166,9 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
 
   const country = addressValue.country || defaultCountry || "";
   const taxConfig = getConsumptionTaxConfig(country);
-  const isInNexus = !nexusList || nexusList.includes(country);
+  // EU member states always carry a consumption-tax obligation, so they count
+  // as in-nexus even when the nexus list is empty or omits them.
+  const isInNexus = !nexusList || nexusList.includes(country) || isEUCountry(country);
   const showTaxFields = isBusiness && isInNexus && !!country;
 
   const businessTaxNumberLabel = (country ? getBusinessTaxNumberLabel(country) : null) ?? "Tax ID";
@@ -242,7 +245,7 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
   function handleAddressChange(newAddress: AddressValue) {
     onAddressChange(newAddress);
     const newCountry = newAddress.country || defaultCountry || "";
-    const newInNexus = !nexusList || nexusList.includes(newCountry);
+    const newInNexus = !nexusList || nexusList.includes(newCountry) || isEUCountry(newCountry);
     const newHasIdentifier = isBusiness && newInNexus && !!newCountry && hasTaxIdentifier;
     const rates = computeTaxRates(newCountry, newAddress.level1, isBusiness, hasTaxIdentifier, newInNexus);
     if (newHasIdentifier !== hasIdentifier || rates.baseTax !== baseTax || rates.effectiveTax !== effectiveTax) {

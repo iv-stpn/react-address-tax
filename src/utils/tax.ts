@@ -896,6 +896,16 @@ export function hasRegionalTax(country: string): boolean {
 }
 
 /**
+ * True for EU member states on the OSS (one-stop-shop) system. These always
+ * carry a consumption-tax obligation for the seller, so they are treated as
+ * in-nexus regardless of the supplied nexus list.
+ */
+export function isEUCountry(country: string): boolean {
+  const config = getConsumptionTaxConfig(country);
+  return !!config && config.taxSystem === "oss";
+}
+
+/**
  * Resolve a country to its (country-level) {@link TaxConfig}, exposing the
  * consumption-tax identifier metadata (prefix/pattern/example). For regional
  * countries these fields are identical across regions, so any entry serves.
