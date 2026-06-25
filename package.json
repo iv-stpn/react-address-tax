@@ -1,6 +1,6 @@
 {
   "name": "react-address-tax",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Reusable React component for international structured address input with VAT validation",
   "keywords": [
     "react",
