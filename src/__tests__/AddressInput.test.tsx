@@ -1,8 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { createRef, type Ref, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { AddressInput } from "../components/AddressInput/AddressInput";
-import type { AddressValue } from "../utils/address";
+import { AddressInput, type AddressInputHandle } from "../components/AddressInput/AddressInput";
+import type { AddressValue, ValidationMode } from "../utils/address";
 
 const baseValue: AddressValue = {
   line1: "123 Main St",
@@ -11,6 +12,20 @@ const baseValue: AddressValue = {
   postalCode: "10001",
   country: "US",
 };
+
+/** Stateful harness so typed values persist (a real controlled parent). */
+function Harness({
+  initial,
+  validationMode,
+  inputRef,
+}: {
+  initial: AddressValue;
+  validationMode?: ValidationMode;
+  inputRef?: Ref<AddressInputHandle>;
+}) {
+  const [value, setValue] = useState(initial);
+  return <AddressInput ref={inputRef} value={value} onChange={setValue} validationMode={validationMode} />;
+}
 
 describe("AddressInput", () => {
   it("renders country selector", () => {
@@ -127,5 +142,67 @@ describe("AddressInput", () => {
     expect(region).toBeInTheDocument();
     expect(region).toBeRequired();
     expect(screen.queryByLabelText(/federated state \(optional\)/i)).not.toBeInTheDocument();
+  });
+
+  it("reports valid in minimal mode once only the country is provided (non-regional, non-EU)", () => {
+    const onValidationChange = vi.fn();
+    // JP in minimal mode collects only the country: no other fields required.
+    render(
+      <AddressInput
+        value={{ line1: "", city: "", level1: "", postalCode: "", country: "JP" }}
+        onChange={() => {}}
+        mode="minimal"
+        onValidationChange={onValidationChange}
+      />,
+    );
+    expect(onValidationChange).toHaveBeenLastCalledWith(true, []);
+  });
+
+  it("reports valid in minimal mode for the US once country and region are provided", () => {
+    const onValidationChange = vi.fn();
+    render(
+      <AddressInput
+        value={{ line1: "", city: "", level1: "NY", postalCode: "", country: "US" }}
+        onChange={() => {}}
+        mode="minimal"
+        requireLevel1
+        onValidationChange={onValidationChange}
+      />,
+    );
+    expect(onValidationChange).toHaveBeenLastCalledWith(true, []);
+  });
+
+  it("onBlur mode hides errors until the field is blurred", async () => {
+    render(<Harness initial={{ ...baseValue, line1: "" }} validationMode="onBlur" />);
+    const input = screen.getByLabelText(/address line 1/i);
+    await userEvent.type(input, "ab");
+    await userEvent.clear(input);
+    // Typing/clearing alone should not surface the error in onBlur mode.
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    fireEvent.blur(input);
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+  });
+
+  it("onType mode reveals errors as the field is edited", async () => {
+    render(<Harness initial={{ ...baseValue, line1: "x" }} validationMode="onType" />);
+    const input = screen.getByLabelText(/address line 1/i);
+    await userEvent.clear(input);
+    // Editing to an empty value reveals the error immediately, without blur.
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+  });
+
+  it("onSubmit mode hides errors until validate() is called via ref", async () => {
+    const ref = createRef<AddressInputHandle>();
+    render(<Harness initial={{ ...baseValue, line1: "" }} validationMode="onSubmit" inputRef={ref} />);
+    const input = screen.getByLabelText(/address line 1/i);
+    await userEvent.type(input, "ab");
+    await userEvent.clear(input);
+    fireEvent.blur(input);
+    // Neither typing nor blur reveals errors in onSubmit mode.
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+    const result = ref.current?.validate();
+    expect(result?.valid).toBe(false);
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
   });
 });

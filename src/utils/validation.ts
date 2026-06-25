@@ -1,5 +1,5 @@
 import { COUNTRY_DATA, type CountryCode } from "../data/countries";
-import type { AddressValue } from "./address";
+import type { AddressFieldKey, AddressValue } from "./address";
 import { addressFieldLabel, getCountryConfig, isAddressFieldRequired } from "./address";
 import { getConsumptionTaxConfig } from "./tax";
 
@@ -26,7 +26,10 @@ export function validatePostalCode(postalCode: string, countryCode: string): boo
   return config.postalCodePattern.test(postalCode.trim());
 }
 
-export function validateAddress(value: AddressValue, options?: { requireLevel1?: boolean }): ValidationResult {
+export function validateAddress(
+  value: AddressValue,
+  options?: { requireLevel1?: boolean; fields?: AddressFieldKey[] },
+): ValidationResult {
   const errors: ValidationError[] = [];
   const requireLevel1 = options?.requireLevel1 ?? false;
   const config = getCountryConfig(value.country);
@@ -48,7 +51,13 @@ export function validateAddress(value: AddressValue, options?: { requireLevel1?:
     return { valid: true, errors };
   }
 
-  for (const field of config.addressFields) {
+  // Which fields are actually collected (and therefore validated). When the
+  // caller restricts the set — e.g. AddressInput in minimal/region mode, where
+  // only the country (and possibly the region) is collected — only those
+  // fields gate validity. When omitted, the country's full field set is used.
+  const fields = options?.fields ?? config.addressFields;
+
+  for (const field of fields) {
     if (!isAddressFieldRequired(field, requireLevel1)) continue;
     const fieldValue = value[field as keyof AddressValue];
     if (!fieldValue || String(fieldValue).trim() === "") {
@@ -61,7 +70,7 @@ export function validateAddress(value: AddressValue, options?: { requireLevel1?:
 
   // level1 may not be part of a country's addressFields, but when it's
   // required it must still be collected and validated — never optional.
-  if (requireLevel1 && !config.addressFields.includes("level1") && (!value.level1 || value.level1.trim() === "")) {
+  if (requireLevel1 && !fields.includes("level1") && (!value.level1 || value.level1.trim() === "")) {
     errors.push({
       field: "level1",
       message: `${addressFieldLabel(value.country, "level1")} is required.`,

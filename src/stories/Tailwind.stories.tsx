@@ -580,13 +580,12 @@ function BillingDemo() {
         <AccountTypeSwitch value={account} onChange={setAccount} />
         <AddressTaxInput
           addressValue={addressValue}
-          taxValue={taxValue}
           taxType={account}
           defaultCountry="DE"
           onAddressChange={setAddressValue}
           onConsumptionTaxChange={setTaxValue}
           countryPlaceholder="Choose your country"
-          classNames={{ root: "flex flex-col gap-4" }}
+          className="flex flex-col gap-4"
           {...tailwindRenderers}
         />
       </div>
@@ -620,12 +619,11 @@ function AddressTaxFormDemo() {
         <AccountTypeSwitch value={account} onChange={setAccount} />
         <AddressTaxInput
           addressValue={addressValue}
-          taxValue={taxValue}
           taxType={account}
           onAddressChange={setAddressValue}
           onConsumptionTaxChange={setTaxValue}
           countryPlaceholder="Choose your country"
-          classNames={{ root: "flex flex-col gap-4" }}
+          className="flex flex-col gap-4"
           {...tailwindRenderers}
         />
       </div>

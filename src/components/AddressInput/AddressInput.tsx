@@ -1,14 +1,26 @@
-import { type ChangeEvent, type ChangeEventHandler, Fragment, type ReactNode, useCallback, useEffect, useState } from "react";
+import {
+  type ChangeEvent,
+  type ChangeEventHandler,
+  Fragment,
+  forwardRef,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import type {
   AddressCollectionMode,
   AddressFieldKey,
   AddressInputClassNames,
   AddressValue,
   CountryAddressConfig,
+  ValidationMode,
 } from "../../utils/address";
 import { ALL_COUNTRY_OPTIONS, getCountryConfig, isEUCountry, resolveAddressField } from "../../utils/address";
 import { hasRegionalTax } from "../../utils/tax";
-import type { ValidationError } from "../../utils/validation";
+import type { ValidationError, ValidationResult } from "../../utils/validation";
 import { validateAddress } from "../../utils/validation";
 
 export interface RenderInputProps {
@@ -66,12 +78,28 @@ export interface RenderFieldEntry {
   node: ReactNode;
 }
 
+/** Imperative handle exposed via ref, primarily for the "onSubmit" validation mode. */
+export interface AddressInputHandle {
+  /**
+   * Marks every collected field as touched (revealing any pending errors) and
+   * returns the current validation result. Call this from a form's submit
+   * handler when using `validationMode="onSubmit"`.
+   */
+  validate: () => ValidationResult;
+}
+
 export interface AddressInputProps {
   value: AddressValue;
   onChange: (value: AddressValue) => void;
   onValidationChange?: (valid: boolean, errors: ValidationError[]) => void;
   /** Controls which fields are shown. Defaults to "full". */
   mode?: AddressCollectionMode;
+  /**
+   * Controls when field-level validation errors become visible. Defaults to
+   * "onType". With "onSubmit", errors stay hidden until `validate()` is called
+   * via the component's ref. `onValidationChange` always fires regardless.
+   */
+  validationMode?: ValidationMode;
   /**
    * When true, the fields are rendered directly (in a Fragment) instead of being
    * wrapped in a `rav-root` container. Use this when embedding AddressInput inside
@@ -162,26 +190,30 @@ function computeEffectiveFields(
   }
 }
 
-export function AddressInput({
-  value,
-  onChange,
-  onValidationChange,
-  mode = "full",
-  inline = false,
-  requireLevel1 = false,
-  disabled = false,
-  className,
-  classNames,
-  defaultCountry,
-  defaultRegion,
-  countryPlaceholder = "Select country",
-  level1AdministrativePlaceholder = (label) => `Select ${label}`,
-  renderInput,
-  renderCountrySelect,
-  renderLevel1AdministrativeSelect,
-  renderContainer,
-  renderFields,
-}: AddressInputProps) {
+export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(function AddressInput(
+  {
+    value,
+    onChange,
+    onValidationChange,
+    mode = "full",
+    validationMode = "onType",
+    inline = false,
+    requireLevel1 = false,
+    disabled = false,
+    className,
+    classNames,
+    defaultCountry,
+    defaultRegion,
+    countryPlaceholder = "Select country",
+    level1AdministrativePlaceholder = (label) => `Select ${label}`,
+    renderInput,
+    renderCountrySelect,
+    renderLevel1AdministrativeSelect,
+    renderContainer,
+    renderFields,
+  }: AddressInputProps,
+  ref,
+) {
   const [touched, setTouched] = useState<Partial<Record<string, boolean>>>({});
   const [errors, setErrors] = useState<ValidationError[]>([]);
 
@@ -197,18 +229,37 @@ export function AddressInput({
   const countryAtBottom = !!defaultCountry;
 
   const runValidation = useCallback(
-    (val: AddressValue) => {
-      const result = validateAddress(val, { requireLevel1 });
+    (val: AddressValue): ValidationResult => {
+      // Only the fields actually collected for this mode/country gate validity,
+      // so minimal/region modes report valid as soon as the country (and region
+      // when required) are provided — even though the country's full field set
+      // would otherwise be required.
+      const fields = computeEffectiveFields(mode, val.country, getCountryConfig(val.country), requireLevel1);
+      const result = validateAddress(val, { requireLevel1, fields });
       setErrors(result.errors);
       onValidationChange?.(result.valid, result.errors);
+      return result;
     },
-    [onValidationChange, requireLevel1],
+    [onValidationChange, requireLevel1, mode],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only re-run on country change
   useEffect(() => {
     runValidation(currentValue);
   }, [currentValue.country]);
+
+  // Keep a closure over the latest render values so the imperative `validate()`
+  // handle (used for "onSubmit") always sees the current value without making
+  // the handle depend on objects that change every render.
+  const validateRef = useRef<() => ValidationResult>(() => ({ valid: true, errors: [] }));
+  validateRef.current = () => {
+    const result = runValidation(currentValue);
+    // Reveal every error by marking all collected fields (plus country) touched.
+    const allFields = ["country", ...computeEffectiveFields(mode, currentValue.country, countryConfig, requireLevel1)];
+    setTouched((t) => ({ ...t, ...Object.fromEntries(allFields.map((f) => [f, true])) }));
+    return result;
+  };
+  useImperativeHandle(ref, () => ({ validate: () => validateRef.current() }), []);
 
   function handleField(field: keyof AddressValue) {
     return (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -218,9 +269,17 @@ export function AddressInput({
         next.postalCode = "";
       }
       onChange(next);
-      setTouched((t) => ({ ...t, [field]: true }));
+      // "onType" reveals errors as the user edits; "onBlur"/"onSubmit" wait.
+      if (validationMode === "onType") setTouched((t) => ({ ...t, [field]: true }));
       runValidation(next);
     };
+  }
+
+  function handleBlur(field: string) {
+    // Blur reveals a field's error in every mode except "onSubmit", where
+    // errors stay hidden until validate() is called.
+    if (validationMode === "onSubmit") return;
+    setTouched((t) => ({ ...t, [field]: true }));
   }
 
   function getError(field: string): string | undefined {
@@ -322,6 +381,7 @@ export function AddressInput({
       id: countryId,
       value: currentValue.country,
       onChange: handleField("country"),
+      onBlur: () => handleBlur("country"),
       disabled,
       required: true,
       "aria-invalid": countryError !== undefined,
@@ -348,7 +408,7 @@ export function AddressInput({
             id: inputId,
             value: currentFieldValue,
             onChange: handleField(fieldKey),
-            onBlur: () => setTouched((t) => ({ ...t, [fieldKey]: true })),
+            onBlur: () => handleBlur(fieldKey),
             disabled,
             required: fieldCfg.required,
             "aria-invalid": error !== undefined,
@@ -361,7 +421,7 @@ export function AddressInput({
             id: inputId,
             value: currentFieldValue,
             onChange: handleField(fieldKey),
-            onBlur: () => setTouched((t) => ({ ...t, [fieldKey]: true })),
+            onBlur: () => handleBlur(fieldKey),
             placeholder: fieldCfg.placeholder,
             disabled,
             required: fieldCfg.required,
@@ -404,4 +464,4 @@ export function AddressInput({
   if (inline) return body;
 
   return <div className={cn("rav-root", className ?? classNames?.root)}>{body}</div>;
-}
+});

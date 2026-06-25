@@ -1,9 +1,10 @@
-import { type CSSProperties, useState } from "react";
-import { AddressInput } from "../components/AddressInput/index";
+import { type CSSProperties, useRef, useState } from "react";
+import { AddressInput, type AddressInputHandle } from "../components/AddressInput/index";
 import { AddressTaxInput } from "../components/AddressTaxInput/index";
-import type { AddressValue } from "../utils/address";
+import type { AddressCollectionMode, AddressValue, ValidationMode } from "../utils/address";
 import type { ConsumptionTaxValue, TaxType } from "../utils/tax";
 import { type ConsumptionTaxOutcome, computeConsumptionTaxOutcome, type TaxOutcomeFlags } from "../utils/tax";
+import type { ValidationError } from "../utils/validation";
 
 // ---------------------------------------------------------------------------
 // ConsumptionTaxPanel
@@ -236,6 +237,101 @@ const sectionLabelStyle: CSSProperties = {
 };
 
 // ---------------------------------------------------------------------------
+// Demo controls — radios/checkboxes to exercise every prop state
+// ---------------------------------------------------------------------------
+
+const controlsStyle: CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "12px 20px",
+  alignItems: "flex-start",
+  padding: "12px 14px",
+  marginBottom: 16,
+  background: "#f9fafb",
+  border: "1px solid #e5e7eb",
+  borderRadius: 6,
+};
+
+const controlGroupStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 4,
+};
+
+const controlLegendStyle: CSSProperties = {
+  fontSize: 10,
+  fontWeight: 700,
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  color: "#6b7280",
+};
+
+const controlOptionStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 6,
+  fontSize: 13,
+  color: "#374151",
+  cursor: "pointer",
+};
+
+function RadioGroup<T extends string>({
+  legend,
+  value,
+  options,
+  onChange,
+}: {
+  legend: string;
+  value: T;
+  options: readonly T[];
+  onChange: (value: T) => void;
+}) {
+  return (
+    <div style={controlGroupStyle}>
+      <span style={controlLegendStyle}>{legend}</span>
+      {options.map((opt) => (
+        <label key={opt} style={controlOptionStyle}>
+          <input type="radio" name={legend} checked={value === opt} onChange={() => onChange(opt)} />
+          {opt}
+        </label>
+      ))}
+    </div>
+  );
+}
+
+function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (checked: boolean) => void }) {
+  return (
+    <label style={controlOptionStyle}>
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      {label}
+    </label>
+  );
+}
+
+const MODES: readonly AddressCollectionMode[] = ["minimal", "regionMinimal", "region", "full"];
+const VALIDATION_MODES: readonly ValidationMode[] = ["onType", "onBlur", "onSubmit"];
+
+/** Renders the live validity from onValidationChange. */
+function ValidationStatus({ valid, errors }: { valid: boolean; errors: ValidationError[] }) {
+  return (
+    <>
+      <span style={sectionLabelStyle}>Validation</span>
+      <div
+        style={{
+          ...jsonStyle,
+          background: valid ? "#d1fae5" : "#fee2e2",
+          border: `1px solid ${valid ? "#10b981" : "#ef4444"}`,
+          color: valid ? "#065f46" : "#991b1b",
+          fontWeight: 600,
+        }}
+      >
+        {valid ? "✓ valid" : `✗ invalid — ${errors.map((e) => e.field).join(", ")}`}
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // AddressWrapper — demos for AddressInput
 // ---------------------------------------------------------------------------
 
@@ -250,10 +346,41 @@ export function AddressWrapper({ defaultCountry }: AddressWrapperProps) {
     postalCode: "",
     country: defaultCountry ?? "",
   });
+  const [mode, setMode] = useState<AddressCollectionMode>("full");
+  const [validationMode, setValidationMode] = useState<ValidationMode>("onType");
+  const [requireLevel1, setRequireLevel1] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [validity, setValidity] = useState<{ valid: boolean; errors: ValidationError[] }>({ valid: true, errors: [] });
+  const inputRef = useRef<AddressInputHandle>(null);
 
   return (
     <div style={containerStyle}>
-      <AddressInput value={value} onChange={setValue} defaultCountry={defaultCountry} />
+      <div style={controlsStyle}>
+        <RadioGroup legend="mode" value={mode} options={MODES} onChange={setMode} />
+        <RadioGroup legend="validationMode" value={validationMode} options={VALIDATION_MODES} onChange={setValidationMode} />
+        <div style={controlGroupStyle}>
+          <span style={controlLegendStyle}>flags</span>
+          <Toggle label="requireLevel1" checked={requireLevel1} onChange={setRequireLevel1} />
+          <Toggle label="disabled" checked={disabled} onChange={setDisabled} />
+          {validationMode === "onSubmit" && (
+            <button type="button" onClick={() => inputRef.current?.validate()} style={{ marginTop: 4, cursor: "pointer" }}>
+              Validate
+            </button>
+          )}
+        </div>
+      </div>
+      <AddressInput
+        ref={inputRef}
+        value={value}
+        onChange={setValue}
+        mode={mode}
+        validationMode={validationMode}
+        requireLevel1={requireLevel1}
+        disabled={disabled}
+        defaultCountry={defaultCountry}
+        onValidationChange={(valid, errors) => setValidity({ valid, errors })}
+      />
+      <ValidationStatus valid={validity.valid} errors={validity.errors} />
       <span style={sectionLabelStyle}>Address value</span>
       <pre style={jsonStyle}>{JSON.stringify(value, null, 2)}</pre>
     </div>
@@ -278,6 +405,12 @@ export function AddressTaxWrapper({ defaultCountry, taxType }: AddressTaxWrapper
   const [taxValue, setTaxValue] = useState<ConsumptionTaxValue>({});
   const [isBusiness, setIsBusiness] = useState(false);
   const [hasNexus, setHasNexus] = useState(true);
+  const [mode, setMode] = useState<AddressCollectionMode>("full");
+  const [validationMode, setValidationMode] = useState<ValidationMode>("onType");
+  const [consumptionTaxRequired, setConsumptionTaxRequired] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [validity, setValidity] = useState<{ valid: boolean; errors: ValidationError[] }>({ valid: true, errors: [] });
+  const inputRef = useRef<AddressInputHandle>(null);
 
   const effectiveIsBusiness = taxType === "business" ? true : taxType === "individual" ? false : isBusiness;
   const hasConsumptionTaxId = taxValue.hasIdentifier ?? true;
@@ -296,31 +429,38 @@ export function AddressTaxWrapper({ defaultCountry, taxType }: AddressTaxWrapper
 
   return (
     <div style={containerStyle}>
+      <div style={controlsStyle}>
+        <RadioGroup legend="mode" value={mode} options={MODES} onChange={setMode} />
+        <RadioGroup legend="validationMode" value={validationMode} options={VALIDATION_MODES} onChange={setValidationMode} />
+        <div style={controlGroupStyle}>
+          <span style={controlLegendStyle}>flags</span>
+          <Toggle label="consumptionTaxRequired" checked={consumptionTaxRequired} onChange={setConsumptionTaxRequired} />
+          <Toggle label="has nexus in country" checked={hasNexus} onChange={setHasNexus} />
+          <Toggle label="disabled" checked={disabled} onChange={setDisabled} />
+          {validationMode === "onSubmit" && (
+            <button type="button" onClick={() => inputRef.current?.validate()} style={{ marginTop: 4, cursor: "pointer" }}>
+              Validate
+            </button>
+          )}
+        </div>
+      </div>
       <AddressTaxInput
+        ref={inputRef}
         addressValue={addressValue}
-        taxValue={taxValue}
         taxType={taxType}
         isBusiness={taxType === "either" ? isBusiness : undefined}
         nexusList={nexusList}
+        mode={mode}
+        validationMode={validationMode}
+        consumptionTaxRequired={consumptionTaxRequired}
+        disabled={disabled}
         defaultCountry={defaultCountry}
         onAddressChange={setAddressValue}
         onConsumptionTaxChange={setTaxValue}
         onBusinessChange={taxType === "either" ? setIsBusiness : undefined}
+        onValidationChange={(valid, errors) => setValidity({ valid, errors })}
       />
-      <div style={{ marginTop: 12 }}>
-        <label
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            cursor: "pointer",
-            fontSize: 13,
-          }}
-        >
-          <input type="checkbox" checked={hasNexus} onChange={(e) => setHasNexus(e.target.checked)} />
-          Has nexus in selected country?
-        </label>
-      </div>
+      <ValidationStatus valid={validity.valid} errors={validity.errors} />
       <span style={sectionLabelStyle}>Tax to collect</span>
       <ConsumptionTaxPanel outcome={outcome} noNexus={noNexus} />
       <span style={sectionLabelStyle}>Address value</span>

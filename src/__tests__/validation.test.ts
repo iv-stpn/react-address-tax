@@ -112,6 +112,31 @@ describe("validateAddress", () => {
     expect(validateAddress(deAddress, { requireLevel1: true }).valid).toBe(false);
     expect(validateAddress({ ...deAddress, level1: "BE" }, { requireLevel1: true }).valid).toBe(true);
   });
+
+  it("only validates the fields passed in `fields`", () => {
+    // Minimal mode for the US collects just the country (+ region), so an
+    // address with only country/level1 must be valid when fields is restricted.
+    const partial: AddressValue = {
+      line1: "",
+      city: "",
+      level1: "NY",
+      postalCode: "",
+      country: "US",
+    };
+    expect(validateAddress(partial).valid).toBe(false);
+    expect(validateAddress(partial, { requireLevel1: true, fields: ["level1"] }).valid).toBe(true);
+  });
+
+  it("is valid with only a country when fields is empty", () => {
+    const onlyCountry: AddressValue = {
+      line1: "",
+      city: "",
+      level1: "",
+      postalCode: "",
+      country: "JP",
+    };
+    expect(validateAddress(onlyCountry, { fields: [] }).valid).toBe(true);
+  });
 });
 
 describe("normalizeConsumptionTax", () => {

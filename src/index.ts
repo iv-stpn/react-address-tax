@@ -1,5 +1,6 @@
 export {
   AddressInput,
+  type AddressInputHandle,
   type AddressInputProps,
 } from "./components/AddressInput/index";
 export {
@@ -13,6 +14,7 @@ export type {
   AddressValue,
   CountryAddressConfig,
   CountryCode,
+  ValidationMode,
 } from "./utils/address";
 export {
   COUNTRIES_ADDRESSES as COUNTRIES,

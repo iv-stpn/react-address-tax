@@ -45,6 +45,17 @@ export type AddressCollectionMode =
   /** Full address, always. */
   | "full";
 
+/**
+ * Controls *when* field-level validation errors are surfaced in the UI.
+ * `onValidationChange` always fires with the true validity regardless of this
+ * setting — this only gates when errors become visible to the user.
+ * - "onType" (default): a field's error shows as soon as it is edited or blurred.
+ * - "onBlur": a field's error shows only once it loses focus.
+ * - "onSubmit": errors stay hidden until validation is triggered imperatively
+ *   (via the component's ref `validate()` handle).
+ */
+export type ValidationMode = "onType" | "onBlur" | "onSubmit";
+
 // ---------------------------------------------------------------------------
 // Shared render-prop types (used by both AddressInput and AddressTaxInput).
 // ---------------------------------------------------------------------------

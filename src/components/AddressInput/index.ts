@@ -1,5 +1,6 @@
 export {
   AddressInput,
+  type AddressInputHandle,
   type AddressInputProps,
   type RenderCheckboxProps,
   type RenderContainerProps,
