@@ -406,10 +406,9 @@ export const AddressTaxInput = forwardRef<AddressInputHandle, AddressTaxInputPro
         value={addressValue}
         onChange={handleAddressChange}
         onValidationChange={onValidationChange}
-        mode={mode}
+        mode={hasRegionalTax(country) && mode !== "region" ? "fullRegion" : mode}
         validationMode={validationMode}
         inline
-        requireLevel1={hasRegionalTax(country)}
         defaultCountry={defaultCountry}
         defaultRegion={defaultRegion}
         countryPlaceholder={countryPlaceholder}

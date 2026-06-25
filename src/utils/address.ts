@@ -264,7 +264,9 @@ export type AddressCollectionMode =
   /** Country + region only, always. */
   | "region"
   /** Full address, always. */
-  | "full";
+  | "full"
+  /** Full address + region is required. */
+  | "fullRegion";
 
 /**
  * Controls *when* field-level validation errors are surfaced in the UI.
@@ -386,17 +388,23 @@ export function addressFieldLabel(code: string, key: AddressFieldKey): string {
 
 /**
  * Whether a field is required. line1/city/postalCode are always required; line2
- * is always optional; the level-1 field is required only when {@link
- * requireLevel1} is set — otherwise it is omitted entirely rather than shown as
- * optional (see computeEffectiveFields).
+ * is always optional; the level-1 field is required based on the mode and
+ * whether it's included in the effective field list for that mode.
  */
-export function isAddressFieldRequired(key: AddressFieldKey, requireLevel1 = false): boolean {
-  if (key === "level1") return requireLevel1;
+export function isAddressFieldRequired(key: AddressFieldKey, mode: AddressCollectionMode = "full"): boolean {
+  if (key === "level1") {
+    // level1 is required for region, regionMinimal, fullRegion, and minimal (when applicable)
+    return mode === "region" || mode === "regionMinimal" || mode === "fullRegion" || mode === "minimal";
+  }
   return key !== "line2";
 }
 
-export function resolveAddressField(code: string, key: AddressFieldKey, requireLevel1 = false): ResolvedAddressField {
-  const required = isAddressFieldRequired(key, requireLevel1);
+export function resolveAddressField(
+  code: string,
+  key: AddressFieldKey,
+  mode: AddressCollectionMode = "full",
+): ResolvedAddressField {
+  const required = isAddressFieldRequired(key, mode);
   const baseLabel = addressFieldLabel(code, key);
   const field: ResolvedAddressField = {
     field: key,

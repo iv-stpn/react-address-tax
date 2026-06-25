@@ -34,7 +34,7 @@ describe("AddressInput", () => {
   });
 
   it("renders US address fields", () => {
-    render(<AddressInput value={baseValue} onChange={() => {}} requireLevel1 />);
+    render(<AddressInput value={baseValue} onChange={() => {}} mode="fullRegion" />);
     expect(screen.getByLabelText(/address line 1/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/city/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/state/i)).toBeInTheDocument();
@@ -44,14 +44,18 @@ describe("AddressInput", () => {
   it("calls onChange when a field changes", async () => {
     const onChange = vi.fn();
     render(<AddressInput value={baseValue} onChange={onChange} />);
-    await userEvent.clear(screen.getByLabelText(/address line 1/i));
-    await userEvent.type(screen.getByLabelText(/address line 1/i), "456 Elm St");
+    const input = screen.getByLabelText(/address line 1/i);
+
+    // Use fireEvent for better compatibility with Bun's test runner
+    fireEvent.change(input, { target: { value: "456 Elm St" } });
+
     expect(onChange).toHaveBeenCalled();
   });
 
   it("shows validation error on blur when field is empty", async () => {
     render(<AddressInput value={{ ...baseValue, line1: "" }} onChange={() => {}} />);
     const input = screen.getByLabelText(/address line 1/i);
+    fireEvent.focus(input);
     fireEvent.blur(input);
     expect(await screen.findByRole("alert")).toBeInTheDocument();
   });
@@ -66,10 +70,14 @@ describe("AddressInput", () => {
     const onChange = vi.fn();
     render(<AddressInput value={baseValue} onChange={onChange} />);
     const select = screen.getByLabelText(/country/i);
-    await userEvent.selectOptions(select, "DE");
+    fireEvent.change(select, { target: { value: "DE" } });
+
+    // Wait for the change to propagate
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
     const lastCall = onChange.mock.calls.at(-1)?.[0] as AddressValue;
-    expect(lastCall.postalCode).toBe("");
-    expect(lastCall.level1).toBe("");
+    expect(lastCall?.postalCode).toBe("");
+    expect(lastCall?.level1).toBe("");
   });
 
   it("renders DE address fields after switching country", async () => {
@@ -93,7 +101,7 @@ describe("AddressInput", () => {
   });
 
   it("shows only state field in minimal mode for US", () => {
-    render(<AddressInput value={baseValue} onChange={() => {}} mode="minimal" requireLevel1 />);
+    render(<AddressInput value={baseValue} onChange={() => {}} mode="minimal" />);
     expect(screen.queryByLabelText(/address line 1/i)).not.toBeInTheDocument();
     expect(screen.getByLabelText(/state/i)).toBeInTheDocument();
   });
@@ -114,29 +122,29 @@ describe("AddressInput", () => {
   });
 
   it("uses defaultRegion to pre-fill state", () => {
-    render(<AddressInput value={{ ...baseValue, level1: "" }} onChange={() => {}} defaultRegion="CA" requireLevel1 />);
+    render(<AddressInput value={{ ...baseValue, level1: "" }} onChange={() => {}} defaultRegion="CA" mode="fullRegion" />);
     const stateSelect = screen.getByLabelText(/state/i) as HTMLSelectElement;
     expect(stateSelect.value).toBe("CA");
   });
 
-  it("omits level1 by default and requires it when requireLevel1 is set", () => {
-    const { rerender } = render(<AddressInput value={baseValue} onChange={() => {}} mode="region" />);
-    // Absent by default — level1 is never optional.
+  it("omits level1 in full mode and requires it in region/fullRegion modes", () => {
+    const { rerender } = render(<AddressInput value={baseValue} onChange={() => {}} mode="full" />);
+    // Absent in full mode — level1 is not included in full mode.
     expect(screen.queryByLabelText(/state/i)).not.toBeInTheDocument();
 
-    rerender(<AddressInput value={baseValue} onChange={() => {}} mode="region" requireLevel1 />);
-    // Required when requireLevel1 is set: no "(optional)" suffix.
+    rerender(<AddressInput value={baseValue} onChange={() => {}} mode="region" />);
+    // Required in region mode: no "(optional)" suffix.
     expect(screen.queryByLabelText(/state \(optional\)/i)).not.toBeInTheDocument();
     const state = screen.getByLabelText(/state/i);
     expect(state).toBeInTheDocument();
     expect(state).toBeRequired();
   });
 
-  it("shows level1 as required for a country without a level1 field when requireLevel1 is set", () => {
-    // DE normally has no level1 field; requireLevel1 must surface it as a
+  it("shows level1 as required for a country without a level1 field in fullRegion mode", () => {
+    // DE normally has no level1 field; fullRegion mode must surface it as a
     // required field rather than omitting it.
     render(
-      <AddressInput value={{ ...baseValue, country: "DE", level1: "", postalCode: "" }} onChange={() => {}} requireLevel1 />,
+      <AddressInput value={{ ...baseValue, country: "DE", level1: "", postalCode: "" }} onChange={() => {}} mode="fullRegion" />,
     );
     const region = screen.getByLabelText(/federated state/i);
     expect(region).toBeInTheDocument();
@@ -165,7 +173,6 @@ describe("AddressInput", () => {
         value={{ line1: "", city: "", level1: "NY", postalCode: "", country: "US" }}
         onChange={() => {}}
         mode="minimal"
-        requireLevel1
         onValidationChange={onValidationChange}
       />,
     );
@@ -179,7 +186,7 @@ describe("AddressInput", () => {
     await userEvent.clear(input);
     // Typing/clearing alone should not surface the error in onBlur mode.
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    fireEvent.blur(input);
+    await userEvent.tab();
     expect(await screen.findByRole("alert")).toBeInTheDocument();
   });
 
@@ -197,7 +204,7 @@ describe("AddressInput", () => {
     const input = screen.getByLabelText(/address line 1/i);
     await userEvent.type(input, "ab");
     await userEvent.clear(input);
-    fireEvent.blur(input);
+    await userEvent.tab();
     // Neither typing nor blur reveals errors in onSubmit mode.
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 

@@ -105,14 +105,6 @@ export interface AddressInputProps {
    * `rav-root` elements. `className`/`classNames.root` are ignored in this mode.
    */
   inline?: boolean;
-  /**
-   * Whether the level-1 (state/province/region) field is required.
-   * Defaults to false, in which case the field is omitted entirely — it is
-   * never shown as optional. Set true to collect it as a required field,
-   * e.g. where downstream logic needs it (AddressTaxInput requires it for
-   * countries whose tax rate varies by region).
-   */
-  requireLevel1?: boolean;
   /** Pre-selects a country and moves the country selector to the bottom of the form. */
   defaultCountry?: string;
   /** Pre-selects a state/region. */
@@ -161,7 +153,6 @@ export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(fu
     mode = "full",
     validationMode = "onType",
     inline = false,
-    requireLevel1 = false,
     disabled = false,
     className,
     classNames,
@@ -197,13 +188,12 @@ export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(fu
       // so minimal/region modes report valid as soon as the country (and region
       // when required) are provided — even though the country's full field set
       // would otherwise be required.
-      const fields = computeEffectiveFields(mode, val.country, requireLevel1);
-      const result = validateAddress(val, { requireLevel1, fields });
+      const result = validateAddress(val, mode);
       setErrors(result.errors);
       onValidationChange?.(result.valid, result.errors);
       return result;
     },
-    [onValidationChange, requireLevel1, mode],
+    [onValidationChange, mode],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only re-run on country change
@@ -218,7 +208,7 @@ export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(fu
   validateRef.current = () => {
     const result = runValidation(currentValue);
     // Reveal every error by marking all collected fields (plus country) touched.
-    const allFields = ["country", ...computeEffectiveFields(mode, currentValue.country, requireLevel1)];
+    const allFields = ["country", ...computeEffectiveFields(mode, currentValue.country)];
     setTouched((t) => ({ ...t, ...Object.fromEntries(allFields.map((f) => [f, true])) }));
     return result;
   };
@@ -252,7 +242,7 @@ export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(fu
 
   const cn = (base: string, custom?: string) => [base, custom].filter(Boolean).join(" ");
 
-  const effectiveFieldOrder = computeEffectiveFields(mode, currentValue.country, requireLevel1);
+  const effectiveFieldOrder = computeEffectiveFields(mode, currentValue.country);
 
   // --- Default render helpers ---
 
@@ -361,7 +351,7 @@ export const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(fu
 
   if (countryConfig) {
     for (const fieldKey of effectiveFieldOrder) {
-      const fieldCfg = resolveAddressField(currentValue.country, fieldKey, requireLevel1);
+      const fieldCfg = resolveAddressField(currentValue.country, fieldKey, mode);
       const error = getError(fieldKey);
       const inputId = `rav-${fieldKey}`;
       const currentFieldValue = (currentValue[fieldKey as keyof AddressValue] as string | undefined) ?? "";

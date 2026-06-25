@@ -74,7 +74,8 @@
     "gen:geonames": "bun run scripts/gen-geonames.ts",
     "gen:level1": "bun run scripts/gen-level1-codes.ts",
     "gen:countries": "bun run scripts/gen-countries.ts",
-    "gen:coverage": "bun run scripts/gen-coverage-table.ts"
+    "gen:coverage": "bun run scripts/gen-coverage-table.ts",
+    "prepare": "husky"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
@@ -94,6 +95,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.2",
+    "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "randexp": "^0.5.3",
     "react": "^19.2.7",

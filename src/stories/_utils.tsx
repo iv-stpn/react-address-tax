@@ -330,7 +330,7 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
   );
 }
 
-const MODES: readonly AddressCollectionMode[] = ["minimal", "regionMinimal", "region", "full"];
+const MODES: readonly AddressCollectionMode[] = ["minimal", "regionMinimal", "region", "full", "fullRegion"];
 const VALIDATION_MODES: readonly ValidationMode[] = ["onType", "onBlur", "onSubmit"];
 
 /** Renders the live validity from onValidationChange. */
@@ -370,7 +370,6 @@ export function AddressWrapper({ defaultCountry }: AddressWrapperProps) {
   });
   const [mode, setMode] = useState<AddressCollectionMode>("full");
   const [validationMode, setValidationMode] = useState<ValidationMode>("onType");
-  const [requireLevel1, setRequireLevel1] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [validity, setValidity] = useState<{ valid: boolean; errors: ValidationError[] }>({ valid: true, errors: [] });
   const inputRef = useRef<AddressInputHandle>(null);
@@ -382,7 +381,6 @@ export function AddressWrapper({ defaultCountry }: AddressWrapperProps) {
         <RadioGroup legend="validationMode" value={validationMode} options={VALIDATION_MODES} onChange={setValidationMode} />
         <div style={controlGroupStyle}>
           <span style={controlLegendStyle}>flags</span>
-          <Toggle label="requireLevel1" checked={requireLevel1} onChange={setRequireLevel1} />
           <Toggle label="disabled" checked={disabled} onChange={setDisabled} />
           {validationMode === "onSubmit" && (
             <button type="button" onClick={() => inputRef.current?.validate()} style={{ marginTop: 4, cursor: "pointer" }}>
@@ -397,7 +395,6 @@ export function AddressWrapper({ defaultCountry }: AddressWrapperProps) {
         onChange={setValue}
         mode={mode}
         validationMode={validationMode}
-        requireLevel1={requireLevel1}
         disabled={disabled}
         defaultCountry={defaultCountry}
         onValidationChange={(valid, errors) => setValidity({ valid, errors })}
