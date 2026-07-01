@@ -976,8 +976,12 @@ export function computeTaxOutcome(
     localTaxLabel: getLocalTaxLabel(country, resolvedState),
   } as const;
 
+  // OSS (EU) jurisdictions always carry a seller obligation, so they count as
+  // in-nexus regardless of the supplied `hasNexus` flag.
+  const sellerHasNexus = hasNexus || config.taxSystem === "oss";
+
   // `effectiveTax` is `baseTax` when the seller has nexus, else 0
-  const effective = (base: number | null): number | null => (hasNexus ? base : 0);
+  const effective = (base: number | null): number | null => (sellerHasNexus ? base : 0);
 
   // If NOT a business (consumer), apply standard rates with exceptions
   if (!isBusiness) {
