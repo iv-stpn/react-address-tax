@@ -21,7 +21,7 @@ type TaxCategory = "reverse-charge" | "standard" | "zero-rated" | "regional-us" 
 function categorize(o: ConsumptionTaxOutcome): TaxCategory {
   if (o.taxSystem === null) return "none";
   if (o.taxSystem === "oss") return o.flags.buyerSelfAccounts ? "reverse-charge" : "standard";
-  if (o.flags.invoiceAtZero && o.flags.buyerSelfAccounts) return "zero-rated";
+  if (o.flags.buyerSelfAccounts) return "zero-rated";
   if (o.flags.localSurcharge) return "regional-us";
   if (o.flags.regionalRates) return "regional-ca";
   return "outside";
@@ -80,7 +80,6 @@ const COLORS: Record<TaxCategory, { bg: string; border: string; text: string; ba
 
 const FLAG_ROWS: { key: keyof TaxOutcomeFlags; label: string }[] = [
   { key: "buyerSelfAccounts", label: "Buyer self-accounts" },
-  { key: "invoiceAtZero", label: "Invoice at 0%" },
   { key: "regionalRates", label: "Regional rates" },
   { key: "localSurcharge", label: "Local surcharge may apply" },
 ];

@@ -61,8 +61,6 @@ export type CountryTaxEntry = TaxConfig | Record<string, TaxConfig>;
 export interface TaxOutcomeFlags {
   /** Buyer self-accounts via reverse charge or self-assessment. */
   buyerSelfAccounts: boolean;
-  /** Invoice must be issued at 0%. */
-  invoiceAtZero: boolean;
   /** Rate varies by state / province — needs regional selection. */
   regionalRates: boolean;
   /** Local / municipal rates may stack on top of the state rate (US). */
@@ -935,7 +933,6 @@ function resolveConfig(entry: CountryTaxEntry, state: string | undefined): { con
 
 const NO_FLAGS: TaxOutcomeFlags = {
   buyerSelfAccounts: false,
-  invoiceAtZero: false,
   regionalRates: false,
   localSurcharge: false,
 };
@@ -991,7 +988,7 @@ export function computeConsumptionTaxOutcome(
         ...base,
         baseTax,
         effectiveTax: effective(baseTax),
-        flags: makeFlags({ buyerSelfAccounts: true, invoiceAtZero: true }),
+        flags: makeFlags({ buyerSelfAccounts: true }),
       };
     }
 
@@ -1016,7 +1013,7 @@ export function computeConsumptionTaxOutcome(
       ...base,
       baseTax,
       effectiveTax: effective(baseTax),
-      flags: makeFlags({ buyerSelfAccounts: true, invoiceAtZero: true }),
+      flags: makeFlags({ buyerSelfAccounts: true }),
     };
   }
 
@@ -1027,7 +1024,7 @@ export function computeConsumptionTaxOutcome(
       ...base,
       baseTax,
       effectiveTax: effective(baseTax),
-      flags: makeFlags({ buyerSelfAccounts: true, invoiceAtZero: true }),
+      flags: makeFlags({ buyerSelfAccounts: true }),
     };
   }
 
