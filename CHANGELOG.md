@@ -1,5 +1,16 @@
 # react-address-tax
 
+## 2.0.1
+
+### Patch Changes
+
+- [`84dd986`](https://github.com/iv-stpn/react-address-tax/commit/84dd986af10f9417360e6e7f9279513c6b44afb4) Thanks [@iv-stpn](https://github.com/iv-stpn)! - Fold the "OSS (EU) jurisdictions always carry a seller nexus" rule into
+  `computeTaxOutcome`. Previously callers had to OR `isEUCountry(country)` into the
+  `hasNexus` argument themselves, so `computeConsumerTaxOutcome("FR", false)`
+  returned `effectiveTax: 0` instead of the headline rate. OSS countries are now
+  treated as in-nexus regardless of the passed `hasNexus` flag; non-OSS
+  (country-specific) jurisdictions remain gated by `hasNexus` as before.
+
 ## 2.0.0
 
 ### Major Changes
