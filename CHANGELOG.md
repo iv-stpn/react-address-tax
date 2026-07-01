@@ -1,5 +1,32 @@
 # react-address-tax
 
+## 2.0.0
+
+### Major Changes
+
+- [`3cca36a`](https://github.com/iv-stpn/react-address-tax/commit/3cca36ae0e2d1cfbcc97d85c8b2bba5751c2cc81) Thanks [@iv-stpn](https://github.com/iv-stpn)! - Rename `ConsumptionTax` to `Tax` across the public API to shorten names. This is
+  a breaking change for consumers using the affected exports.
+
+  Renamed functions:
+
+  - `computeConsumptionTaxOutcome` → `computeTaxOutcome`
+  - `computeConsumerConsumptionTaxOutcome` → `computeConsumerTaxOutcome`
+  - `getConsumptionTaxLabel` → `getTaxLabel`
+  - `getLocalConsumptionTaxLabel` → `getLocalTaxLabel`
+  - `normalizeConsumptionTax` → `normalizeTax`
+  - `validateConsumptionTax` → `validateTax`
+
+  Renamed types:
+
+  - `ConsumptionTaxLabels` → `TaxLabels`
+  - `ConsumptionTaxValue` → `TaxValue`
+  - `ConsumptionTaxOutcome` → `TaxOutcome`
+
+  The `AddressTaxInput` `onConsumptionTaxChange` prop is now `onTaxChange`, and
+  the emitted value fields `consumptionTaxLabel` / `localConsumptionTaxLabel` are
+  now `taxLabel` / `localTaxLabel`. The rendered tax input DOM id changed from
+  `rav-consumptionTaxId` to `rav-taxId`.
+
 ## 1.3.1
 
 ### Patch Changes
