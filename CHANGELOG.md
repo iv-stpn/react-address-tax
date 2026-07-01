@@ -1,5 +1,25 @@
 # react-address-tax
 
+## 1.3.0
+
+### Minor Changes
+
+- [`0dda096`](https://github.com/iv-stpn/react-address-tax/commit/0dda096b3620a4a5ed53b12074118147ea0b41f8) Thanks [@iv-stpn](https://github.com/iv-stpn)! - Simplified ConsumptionTaxOutcome interface by removing redundant fields
+
+  **Breaking Changes:**
+
+  - Removed `hasNexus` field from `ConsumptionTaxOutcome` (mirrors input parameter)
+  - Removed `state` field from `ConsumptionTaxOutcome` (mirrors input parameter)
+  - Removed `collectionThreshold` field from `ConsumptionTaxOutcome` (use `getConsumptionTaxConfig()` instead)
+  - Removed `invoiceAtZero` flag from `TaxOutcomeFlags` (always equals `buyerSelfAccounts`)
+
+  **Improvements:**
+
+  - Simplified `computeConsumptionTaxOutcome` implementation - now checks business status first for clearer logic flow
+  - Reduced `ConsumptionTaxOutcome` from 9 fields to 6 fields
+  - Reduced `TaxOutcomeFlags` from 4 fields to 3 fields
+  - Interface now only contains computed outputs, not mirrored inputs
+
 ## 1.2.1
 
 ### Patch Changes
