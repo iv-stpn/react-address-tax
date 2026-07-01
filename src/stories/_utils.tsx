@@ -16,14 +16,22 @@ import type { ValidationError } from "../utils/validation";
 // ---------------------------------------------------------------------------
 
 /** Display-only categorization derived from the outcome flags. */
-type TaxCategory = "reverse-charge" | "standard" | "zero-rated" | "regional-us" | "regional-ca" | "outside" | "no-nexus" | "none";
+type TaxCategory =
+  | "reverse-charge"
+  | "standard"
+  | "zero-rated"
+  | "regional-local-surcharge"
+  | "regional"
+  | "outside"
+  | "no-nexus"
+  | "none";
 
 function categorize(o: ConsumptionTaxOutcome): TaxCategory {
   if (o.taxSystem === null) return "none";
   if (o.taxSystem === "oss") return o.flags.buyerSelfAccounts ? "reverse-charge" : "standard";
   if (o.flags.buyerSelfAccounts) return "zero-rated";
-  if (o.flags.localSurcharge) return "regional-us";
-  if (o.flags.regionalRates) return "regional-ca";
+  if (o.flags.localSurcharge) return "regional-local-surcharge";
+  if (o.flags.regionalRates) return "regional";
   return "outside";
 }
 
@@ -46,13 +54,13 @@ const COLORS: Record<TaxCategory, { bg: string; border: string; text: string; ba
     text: "#1e40af",
     badge: "#2563eb",
   },
-  "regional-us": {
+  "regional-local-surcharge": {
     bg: "#f3f4f6",
     border: "#9ca3af",
     text: "#374151",
     badge: "#6b7280",
   },
-  "regional-ca": {
+  regional: {
     bg: "#f3f4f6",
     border: "#9ca3af",
     text: "#374151",
@@ -110,11 +118,11 @@ function buildHeadline(category: TaxCategory, o: ConsumptionTaxOutcome, state?: 
       return "Zero-rated Export";
     case "standard":
       return `Standard ${taxName} — ${rate}%`;
-    case "regional-us":
+    case "regional-local-surcharge":
       if (!state) return "US Sales Tax — select state";
       if (rate === null) return `No ${taxName} — ${state}`;
       return `${taxName} — ${state} ${rate}%`;
-    case "regional-ca":
+    case "regional":
       if (!state) return "Canadian GST/HST — select province";
       if (rate === null) return `${taxName} — ${state}`;
       return `${taxName} — ${state} ${rate}%`;
