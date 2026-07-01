@@ -3,7 +3,12 @@ import { AddressInput, type AddressInputHandle } from "../components/AddressInpu
 import { AddressTaxInput } from "../components/AddressTaxInput/index";
 import type { AddressCollectionMode, AddressValue, ValidationMode } from "../utils/address";
 import type { ConsumptionTaxValue, TaxType } from "../utils/tax";
-import { type ConsumptionTaxOutcome, computeConsumptionTaxOutcome, type TaxOutcomeFlags } from "../utils/tax";
+import {
+  type ConsumptionTaxOutcome,
+  computeConsumptionTaxOutcome,
+  getConsumptionTaxConfig,
+  type TaxOutcomeFlags,
+} from "../utils/tax";
 import type { ValidationError } from "../utils/validation";
 
 // ---------------------------------------------------------------------------
@@ -15,9 +20,7 @@ type TaxCategory = "reverse-charge" | "standard" | "zero-rated" | "regional-us" 
 
 function categorize(o: ConsumptionTaxOutcome): TaxCategory {
   if (o.taxSystem === null) return "none";
-  if (o.taxSystem === "oss") {
-    return o.flags.buyerSelfAccounts ? "reverse-charge" : "standard";
-  }
+  if (o.taxSystem === "oss") return o.flags.buyerSelfAccounts ? "reverse-charge" : "standard";
   if (o.flags.invoiceAtZero && o.flags.buyerSelfAccounts) return "zero-rated";
   if (o.flags.localSurcharge) return "regional-us";
   if (o.flags.regionalRates) return "regional-ca";
@@ -95,8 +98,8 @@ function formatTaxLabel(o: ConsumptionTaxOutcome): string | null {
   return `${en} / ${local}`;
 }
 
-function buildHeadline(category: TaxCategory, o: ConsumptionTaxOutcome): string {
-  const { consumptionTaxLabel: taxName, effectiveTax: rate, state } = o;
+function buildHeadline(category: TaxCategory, o: ConsumptionTaxOutcome, state?: string): string {
+  const { consumptionTaxLabel: taxName, effectiveTax: rate } = o;
   switch (category) {
     case "none":
       return "No country selected";
@@ -123,9 +126,24 @@ function buildHeadline(category: TaxCategory, o: ConsumptionTaxOutcome): string 
   }
 }
 
-function ConsumptionTaxPanel({ outcome, noNexus = false }: { outcome: ConsumptionTaxOutcome; noNexus?: boolean }) {
+function ConsumptionTaxPanel({
+  outcome,
+  country,
+  state,
+  noNexus = false,
+}: {
+  outcome: ConsumptionTaxOutcome;
+  country: string;
+  state?: string;
+  noNexus?: boolean;
+}) {
   const category: TaxCategory = noNexus ? "no-nexus" : categorize(outcome);
   const c = COLORS[category];
+
+  // Resolve collectionThreshold from config for display
+  const config = country ? getConsumptionTaxConfig(country) : undefined;
+  const collectionThreshold = config?.collectionThreshold ?? null;
+
   return (
     <div
       style={{
@@ -156,7 +174,7 @@ function ConsumptionTaxPanel({ outcome, noNexus = false }: { outcome: Consumptio
         >
           TAX
         </span>
-        <span style={{ fontWeight: 600, color: c.text, fontSize: 14 }}>{buildHeadline(category, outcome)}</span>
+        <span style={{ fontWeight: 600, color: c.text, fontSize: 14 }}>{buildHeadline(category, outcome, state)}</span>
         <div
           style={{
             marginLeft: "auto",
@@ -195,12 +213,12 @@ function ConsumptionTaxPanel({ outcome, noNexus = false }: { outcome: Consumptio
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              {outcome.collectionThreshold === null ? (
+              {collectionThreshold === null ? (
                 <span style={{ color: `${c.text}60` }}>—</span>
-              ) : outcome.collectionThreshold === 0 ? (
+              ) : collectionThreshold === 0 ? (
                 "None"
               ) : (
-                outcome.collectionThreshold.toLocaleString()
+                collectionThreshold.toLocaleString()
               )}
             </td>
           </tr>
@@ -481,7 +499,12 @@ export function AddressTaxWrapper({ defaultCountry, taxType }: AddressTaxWrapper
       />
       <ValidationStatus valid={validity.valid} errors={validity.errors} />
       <span style={sectionLabelStyle}>Tax to collect</span>
-      <ConsumptionTaxPanel outcome={outcome} noNexus={noNexus} />
+      <ConsumptionTaxPanel
+        outcome={outcome}
+        country={addressValue.country || defaultCountry || ""}
+        state={addressValue.level1}
+        noNexus={noNexus}
+      />
       <span style={sectionLabelStyle}>Address value</span>
       <pre style={jsonStyle}>{JSON.stringify(addressValue, null, 2)}</pre>
       <span style={sectionLabelStyle}>Tax value</span>
@@ -491,7 +514,6 @@ export function AddressTaxWrapper({ defaultCountry, taxType }: AddressTaxWrapper
             ...taxValue,
             baseTax: outcome.baseTax,
             effectiveTax: outcome.effectiveTax,
-            hasNexus: outcome.hasNexus,
           },
           null,
           2,

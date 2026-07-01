@@ -86,17 +86,11 @@ export interface ConsumptionTaxOutcome {
    */
   baseTax: number | null;
   /**
-   * Rate the seller actually charges: {@link baseTax} when {@link hasNexus}, 0
-   * otherwise. null only when {@link hasNexus} is true and {@link baseTax}
+   * Rate the seller actually charges: {@link baseTax} when the seller has nexus, 0
+   * otherwise. null only when the seller has nexus and {@link baseTax}
    * itself can't be resolved.
    */
   effectiveTax: number | null;
-  /** Whether the seller has a nexus in the resolved country (mirrors the input). */
-  hasNexus: boolean;
-  /** Resolved state/province code, when one was supplied. */
-  state: string | null;
-  /** 0 = no threshold (always collect); positive = registration threshold in local currency; null = seller never collects. */
-  collectionThreshold: number | null;
   flags: TaxOutcomeFlags;
 }
 
@@ -956,9 +950,6 @@ const EMPTY_OUTCOME: ConsumptionTaxOutcome = {
   localConsumptionTaxLabel: null,
   baseTax: null,
   effectiveTax: 0,
-  hasNexus: false,
-  state: null,
-  collectionThreshold: null,
   flags: NO_FLAGS,
 };
 
@@ -973,68 +964,79 @@ export function computeConsumptionTaxOutcome(
   hasNexus: boolean,
   state?: string,
 ): ConsumptionTaxOutcome {
-  if (!country) return { ...EMPTY_OUTCOME, hasNexus };
+  if (!country) return EMPTY_OUTCOME;
 
   const entry = TAX_CONFIG[country.toUpperCase() as CountryCode];
-  if (!entry) return { ...EMPTY_OUTCOME, hasNexus };
+  if (!entry) return EMPTY_OUTCOME;
 
   const { config, regionResolved } = resolveConfig(entry, state);
   const resolvedState = state ? state.toUpperCase() : undefined;
+  const isRegionalCountry = isRegional(entry);
+
   const base = {
     taxSystem: config.taxSystem,
     consumptionTaxLabel: getConsumptionTaxLabel(country, resolvedState),
     localConsumptionTaxLabel: getLocalConsumptionTaxLabel(country, resolvedState),
-    state: resolvedState ?? null,
-    hasNexus,
   } as const;
 
-  // `effectiveTax` is `baseTax` when the seller has a nexus, else 0 — so the
-  // seller only charges when they actually have a collection obligation.
-  const effective = (b: number | null): number | null => (hasNexus ? b : 0);
+  // `effectiveTax` is `baseTax` when the seller has nexus, else 0
+  const effective = (base: number | null): number | null => (hasNexus ? base : 0);
 
-  // OSS countries reverse-charge B2B sales to identifier holders (invoice at
-  // 0%, buyer self-accounts), otherwise charge the standard rate.
-  if (config.taxSystem === "oss") {
-    if (isBusiness && hasConsumptionTaxId) {
+  // If NOT a business (consumer), apply standard rates with exceptions
+  if (!isBusiness) {
+    // Zero-rated exports (UK): invoice at 0%, buyer self-accounts
+    if (config.zeroRatedExport) {
       const baseTax = 0;
       return {
         ...base,
         baseTax,
         effectiveTax: effective(baseTax),
-        collectionThreshold: null,
         flags: makeFlags({ buyerSelfAccounts: true, invoiceAtZero: true }),
       };
     }
-    const baseTax = config.baseConsumerTax;
+
+    // Standard consumer rate
+    const baseTax = regionResolved || !isRegionalCountry ? config.baseConsumerTax : null;
     return {
       ...base,
       baseTax,
       effectiveTax: effective(baseTax),
-      collectionThreshold: config.collectionThreshold,
-      flags: NO_FLAGS,
+      flags: makeFlags({
+        regionalRates: isRegionalCountry,
+        localSurcharge: !!config.localSurcharge,
+      }),
     };
   }
 
-  // Zero-rated exports (UK): invoice at 0%, buyer self-accounts.
+  // Business transactions
+  // OSS countries: B2B with valid tax ID → reverse charge (0%)
+  if (config.taxSystem === "oss" && hasConsumptionTaxId) {
+    const baseTax = 0;
+    return {
+      ...base,
+      baseTax,
+      effectiveTax: effective(baseTax),
+      flags: makeFlags({ buyerSelfAccounts: true, invoiceAtZero: true }),
+    };
+  }
+
+  // Zero-rated exports (UK): B2B → 0%, buyer self-accounts
   if (config.zeroRatedExport) {
     const baseTax = 0;
     return {
       ...base,
       baseTax,
       effectiveTax: effective(baseTax),
-      collectionThreshold: null,
       flags: makeFlags({ buyerSelfAccounts: true, invoiceAtZero: true }),
     };
   }
 
-  // Country-specific: rate comes from the resolved region (when applicable).
-  const isRegionalCountry = isRegional(entry);
+  // Business without valid tax ID or non-OSS: standard rate
   const baseTax = regionResolved || !isRegionalCountry ? config.baseConsumerTax : null;
   return {
     ...base,
     baseTax,
     effectiveTax: effective(baseTax),
-    collectionThreshold: config.collectionThreshold,
     flags: makeFlags({
       regionalRates: isRegionalCountry,
       localSurcharge: !!config.localSurcharge,
