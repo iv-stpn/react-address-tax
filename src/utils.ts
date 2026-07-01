@@ -35,6 +35,7 @@ export type {
   TaxType,
 } from "./utils/tax";
 export {
+  computeConsumerConsumptionTaxOutcome,
   computeConsumptionTaxOutcome,
   getBusinessTaxNumberLabel,
   getConsumptionTaxConfig,

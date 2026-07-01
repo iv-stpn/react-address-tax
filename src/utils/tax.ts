@@ -1040,3 +1040,21 @@ export function computeConsumptionTaxOutcome(
     }),
   };
 }
+
+/**
+ * Compute consumption tax outcome for consumer (B2C) transactions.
+ * Convenience wrapper around {@link computeConsumptionTaxOutcome} with `isBusiness: false`.
+ *
+ * @param country - Two-letter country code (ISO 3166-1 alpha-2)
+ * @param hasNexus - Whether the seller has a tax nexus in the country
+ * @param state - Optional state/province code for regional tax countries (US, CA)
+ * @returns The computed tax outcome for a consumer transaction
+ */
+export function computeConsumerConsumptionTaxOutcome(
+  country: string,
+  hasNexus: boolean,
+  state?: string,
+): ConsumptionTaxOutcome {
+  return computeConsumptionTaxOutcome(country, false, false, hasNexus, state);
+}
+
