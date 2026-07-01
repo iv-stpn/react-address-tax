@@ -1050,11 +1050,6 @@ export function computeConsumptionTaxOutcome(
  * @param state - Optional state/province code for regional tax countries (US, CA)
  * @returns The computed tax outcome for a consumer transaction
  */
-export function computeConsumerConsumptionTaxOutcome(
-  country: string,
-  hasNexus: boolean,
-  state?: string,
-): ConsumptionTaxOutcome {
+export function computeConsumerConsumptionTaxOutcome(country: string, hasNexus: boolean, state?: string): ConsumptionTaxOutcome {
   return computeConsumptionTaxOutcome(country, false, false, hasNexus, state);
 }
-
