@@ -97,7 +97,13 @@ function computeTaxRates(
   hasTaxIdentifier: boolean,
   isInNexus: boolean,
 ): { baseTax: number; effectiveTax: number; taxLabel: string | null; localTaxLabel: string | null } {
-  const outcome = computeTaxOutcome(country, isBusiness, isBusiness && hasTaxIdentifier, isInNexus, level1);
+  const outcome = computeTaxOutcome({
+    country,
+    isBusiness,
+    hasTaxId: isBusiness && hasTaxIdentifier,
+    hasNexus: isInNexus,
+    state: level1,
+  });
   return {
     baseTax: outcome.baseTax ?? 0,
     effectiveTax: outcome.effectiveTax ?? 0,

@@ -458,7 +458,13 @@ export function AddressTaxWrapper({ defaultCountry, taxType }: AddressTaxWrapper
 
   const hasCountry = !!(addressValue.country || defaultCountry);
   const noNexus = !hasNexus && hasCountry;
-  const outcome = computeTaxOutcome(addressValue.country, effectiveIsBusiness, hasTaxId, hasNexus, addressValue.level1);
+  const outcome = computeTaxOutcome({
+    country: addressValue.country,
+    isBusiness: effectiveIsBusiness,
+    hasTaxId,
+    hasNexus,
+    state: addressValue.level1,
+  });
 
   return (
     <div style={containerStyle}>

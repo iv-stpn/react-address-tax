@@ -954,13 +954,21 @@ const EMPTY_OUTCOME: TaxOutcome = {
 // Public API
 // ---------------------------------------------------------------------------
 
-export function computeTaxOutcome(
-  country: string,
-  isBusiness: boolean,
-  hasTaxId: boolean,
-  hasNexus: boolean,
-  state?: string,
-): TaxOutcome {
+export interface ComputeTaxOutcomeParams {
+  country: string;
+  isBusiness: boolean;
+  hasTaxId: boolean;
+  hasNexus?: boolean;
+  state?: string;
+}
+
+export function computeTaxOutcome({
+  country,
+  isBusiness,
+  hasTaxId,
+  hasNexus = false,
+  state,
+}: ComputeTaxOutcomeParams): TaxOutcome {
   if (!country) return EMPTY_OUTCOME;
 
   const entry = TAX_CONFIG[country.toUpperCase() as CountryCode];
@@ -1045,15 +1053,21 @@ export function computeTaxOutcome(
   };
 }
 
+export interface ComputeConsumerTaxOutcomeParams {
+  country: string;
+  hasNexus?: boolean;
+  state?: string;
+}
+
 /**
  * Compute consumption tax outcome for consumer (B2C) transactions.
  * Convenience wrapper around {@link computeTaxOutcome} with `isBusiness: false`.
  *
- * @param country - Two-letter country code (ISO 3166-1 alpha-2)
- * @param hasNexus - Whether the seller has a tax nexus in the country
- * @param state - Optional state/province code for regional tax countries (US, CA)
+ * @param params.country - Two-letter country code (ISO 3166-1 alpha-2)
+ * @param params.hasNexus - Whether the seller has a tax nexus in the country (defaults to false)
+ * @param params.state - Optional state/province code for regional tax countries (US, CA)
  * @returns The computed tax outcome for a consumer transaction
  */
-export function computeConsumerTaxOutcome(country: string, hasNexus: boolean, state?: string): TaxOutcome {
-  return computeTaxOutcome(country, false, false, hasNexus, state);
+export function computeConsumerTaxOutcome({ country, hasNexus = false, state }: ComputeConsumerTaxOutcomeParams): TaxOutcome {
+  return computeTaxOutcome({ country, isBusiness: false, hasTaxId: false, hasNexus, state });
 }
