@@ -1,5 +1,11 @@
 # react-address-tax
 
+## 2.1.0
+
+### Minor Changes
+
+- [`60aee00`](https://github.com/iv-stpn/react-address-tax/commit/60aee003ba38bc55bca644f65c6ab25942f1d74f) Thanks [@iv-stpn](https://github.com/iv-stpn)! - Change `computeTaxOutcome` and `computeConsumerTaxOutcome` to accept a single options object instead of positional arguments, and make `hasNexus` optional (defaults to `false`).
+
 ## 2.0.1
 
 ### Patch Changes
